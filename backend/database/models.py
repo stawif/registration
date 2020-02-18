@@ -37,7 +37,7 @@ class Recorder(models.Model):
     Recorder is a employee of owner who has job of data entry in this application
     """
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    username = models.CharField(max_length=30,blank=False)
+    username = models.CharField(max_length=30,blank=False,unique=True)
     password = models.CharField(max_length=30,blank=False)
 
     def __str__(self):

@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .serializers import MachineSerializer , VehicleSerializer
+from .serializers import MachineSerializer , VehicleSerializer , RecorderSerializer , PartySerializer
 from rest_framework.views import APIView
-from .models import Machine , Owner , Vehicle , Store
+from .models import Machine , Owner , Vehicle , Recorder , Party
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
@@ -64,5 +64,34 @@ class AddVehicle(APIView):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+
+class AddRecorder(APIView):
+    """
+    View to Add New Recorder in Database
+    """
+    def post(self,request):
+        recorder_name_list = Recorder.objects.all().values('username')
+        owner = Owner.objects.get(id=1)
+        """
+        Condition to check Whether a Recorder is already exists or not.
+        """
+        if request.data['username'] in recorder_name_list:
+            return Response("username Already Exists./n Please choose another username")
+        else:
+            request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
+            serializer = RecorderSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response("Recorder Created", status=status.HTTP_201_CREATED)
+            return Response("Please provide Correct Details/User already exists.",status=status.HTTP_400_BAD_REQUEST)
+
+class PartyList(APIView):
+    """
+    View to return List of Vehicles.
+    """
+    def get(self,request):
+        queryset = Party.objects.all()
+        serializer = PartySerializer(queryset,many=True)
+        return Response(serializer.data)
 
 

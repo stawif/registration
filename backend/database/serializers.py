@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Machine , Owner , Vehicle , Store
+from .models import Machine , Owner , Vehicle , Recorder , Party
 
 class MachineSerializer(serializers.ModelSerializer):
     """
@@ -17,3 +17,18 @@ class VehicleSerializer(serializers.ModelSerializer):
         model = Vehicle
         fields = ['owner','name']
 
+class RecorderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Recorder Model.
+    """
+    class Meta:
+        model = Recorder
+        fields = ['owner','username','password']
+
+class PartySerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Party Model.
+    """
+    class Meta:
+        model = Party
+        fields = ['owner','name','contact','village','party_type']
