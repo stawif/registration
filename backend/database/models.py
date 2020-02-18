@@ -47,7 +47,7 @@ class Store(models.Model):
     """
     Store is for keeping records of things used by owner in works for party
     """
-    owner = models.OneToOneField(Owner,on_delete=models.CASCADE)
+    owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
     name = models.CharField(max_length=30, blank=False)
     measurement = models.CharField(max_length=30, blank=False)
     quantity = models.IntegerField(default=0)
