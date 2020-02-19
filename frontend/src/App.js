@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import  './components/registration/MachineReg'
 
 class App extends Component{
   render(){
