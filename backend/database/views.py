@@ -87,11 +87,31 @@ class AddRecorder(APIView):
 
 class PartyList(APIView):
     """
-    View to return List of Vehicles.
+    View to return List of Party.
     """
     def get(self,request):
         queryset = Party.objects.all()
         serializer = PartySerializer(queryset,many=True)
         return Response(serializer.data)
+
+class AddParty(APIView):
+    """
+    View to Add New Recorder in Database
+    """
+    def post(self,request):
+        party_list = Party.objects.all().values('name','contact','village','party_type')
+        owner = Owner.objects.get(id=1)
+        """
+        Condition to check Whether a Recorder is already exists or not.
+        """
+        if request.data in party_list:
+            return Response("Party Already Exists.")
+        else:
+            request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
+            serializer = PartySerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response("Party Created", status=status.HTTP_201_CREATED)
+            return Response("Please provide Correct Details/User already exists.",status=status.HTTP_400_BAD_REQUEST)
 
 
