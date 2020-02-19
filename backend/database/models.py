@@ -59,9 +59,10 @@ class Store(models.Model):
 
 @receiver(pre_save, sender=Store)
 def check_item_availability(sender,instance,**kwarge):
-    allItems = sender.objects.filter(owner=instance.owner)
-    for item in allItems:
-        print(item.name)
+    all_items = sender.objects.filter(owner=instance.owner)
+    for item in all_items:
+        if instance.name.lower() == item.name.lower():
+            raise Exception('Name of item is already exist')
 
 
 type_of_party = (
@@ -83,3 +84,11 @@ class Party(models.Model):
 
     def __str__(self):
         return self.name    
+
+@receiver(pre_save, sender=Party)
+def check_party_name_availability(sender,instance,**kwarge):
+    all_parties = sender.objects.filter(party_type=instance.party_type)
+    for party in all_parties:
+        if party.name.lower() == instance.name.lower():
+            raise Exception('Name of party is already exist in same Party type')
+
