@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Machine , Owner , Vehicle , Recorder , Party
+from .models import Machine , Owner , Vehicle , Recorder , Party , Store
 
 class MachineSerializer(serializers.ModelSerializer):
     """
@@ -32,3 +32,11 @@ class PartySerializer(serializers.ModelSerializer):
     class Meta:
         model = Party
         fields = ['owner','name','contact','village','party_type']
+
+class StoreSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Store Model.
+    """
+    class Meta:
+        model = Store
+        fields = ['owner','name','measurement','quantity']

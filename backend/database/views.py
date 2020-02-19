@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .serializers import MachineSerializer , VehicleSerializer , RecorderSerializer , PartySerializer
+from .serializers import MachineSerializer , VehicleSerializer , RecorderSerializer , PartySerializer , StoreSerializer
 from rest_framework.views import APIView
-from .models import Machine , Owner , Vehicle , Recorder , Party
+from .models import Machine , Owner , Vehicle , Recorder , Party , Store
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
@@ -114,4 +114,12 @@ class AddParty(APIView):
                 return Response("Party Created", status=status.HTTP_201_CREATED)
             return Response("Please provide Correct Details/User already exists.",status=status.HTTP_400_BAD_REQUEST)
 
+class StoreItemList(APIView):
+    """
+    View to return List of Party.
+    """
+    def get(self,request):
+        queryset = Store.objects.all()
+        serializer = StoreSerializer(queryset,many=True)
+        return Response(serializer.data)
 
