@@ -5,29 +5,35 @@ import { useForm } from "react-hook-form";
 export default function MachineRegistration() {
   const [machineList, setMachineList] = useState({});
   const [machineName, userInput] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    fetchProduct = async () => {
-      const response = await fetch("http://127.0.0.1:8000/list-of-machines/");
-      const res = await response.json();
-      setMachineList(res);
-    }
+  const fetchProduct = async () =>{
+    const responseMachineList = await fetch("http://127.0.0.1:8000/list-of-machines/"); 
+    const jsonMachineList = await responseMachineList.json();
+    setMachineList(jsonMachineList);
+  }
 
-    fetchProduct();
-    checkMachine();
-  }, [machineName]);
+  fetchProduct(); 
 
+  useEffect(
+    () => {
+      checkMachine();
+    },
+    [machineList]
+  );
   
   // below function is used to check typed machine name is already in database or not
   function checkMachine() {
     try {
       //errors.firstName.message();
+      setErrorMessage("");
       const showList = (item, index) => {
         if (machineName === item.name) {
-          alert("please enter different machine name");
+          setErrorMessage("* This machine name is already exist!!!");
         }
+        else{}
       };
-      data.forEach(showList);
+      machineList.forEach(showList);
     } 
     catch (err) {}
   }
@@ -53,10 +59,9 @@ export default function MachineRegistration() {
       <center>
         <h2>Machine Registration</h2>
       </center>
-      <div className="">
+      
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <input
+          <input
               type="text"
               name="machineName"
               ref={register({
@@ -65,17 +70,14 @@ export default function MachineRegistration() {
                 minLength: { value: 5, message: "Min length is 5" }
               })}
               onChange={e => userInput(e.target.value)}
-              placeholder="Enter Machine Name"
-            />
+              placeholder="Enter Machine Name"/>
 
-            <div style={{ color: "red" }}>
-              {Object.keys(errors).length > 0 && errors.machineName.message}
-            </div>
-          </div>
+            <br/>
+            <p>{errorMessage}</p>
 
           <input type="submit" />
         </form>
-      </div>
+    
     </div>
   );
 }

@@ -12,8 +12,6 @@ class App extends Component{
     <div className="App">
       <h3>Machine registration</h3>
       <MachineRegistration/>
-      <h3>PartyReg</h3>
-      <PartyReg/>
     </div>
   );
   }
