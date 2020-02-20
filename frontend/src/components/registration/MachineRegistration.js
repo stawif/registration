@@ -55,7 +55,31 @@ export default function MachineRegistration() {
   console.log(errors);
 
   return (
-    <div>
+							<form className="form-container form-group" onSubmit={handleSubmit(onSubmit)}>
+							<p className="headingViewPart">Machine Registration</p>
+							<div className="pt-5">
+                <input 
+                    type="text" 
+                    className="mb-2" 
+                    name="machineName" 
+                    ref={register({
+                      required: true,
+                      maxLength: 30,
+                      minLength: { value: 5, message: "Min length is 5" }
+                    })}
+                    placeholder="Machine Name" 
+                    onChange={e => userInput(e.target.value)} 
+                    />
+							</div>
+							<br/>
+              { errorMessage }
+              <br/>
+							<button type="submit" className="btn btn-outline-dark">Save</button>
+							</form>      
+  );
+}
+
+/*
       <center>
         <h2>Machine Registration</h2>
       </center>
@@ -77,7 +101,4 @@ export default function MachineRegistration() {
 
           <input type="submit" />
         </form>
-    
-    </div>
-  );
-}
+*/

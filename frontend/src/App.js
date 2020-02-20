@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import './machine.css';
 import MachineRegistration from './components/registration/MachineRegistration';
-import inputField from './inputField';
 
 function App(){
 		return (
@@ -9,7 +8,6 @@ function App(){
 				<div id="container" className="row">
 					<div id="controller" className="col-sm-3">
 						<center> <p className="headingDashboard">DASHBOARD</p> </center>
-						<inputField />
 					</div>
 					<div className="col-sm-9">
 						<nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -60,14 +58,7 @@ function App(){
 							</div>
 						</nav> 
 						<div id="viewPart" className="d-flex justify-content-center align-items-center">
-							<form className="form-container form-group">
-							<p className="headingViewPart">Machine Registration</p>
-							<div className="pt-5">
-								<input type="text" className="mb-2" name="machine" placeholder="Machine Name" required/>
-							</div>
-							<br/>
-							<button type="submit" className="btn btn-outline-dark">Save</button>
-							</form>
+							<MachineRegistration />
 						</div>
 					</div>
 				</div>
@@ -77,3 +68,15 @@ function App(){
 
 
 export default App;
+
+/*
+							<form className="form-container form-group">
+							<p className="headingViewPart">Machine Registration</p>
+							<div className="pt-5">
+								<input type="text" className="mb-2" name="machine" placeholder="Machine Name" required/>
+							</div>
+							<br/>
+							<button type="submit" className="btn btn-outline-dark">Save</button>
+							</form>
+
+*/
