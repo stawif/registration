@@ -47,8 +47,14 @@ input{
 
 /* For mobiles */
 @media only screen and (max-width: 500px){
+	#controller{
+		display: none;
+	}
 	#viewPart{
 		border-top: 1px solid #d3d3d3;
+	}
+	#containViewPart{
+		padding: 0px;
 	}
 	.form-container{
 		width: 80%;
