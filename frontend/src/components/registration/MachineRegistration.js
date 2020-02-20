@@ -3,20 +3,19 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 
 export default function MachineRegistration() {
-  const [data, setData] = useState({});
-  const [machinename, userInput] = useState("");
+  const [machineList, setMachineList] = useState({});
+  const [machineName, userInput] = useState("");
 
   useEffect(() => {
-    async function fetchProduct() {
+    fetchProduct = async () => {
       const response = await fetch("http://127.0.0.1:8000/list-of-machines/");
-
       const res = await response.json();
-      setData(res);
+      setMachineList(res);
     }
 
     fetchProduct();
     checkMachine();
-  }, [machinename]);
+  }, [machineName]);
 
   
   // below function is used to check typed machine name is already in database or not
@@ -24,25 +23,26 @@ export default function MachineRegistration() {
     try {
       //errors.firstName.message();
       const showList = (item, index) => {
-        if (machinename === item.name) {
+        if (machineName === item.name) {
           alert("please enter different machine name");
         }
       };
       data.forEach(showList);
-    } catch (err) {}
+    } 
+    catch (err) {}
   }
 
   const { register, errors, handleSubmit, reset } = useForm();
   const onSubmit = (data, e) => {
-    alert("machine registered successfully"+machinename);
+    alert("machine registered successfully"+machineName);
     axios
       .post(`http://127.0.0.1:8000/machine-registration/`, {
-        name: machinename
+        name: machineName
       })
       .then(res => {
         console.log(res);
         console.log(res.data);
-        setData(res);
+        setMachineList(res);
       });
     e.target.reset();
   };
