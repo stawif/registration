@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-//import './App.css';
-import MachineRegistration from './components/registration/MachineRegistration';
-import BasicValidation from './components/registration/BasicValidation';
-import PartyReg from './components/registration/PartyReg';
+import VehicleRegistration from './components/registration/VehicleRegistration';
+import RecorderRegistration from './components/registration/RecorderRegistration';
 import PartyDisplay from './components/displaydata/PartyDisplay';
+import PartyRegistration from './components/registration/PartyRegistration';
+import StoreRegistration from './components/registration/StoreRegistration';
+import MachineDisplay from './components/displaydata/MachineDisplay';
+import VehicleDisplay from './components/displaydata/VehicleDisplay';
+import StoreDisplay from './components/displaydata/StoreDisplay';
+
 
 
 class App extends Component{
@@ -11,7 +15,7 @@ class App extends Component{
   return (
     <div className="App">
       <h3>Registration begins</h3>
-      <PartyDisplay/>
+      <StoreDisplay/>
     </div>
   );
   }
