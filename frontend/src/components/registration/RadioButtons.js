@@ -11,6 +11,7 @@ export default class RadioButtons extends Component {
   }
 
   onChange(i) {
+    
     this.setState({
       checked: i
     });
