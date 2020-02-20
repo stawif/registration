@@ -123,3 +123,24 @@ class StoreItemList(APIView):
         serializer = StoreSerializer(queryset,many=True)
         return Response(serializer.data)
 
+class AddStoreItem(APIView):
+    """
+    View to Add New Item in Store in Database.
+    """ss
+    def post(self,request):
+        item_list = Store.objects.all().values('owner','name')
+        owner = Owner.objects.get(id=1)
+        
+        item_dict = {'owner':owner.id,'name':request.data['name']}
+        """
+        Condition to check Whether a Item is already exists or not.
+        """
+        if item_dict in item_list:
+            return Response("Item Already Exists.")
+        else:
+            request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
+            serializer = StoreSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response("StoreItem Added", status=status.HTTP_201_CREATED)
+            return Response("Please provide Correct Details/Item already exists.",status=status.HTTP_400_BAD_REQUEST)
