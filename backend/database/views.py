@@ -126,7 +126,7 @@ class StoreItemList(APIView):
 class AddStoreItem(APIView):
     """
     View to Add New Item in Store in Database.
-    """ss
+    """
     def post(self,request):
         item_list = Store.objects.all().values('owner','name')
         owner = Owner.objects.get(id=1)
