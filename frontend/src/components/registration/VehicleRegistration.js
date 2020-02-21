@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 
-export default function MachineRegistration() {
+export default function VehicleRegistration() {
   const [data, setData] = useState({});
-  const [machinename, userInput] = useState("");
+  const [vehiclename, userInput] = useState("");
 
   const { register, errors, handleSubmit } = useForm();
 
   async function fetchProduct() {
-    const response = await fetch("http://127.0.0.1:8000/list-of-machines/");
+    const response = await fetch("http://127.0.0.1:8000/list-of-vehicle/");
 
     const res = await response.json();
     setData(res);
@@ -17,15 +17,15 @@ export default function MachineRegistration() {
 
   useEffect(() => {
     fetchProduct();
-    checkMachine();
-  }, [machinename]);
+    checkVehicle();
+  }, [vehiclename]);
 
-  // below function is used to check typed machine name is already in database or not
-  function checkMachine() {
+  // below function is used to check typed vehicle name is already in database or not
+  function checkVehicle() {
     try {
       const showList = (item, index) => {
-        if (machinename === item.name) {
-          alert("already exists, please enter different machine name");
+        if (vehiclename === item.name) {
+          alert("already exists, please enter different vehicle name");
         }
       };
       data.forEach(showList);
@@ -33,10 +33,10 @@ export default function MachineRegistration() {
   }
 
   const onSubmit = data => {
-    alert("machine registered successfully" + machinename);
+    alert("vehicle registered successfully " + vehiclename);
     axios
-      .post(`http://127.0.0.1:8000/machine-registration/`, {
-        name: machinename
+      .post(`http://127.0.0.1:8000/vehicle-registration/`, {
+        name: vehiclename
       })
       .then(res => {
         console.log(res);
@@ -49,25 +49,25 @@ export default function MachineRegistration() {
   return (
     <div>
       <center>
-        <h2>Machine Registration</h2>
+        <h2>Vehicle Registration</h2>
       </center>
       <div className="">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <input
               type="text"
-              name="machineName"
+              name="vehicleName"
               ref={register({
                 required: true,
                 maxLength: 30,
                 minLength: { value: 5, message: "Min length is 5" }
               })}
               onChange={e => userInput(e.target.value)}
-              placeholder="Enter Machine Name"
+              placeholder="Enter Vehicle Name"
             />
 
             <div style={{ color: "red" }}>
-              {Object.keys(errors).length > 0 && errors.machineName.message}
+              {Object.keys(errors).length > 0 && errors.vehicleName.message}
             </div>
           </div>
 
