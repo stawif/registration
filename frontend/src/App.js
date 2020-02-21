@@ -2,6 +2,7 @@ import React, {useState,useEffect} from 'react';
 import './homePage.css';
 import MachineRegistration from './components/registration/MachineRegistration';
 import VehicleRegistration from './components/registration/VehicleRegistration';
+import PartyRegistration from './components/registration/PartyRegistration';
 
 class App extends React.Component{
 	constructor(props){
@@ -64,7 +65,7 @@ class App extends React.Component{
 							</div>
 						</nav> 
 						<div id="viewPart" className="d-flex justify-content-center align-items-center">
-							<VehicleRegistration />
+							<PartyRegistration />
 						</div>
 					</div>
 				</div>
