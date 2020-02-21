@@ -1,19 +1,8 @@
-<<<<<<< HEAD
-import React from 'react';
-import './machine.css';
-//import './App.css';
-//import MachineRegistration from './components/registration/MachineRegistration';
-//import BasicValidation from './components/registration/BasicValidation';
-//import PartyReg from './components/registration/PartyReg';
-//import PartyDisplay from './components/displaydata/PartyDisplay';
-//import VehicleReg from './components/registration/VehicleReg';
-=======
 import React, {useState,useEffect} from 'react';
 import './homePage.css';
 import MachineRegistration from './components/registration/MachineRegistration';
 import VehicleRegistration from './components/registration/VehicleRegistration';
 import PartyRegistration from './components/registration/PartyRegistration';
->>>>>>> c86c2f47aff5216cf01066b5550087db0bf9a710
 
 class App extends React.Component{
 	constructor(props){
@@ -36,17 +25,10 @@ class App extends React.Component{
 							<div className="collapse navbar-collapse" id="navbarSupportedContent">
 								<ul className="navbar-nav mr-auto">
 									<li className="nav-item active">
-<<<<<<< HEAD
-										<a className="nav-link">Logout<span className="sr-only">(current)</span></a>
-									</li>
-									<li className="nav-item">
-										<a className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-=======
 										<a className="nav-link" href="">Logout<span className="sr-only">(current)</span></a>
 									</li>
 									<li className="nav-item">
 										<a className="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
->>>>>>> c86c2f47aff5216cf01066b5550087db0bf9a710
 										Registration
 										</a>
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
