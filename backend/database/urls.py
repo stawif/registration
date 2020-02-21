@@ -4,7 +4,7 @@ from .views import AddMachine , MachineList , VehicleList , AddVehicle , AddReco
 urlpatterns = [
     path('machine-registration/',AddMachine.as_view()),
     path('list-of-machines/',MachineList.as_view()),
-    path('list-of-vehicle/',VehicleList.as_view()),
+    path('list-of-vehicles/',VehicleList.as_view()),
     path('vehicle-registration/',AddVehicle.as_view()),
     path('recorder-registration/',AddRecorder.as_view()),
     path('list-of-party/',PartyList.as_view()),
