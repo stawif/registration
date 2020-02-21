@@ -10,5 +10,5 @@ urlpatterns = [
     path('list-of-party/',PartyList.as_view()),
     path('party-registration/',AddParty.as_view()),
     path('list-of-item/',StoreItemList.as_view()),
-    path('store-registration/',AddStoreItem.as_view())
+    path('item-registration/',AddStoreItem.as_view())
 ]

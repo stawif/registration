@@ -3,6 +3,7 @@ import './homePage.css';
 import MachineRegistration from './components/registration/MachineRegistration';
 import VehicleRegistration from './components/registration/VehicleRegistration';
 import PartyRegistration from './components/registration/PartyRegistration';
+import ItemRegistration from './components/registration/ItemRegistration';
 
 class App extends React.Component{
 	constructor(props){
@@ -65,7 +66,7 @@ class App extends React.Component{
 							</div>
 						</nav> 
 						<div id="viewPart" className="d-flex justify-content-center align-items-center">
-							<PartyRegistration />
+							<ItemRegistration />
 						</div>
 					</div>
 				</div>
