@@ -1,41 +1,41 @@
 import React from "react";
 import axios from "axios";
 
-export default class MachineRegistration extends React.Component{
+export default class VehicleRegistration extends React.Component{
   constructor(props){
     super(props);
 
     this.state={
-      machineName: "",
-      machineExistStatus: "",
-      machineList: {},
+      vehicleName: "",
+      vehicleExistStatus: "",
+      vehicleList: {},
       buttonStatus: {
         visibility: 'visible'
       }
     }
 
-    // Fetch machine list from server
+    // Fetch vehicle list from server
     this.state.fetchProduct = async () =>{
-      const responseMachineList = await fetch("http://127.0.0.1:8000/list-of-machines/");
-      const jsonMachineList = await responseMachineList.json();
-      this.state.machineList = jsonMachineList;
+      const responsevehicleList = await fetch("http://127.0.0.1:8000/list-of-vehicles/");
+      const jsonvehicleList = await responsevehicleList.json();
+      this.state.vehicleList = jsonvehicleList;
     }
     
     this.state.fetchProduct(); 
 
-    // Check existence of machine name 
-    this.state.checkMachine = () => {
+    // Check existence of vehicle name 
+    this.state.checkvehicle = () => {
       try {
         this.setState({
-             machineExistStatus :"",
+             vehicleExistStatus :"",
              buttonStatus: {
               visibility: 'visible'           
              }
             });
         const showList = (item, index) => {
-            if (this.state.machineName.localeCompare(item.name) == 0){
+            if (this.state.vehicleName.localeCompare(item.name) == 0){
               this.setState({
-                 machineExistStatus :"* This machine name is already exist!!!",
+                 vehicleExistStatus :"* This vehicle name is already exist!!!",
                  buttonStatus: {
                   visibility: 'hidden'                 
                  }
@@ -43,21 +43,21 @@ export default class MachineRegistration extends React.Component{
             }
             else{}
         };
-        this.state.machineList.forEach(showList);
+        this.state.vehicleList.forEach(showList);
       } 
       catch (err) {}
     }
 
     this.state.onSubmit =(e) => {
-        axios.post('http://127.0.0.1:8000/machine-registration/', 
+        axios.post('http://127.0.0.1:8000/vehicle-registration/', 
         {
-          name: this.state.machineName
+          name: this.state.vehicleName
         }
         ).then(res => {
           this.state.fetchProduct();
         }
         ).catch(error => {
-          alert( error.response.request._response )
+          //alert( error.response.request._response )
         });
       e.target.reset();
       e.preventDefault();
@@ -68,26 +68,26 @@ export default class MachineRegistration extends React.Component{
   render(){
     return (
 		<form className="form-container form-group" onSubmit={ e => this.state.onSubmit(e) }>
-    <p className="headingViewPart">Machine Registration</p>
+    <p className="headingViewPart">vehicle Registration</p>
 		<div className="pt-5">
         <input 
         type="text" 
         className="mb-2" 
-        name="machineName" 
-        placeholder="Machine Name" 
+        name="vehicleName" 
+        placeholder="vehicle Name" 
         autocomplete="off"
         maxlength = "30"
         minLength = "5"
         onChange={
           e => {
-          this.state.machineName = e.target.value;
-          this.state.checkMachine();
+          this.state.vehicleName = e.target.value;
+          this.state.checkvehicle();
         }
         } 
         required
         />
     </div>    
-    <p>{this.state.machineExistStatus}</p>     
+    <p>{this.state.vehicleExistStatus}</p>     
     <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
     </form>  
     );

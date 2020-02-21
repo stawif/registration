@@ -1,8 +1,14 @@
 import React, {useState,useEffect} from 'react';
-import './machine.css';
+import './homePage.css';
 import MachineRegistration from './components/registration/MachineRegistration';
+import VehicleRegistration from './components/registration/VehicleRegistration';
 
-function App(){
+class App extends React.Component{
+	constructor(props){
+		super(props);
+	}
+	render()
+	{
 		return (
 			<div>
 				<div id="container" className="row">
@@ -53,30 +59,20 @@ function App(){
 								</ul>
 								<form className="form-inline my-2 my-lg-0">
 									<input className="form-control mr-sm-2" type="search" placeholder="Party" aria-label="Search"/>
-									<button className="btn btn-outline-success my-2 my-sm-0" type="submit">Status</button>
+									<button className="btn btn-outline-dark my-2 my-sm-0" type="submit">Status</button>
 								</form>
 							</div>
 						</nav> 
 						<div id="viewPart" className="d-flex justify-content-center align-items-center">
-							<MachineRegistration />
+							<VehicleRegistration />
 						</div>
 					</div>
 				</div>
 			</div>
 		);
+	}	
 }
 
 
 export default App;
 
-/*
-							<form className="form-container form-group">
-							<p className="headingViewPart">Machine Registration</p>
-							<div className="pt-5">
-								<input type="text" className="mb-2" name="machine" placeholder="Machine Name" required/>
-							</div>
-							<br/>
-							<button type="submit" className="btn btn-outline-dark">Save</button>
-							</form>
-
-*/
