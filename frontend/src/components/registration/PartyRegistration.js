@@ -80,7 +80,7 @@ export default class PartyRegistration extends React.Component{
   render(){
     return (
 		<form className="form-container form-group" onSubmit={ e => this.state.onSubmit(e) }>
-         <p className="headingViewPart">party Registration</p>
+         <p className="headingViewPart">Party Registration</p>
 		<div className="pt-5">
 
         <input 
