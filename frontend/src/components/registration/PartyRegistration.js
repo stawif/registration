@@ -141,7 +141,7 @@ export default class PartyRegistration extends React.Component{
         <hr/>
 
         <div style={this.state.radioButtonStyle}>    
-            <div class="radio">
+            <span class="radio">
                 <label>
                     <input 
                         type="radio" 
@@ -155,8 +155,8 @@ export default class PartyRegistration extends React.Component{
                         required/>
                         Machine Party
                 </label>
-            </div>
-            <div class="radio">
+            </span>
+            <span class="radio">
                 <label>
                     <input type="radio" name="optradio" value="Vehicle_work"
                         onChange={  
@@ -166,8 +166,8 @@ export default class PartyRegistration extends React.Component{
                         } />
                         Vehicle Party
                 </label>
-            </div>
-            <div class="radio">
+            </span>
+            <span class="radio">
                 <label>
                     <input type="radio" name="optradio" value="Daily_work"
                         onChange={  
@@ -177,8 +177,8 @@ export default class PartyRegistration extends React.Component{
                         } />
                         Daily Party
                 </label>
-            </div>        
-            <div class="radio">
+            </span>        
+            <span class="radio">
                 <label>
                     <input type="radio" name="optradio" value="Purchase_party"
                         onChange={  
@@ -188,7 +188,7 @@ export default class PartyRegistration extends React.Component{
                         } />
                     Purchase Party
                 </label>
-            </div>        
+            </span>        
         </div>    
 
     
