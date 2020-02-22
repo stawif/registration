@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Machine , Owner , Vehicle , Recorder , Party , Item
+from .models import Machine , Owner , Vehicle , Recorder , Party , Item , MachineParty,PurchaseParty,VehicleParty
 
 class MachineSerializer(serializers.ModelSerializer):
     """
@@ -25,14 +25,6 @@ class RecorderSerializer(serializers.ModelSerializer):
         model = Recorder
         fields = ['owner','username','password']
 
-class PartySerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Party Model.
-    """
-    class Meta:
-        model = Party
-        fields = ['owner','name','contact','village','party_type']
-
 class ItemSerializer(serializers.ModelSerializer):
     """
     Serializer for the Store Model.
@@ -40,3 +32,36 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['owner','name','measurement','quantity']
+
+class PartySerializer(serializers.ModelSerializer):
+    """
+    Serializer for the party Model.
+    """
+    class Meta:
+        model = Party
+        fields = ['owner','contact','village']
+
+class MachinePartySerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Machine Party Model.
+    """
+    class Meta:
+        model = MachineParty
+        fields = ['credit_id','name']
+
+class VehiclePartySerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Vehicle Party Model.
+    """
+    class Meta:
+        model = VehicleParty
+        fields = ['name']
+
+class PurchasePartySerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Vehicle Party Model.
+    """
+    class Meta:
+        model = VehicleParty
+        fields = ['name']
+

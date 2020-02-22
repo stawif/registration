@@ -1,7 +1,9 @@
 from django.shortcuts import render
-from .serializers import MachineSerializer , VehicleSerializer , RecorderSerializer , PartySerializer , ItemSerializer
+from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , ItemSerializer,
+                            PartySerializer,PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer)
 from rest_framework.views import APIView
-from .models import Machine , Owner , Vehicle , Recorder , Party , Item
+from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
+                        MachineParty,PurchaseParty,VehicleParty)
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
@@ -85,35 +87,6 @@ class AddRecorder(APIView):
                 return Response("Recorder Created", status=status.HTTP_201_CREATED)
             return Response("Please provide Correct Details/User already exists.",status=status.HTTP_400_BAD_REQUEST)
 
-class PartyList(APIView):
-    """
-    View to return List of Party.
-    """
-    def get(self,request):
-        queryset = Party.objects.all()
-        serializer = PartySerializer(queryset,many=True)
-        return Response(serializer.data)
-
-class AddParty(APIView):
-    """
-    View to Add New Recorder in Database
-    """
-    def post(self,request):
-        party_list = Party.objects.all().values('name','contact','village','party_type')
-        owner = Owner.objects.get(id=1)
-        """
-        Condition to check Whether a Recorder is already exists or not.
-        """
-        if request.data in party_list:
-            return Response("Party Already Exists.")
-        else:
-            request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
-            serializer = PartySerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response("Party Created", status=status.HTTP_201_CREATED)
-            return Response("Please provide Correct Details/User already exists.",status=status.HTTP_400_BAD_REQUEST)
-
 class ItemList(APIView):
     """
     View to return List of Party.
@@ -144,3 +117,103 @@ class AddItem(APIView):
                 serializer.save()
                 return Response("StoreItem Added", status=status.HTTP_201_CREATED)
             return Response("Please provide Correct Details/Item already exists.",status=status.HTTP_400_BAD_REQUEST)
+
+class MachinePartyList(APIView):
+    """
+    View to return List of Machine Party.
+    """
+    def get(self,request):
+        queryset = MachineParty.objects.all()
+        serializer = MachinePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class AddMachineParty(APIView):
+    """
+    View to Add New Machine party in Database.
+    """
+    def post(self,request):
+        machine_party_list = MachineParty.objects.all().values('name')
+        owner = Owner.objects.get(id=1)
+        dict1 = {"name":request.data['name']}
+        if dict1 in machine_party_list:
+            return Response('Party Already Exists in Machine Work.')
+        else:
+            name = request.data['name']
+            contact = request.data['contact'] 
+            village=request.data['village']
+            try:
+                n = Party.objects.create(owner=owner,contact=contact,village=village)
+                n2 = MachineParty.objects.create(credit_id=n,name=name)
+                return Response("party added.")
+            except Exception:
+                n.delete()
+                return Response("Party not Created.Network problem.")
+
+        return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
+
+class VehiclePartyList(APIView):
+    """
+    View to return List of Vehicle Party.
+    """
+    def get(self,request):
+        queryset = VehicleParty.objects.all()
+        serializer = VehiclePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class AddVehicleParty(APIView):
+    """
+    View to Add New Vehicle Party in Database.
+    """
+    def post(self,request):
+        vehicle_party_list = VehicleParty.objects.all().values('name')
+        owner = Owner.objects.get(id=1)
+        dict1 = {"name":request.data['name']}
+        if dict1 in vehicle_party_list:
+            return Response('Party Already Exists in Vehicle Work.')
+        else:
+            name = request.data['name']
+            contact = request.data['contact'] 
+            village=request.data['village']
+            try:
+                n = Party.objects.create(owner=owner,contact=contact,village=village)
+                n2 = VehicleParty.objects.create(credit_id=n,name=name)
+                return Response("party added.")
+            except Exception:
+                n.delete()
+                return Response("Party not Created.Network problem.")
+
+        return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
+
+class PurchasePartyList(APIView):
+    """
+    View to return List of Purchase Party.
+    """
+    def get(self,request):
+        queryset = PurchaseParty.objects.all()
+        serializer = PurchasePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class AddPurchaseParty(APIView):
+    """
+    View to Add New Purchase Party in Database.
+    """
+    def post(self,request):
+        purchase_party_list = PurchaseParty.objects.all().values('name')
+        owner = Owner.objects.get(id=1)
+        dict1 = {"name":request.data['name']}
+        if dict1 in purchase_party_list:
+            return Response('Party Already Exists in Purchase Work.')
+        else:
+            name = request.data['name']
+            contact = request.data['contact'] 
+            village=request.data['village']
+            try:
+                n = Party.objects.create(owner=owner,contact=contact,village=village)
+                n2 = PurchaseParty.objects.create(credit_id=n,name=name)
+                return Response("party added.")
+            except Exception:
+                n.delete()
+                return Response("Party not Created.Network problem.")
+        
+        return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
+

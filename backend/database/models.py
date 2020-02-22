@@ -71,11 +71,11 @@ class Party(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     contact = models.IntegerField(blank=False)
     village = models.CharField(max_length=30,blank=False)
-    date = models.DateField(blank=False)
-    total_credit = models.IntegerField()
+    date = models.DateField(blank=False,auto_now_add=True)  #Add aunto now date
+    total_credit = models.IntegerField(default=0)   
 
     def __str__(self):
-        return self.pk    
+        return str(self.pk)    
 
 
 """
@@ -128,6 +128,10 @@ class MachineParty(models.Model):
     credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
 
+    def __str__(self):
+        return self.name
+
+
 class VehicleParty(models.Model):
     """
     Parties that gives work related to vehicle
@@ -135,12 +139,22 @@ class VehicleParty(models.Model):
     credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
 
+    def __str__(self):
+        return self.name
+
+    
+
 class PurchaseParty(models.Model):
     """
     Parties that gives work related to purchase
     """
     credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
+
+    def __str__(self):
+        return self.name
+
+    
 
 class DailyParty(models.Model):
     """
@@ -264,180 +278,7 @@ class Credit(models.Model):
     def __str__(self):
         return self.work
 
-<<<<<<< HEAD
 
-"""
-Above models are complete
-"""
-
-class MixDebit(models.Model):
-    """
-    A class to generalize debit type
-    """
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    date = models.DateField(blank=False)
-    spend_amount = models.IntegerField(blank=False)
-
-    def __str__(self):
-        return self.pk    
-
-class Worker(models.Model):
-    """
-    Workers are also employees od owner who do work for owner
-    """
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    debit_id = models.OneToOneField(MixDebit,on_delete=models.CASCADE)
-    name = models.CharField(max_length=30,blank=False)
-    contact = models.IntegerField(blank=False)
-    village = models.CharField(max_length=30,blank=False)
-    salary = models.IntegerField(blank=False)
-    advance = models.IntegerField(blank=False)
-    exit_date = models.DateField()
-
-    def __str__(self):
-        return self.name    
-
-class DailyExpense(models.Model):
-    """
-    Owner has some daily expenses
-    """
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    debit_id = models.OneToOneField(MixDebit,on_delete=models.CASCADE)
-    expense = models.IntegerField(blank=False)
-    remark = models.CharField(max_length=50, blank=True)
-
-    def __str__(self):
-        return self.debit_id   
-
-class Work(models.Model):
-    """
-    Work is a generalised term for different types of work which are given by Parties
-    """
-    party = models.ForeignKey(Party,on_delete=models.CASCADE)
-    paid_amount = models.IntegerField(default=0)
-    date = models.DateField(blank=False)
-    remark = models.CharField(max_length=50,blank=True)
-
-    def __str__(self):
-        return self.pk    
-
-class MachineWork(models.Model):
-    """
-    This is a type of work owner do for party in mining
-    """
-    work = models.ForeignKey(Work, on_delete=models.CASCADE)
-    machine = models.OneToOneField(Machine, on_delete=models.CASCADE)    
-    date = models.DateField()
-    drilling_feet = models.IntegerField(blank=False)
-    diesel_amount = models.IntegerField(blank=False)
-    remark = models.CharField(max_length=50, blank=True)
-
-    def __str__(self):
-        return self.date    
-
-class VehicleWork(models.Model):
-    """
-    This is a type of work owner do for a party 
-    """
-    work = models.ForeignKey(Work, on_delete=models.CASCADE)
-    date = models.DateField()
-    five_feet = models.IntegerField(blank=False)
-    two_half_feet = models.IntegerField(blank=False)
-    remark = models.CharField(max_length=50, blank=True)
-
-    def __str__(self):
-        return self.date    
-
-class VeicleWorkVehicles(models.Model):
-    """
-    All vehicles that are used in VehicleWork
-    """
-    vehicle_work = models.ForeignKey(VehicleWork, on_delete=models.CASCADE)
-    Vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.vehicle_work    
-
-class DailyWork(models.Model):
-    """
-    This is a type of  work owner do for a party
-    """
-    work = models.ForeignKey(Work, on_delete=models.CASCADE)
-    five_feet = models.IntegerField(blank=False)
-    five_feet_rate = models.IntegerField(blank=False)
-    two_half_feet = models.IntegerField(blank=False)
-    two_half_feet_rate = models.IntegerField(blank=False)
-    diesel_spend = models.IntegerField(blank=False)
-    net_amount = models.IntegerField(blank=False)
-
-    def __str__(self):
-        return self.pk    
-     
-class DailyWorkVehicles(models.Model):
-    """
-    All vehicles that are used in DailyWork
-    """
-    daily_work = models.ForeignKey(DailyWork, on_delete=models.CASCADE)
-    Vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.daily_work    
-
-class Purchase(models.Model):
-    """
-    Purchase records of owner from any party
-    """
-    party = models.ForeignKey(Party, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    debit_id = models.OneToOneField(MixDebit, on_delete=models.CASCADE)
-    rate = models.IntegerField(blank=False)
-    net_amount = models.IntegerField(blank=False)
-    paid = models.IntegerField(blank=False)
-    remaining = models.IntegerField(blank=False)
-    remark = models.CharField(max_length=50, blank=True)
-
-    def __str__(self):
-        return self.debit_id    
-
-class Supply(models.Model):
-    """
-    Records of items supplied to any work
-    """    
-    work = models.ForeignKey(Work, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    date = models.DateField()
-    quantity = models.IntegerField(blank=False)
-
-    def __str__(self):
-        return self.pk    
-
-class Account(models.Model):
-    """
-    Account of owner about it's overall credit, debit and current balance
-    """
-    owner = models.OneToOneField(Owner, on_delete=models.CASCADE)
-    total_credit = models.IntegerField(default=0)
-    total_debit = models.IntegerField(default=0)
-    balance = models.IntegerField(default=0)    
-
-    def __str__(self):
-        return self.owner    
-
-class Credit(models.Model):
-    """
-    Credit history of owner account
-    """
-    work = models.ForeignKey(Work, on_delete=models.CASCADE)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    date = models.DateField(blank=False)
-    credit_amount = models.IntegerField(blank=False)
-    remark = models.CharField(max_length=50, blank=True)
-
-    def __str__(self):
-        return self.work
-
-=======
->>>>>>> 50834f44e4d7641df4fe0ea5a1c53bdbfca7b143
 class Debit(models.Model):
     """
     Debit history of owner account
