@@ -215,7 +215,7 @@ class Purchase(models.Model):
     Purchase records of owner from any party
     """
     party = models.ForeignKey(Party, on_delete=models.CASCADE)
-    item = models.ForeignKey(Store, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     debit_id = models.OneToOneField(MixDebit, on_delete=models.CASCADE)
     rate = models.IntegerField(blank=False)
     net_amount = models.IntegerField(blank=False)
@@ -231,7 +231,7 @@ class Supply(models.Model):
     Records of items supplied to any work
     """    
     work = models.ForeignKey(Work, on_delete=models.CASCADE)
-    item = models.ForeignKey(Store, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     date = models.DateField()
     quantity = models.IntegerField(blank=False)
 
