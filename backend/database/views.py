@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .serializers import MachineSerializer , VehicleSerializer , RecorderSerializer , PartySerializer , StoreSerializer
+from .serializers import MachineSerializer , VehicleSerializer , RecorderSerializer , PartySerializer , ItemSerializer
 from rest_framework.views import APIView
-from .models import Machine , Owner , Vehicle , Recorder , Party , Store
+from .models import Machine , Owner , Vehicle , Recorder , Party , Item
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
@@ -114,21 +114,21 @@ class AddParty(APIView):
                 return Response("Party Created", status=status.HTTP_201_CREATED)
             return Response("Please provide Correct Details/User already exists.",status=status.HTTP_400_BAD_REQUEST)
 
-class StoreItemList(APIView):
+class ItemList(APIView):
     """
     View to return List of Party.
     """
     def get(self,request):
-        queryset = Store.objects.all()
-        serializer = StoreSerializer(queryset,many=True)
+        queryset = Item.objects.all()
+        serializer = ItemSerializer(queryset,many=True)
         return Response(serializer.data)
 
-class AddStoreItem(APIView):
+class AddItem(APIView):
     """
     View to Add New Item in Store in Database.
     """
     def post(self,request):
-        item_list = Store.objects.all().values('owner','name')
+        item_list = Item.objects.all().values('owner','name')
         owner = Owner.objects.get(id=1)
         
         item_dict = {'owner':owner.id,'name':request.data['name']}
@@ -139,7 +139,7 @@ class AddStoreItem(APIView):
             return Response("Item Already Exists.")
         else:
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
-            serializer = StoreSerializer(data=request.data)
+            serializer = ItemSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response("StoreItem Added", status=status.HTTP_201_CREATED)

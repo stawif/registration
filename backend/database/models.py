@@ -45,9 +45,9 @@ class Recorder(models.Model):
     def __str__(self):
         return self.username    
 
-class Store(models.Model):
+class Item(models.Model):
     """
-    Store is for keeping records of things used by owner in works for party
+    Item is for keeping records of things used by owner in works for party
     """
     owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
     name = models.CharField(max_length=30, blank=False)
@@ -57,7 +57,7 @@ class Store(models.Model):
     def __str__(self):
         return self.name    
 
-@receiver(pre_save, sender=Store)
+@receiver(pre_save, sender=Item)
 def check_item_availability(sender,instance,**kwarge):
     all_items = sender.objects.filter(owner=instance.owner)
     for item in all_items:
