@@ -3,13 +3,50 @@ import './homePage.css';
 import MachineRegistration from './components/registration/MachineRegistration';
 import VehicleRegistration from './components/registration/VehicleRegistration';
 import PartyRegistration from './components/registration/PartyRegistration';
+import ItemRegistration from './components/registration/ItemRegistration';
 
 class App extends React.Component{
 	constructor(props){
 		super(props);
+		this.state ={
+			allPages: {
+				machineReg: "machineRegisration",
+				vehicleReg: "vehicleRegistration",
+				partyReg: "partyRegistration",
+				itemReg: "itemRegistration"
+			},
+			currentPage: "machineRegistration"
+		}
+
+		this.updateCurrentPage = this.updateCurrentPage.bind(this);
 	}
+	
+	updateCurrentPage = async (choosePage) => {
+		console.log("choosePage : "+choosePage);
+		await this.setState({
+			currentPage: choosePage
+		});
+		console.log(this.state.currentPage);
+	}
+
 	render()
 	{
+		let currentComponent;
+		if(this.state.currentPage === this.state.allPages.machineReg){
+			currentComponent = <MachineRegistration />
+		}
+		else if(this.state.currentPage === this.state.allPages.vehicleReg){
+			currentComponent = <VehicleRegistration />
+		}
+		else if(this.state.currentPage === this.state.allPages.partyReg){
+			currentComponent = <PartyRegistration />
+		}
+		else if(this.state.currentPage === this.state.allPages.itemReg){
+			currentComponent = <ItemRegistration />
+		}
+		else{
+			currentComponent = <MachineRegistration />
+		} 
 		return (
 			<div>
 				<div id="container" className="row">
@@ -32,9 +69,10 @@ class App extends React.Component{
 										Registration
 										</a>
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-											<a className="dropdown-item" href="">Machine</a>
-											<a className="dropdown-item" href="">Vehicle</a>
-											<a className="dropdown-item" href="">Party</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineReg) }>Machine</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleReg) } >Vehicle</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.partyReg) } >Party</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.itemReg) } >Item</a>
 										</div>
 									</li>
 									<li className="nav-item dropdown">
@@ -65,7 +103,7 @@ class App extends React.Component{
 							</div>
 						</nav> 
 						<div id="viewPart" className="d-flex justify-content-center align-items-center">
-							<PartyRegistration />
+							{ currentComponent }
 						</div>
 					</div>
 				</div>

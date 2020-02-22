@@ -12,9 +12,6 @@ export default class PartyRegistration extends React.Component{
       partyType: "",
       partyList: {},
       partyExistMessage: "",
-      partyExistStatus: {
-          visibility: 'hidden'
-      },
       buttonStatus: {
           visibility: 'visible'
       },
