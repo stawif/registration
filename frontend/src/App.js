@@ -2,8 +2,11 @@ import React, {useState,useEffect} from 'react';
 import './homePage.css';
 import MachineRegistration from './components/registration/MachineRegistration';
 import VehicleRegistration from './components/registration/VehicleRegistration';
-import PartyRegistration from './components/registration/PartyRegistration';
 import ItemRegistration from './components/registration/ItemRegistration';
+import MachinePartyRegistration from './components/registration/MachinePartyRegistration';
+import VehiclePartyRegistration from './components/registration/VehiclePartyRegistration';
+import PurchasePartyRegistration from './components/registration/PurchasePartyRegistration';
+
 
 class App extends React.Component{
 	constructor(props){
@@ -12,8 +15,10 @@ class App extends React.Component{
 			allPages: {
 				machineReg: "machineRegisration",
 				vehicleReg: "vehicleRegistration",
-				partyReg: "partyRegistration",
-				itemReg: "itemRegistration"
+				itemReg: "itemRegistration",
+				machinePartyReg: "machinePartyRegistration",
+				vehiclePartyReg: "vehiclePartyRegistration",
+				purchasePartyReg: "purchasePartyRegistration"
 			},
 			currentPage: "machineRegistration"
 		}
@@ -21,6 +26,7 @@ class App extends React.Component{
 		this.updateCurrentPage = this.updateCurrentPage.bind(this);
 	}
 	
+	// Change pages when user choose from navbar 
 	updateCurrentPage = async (choosePage) => {
 		console.log("choosePage : "+choosePage);
 		await this.setState({
@@ -38,11 +44,17 @@ class App extends React.Component{
 		else if(this.state.currentPage === this.state.allPages.vehicleReg){
 			currentComponent = <VehicleRegistration />
 		}
-		else if(this.state.currentPage === this.state.allPages.partyReg){
-			currentComponent = <PartyRegistration />
-		}
 		else if(this.state.currentPage === this.state.allPages.itemReg){
 			currentComponent = <ItemRegistration />
+		}
+		else if(this.state.currentPage === this.state.allPages.machinePartyReg){
+			currentComponent = <MachinePartyRegistration />
+		}
+		else if(this.state.currentPage === this.state.allPages.vehiclePartyReg){
+			currentComponent = <VehiclePartyRegistration />
+		}
+		else if(this.state.currentPage === this.state.allPages.purchasePartyReg){
+			currentComponent = <PurchasePartyRegistration />
 		}
 		else{
 			currentComponent = <MachineRegistration />
@@ -71,8 +83,10 @@ class App extends React.Component{
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineReg) }>Machine</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleReg) } >Vehicle</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.partyReg) } >Party</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.itemReg) } >Item</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machinePartyReg) } >Machine Party</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyReg) } >Vehicle Party</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyReg) } >Purchase Party</a>
 										</div>
 									</li>
 									<li className="nav-item dropdown">

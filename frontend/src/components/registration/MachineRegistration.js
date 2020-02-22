@@ -33,7 +33,7 @@ export default class MachineRegistration extends React.Component{
              }
             });
         const showList = (item, index) => {
-            if (this.state.machineName.localeCompare(item.name) == 0){
+            if (this.state.machineName.toLowerCase() === item.name.toLowerCase()){
               this.setState({
                  machineExistStatus :"* This machine name is already exist!!!",
                  buttonStatus: {

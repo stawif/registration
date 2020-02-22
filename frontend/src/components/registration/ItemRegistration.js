@@ -35,7 +35,7 @@ export default class ItemRegistration extends React.Component{
              }
             });
         const showList = (item, index) => {
-            if (this.state.itemName.localeCompare(item.name) == 0){
+            if (this.state.itemName.toLowerCase() === item.name.toLowerCase()){
               this.setState({
                  itemExistMessage :"* This item name is already exist!!!",
                     buttonStatus: {

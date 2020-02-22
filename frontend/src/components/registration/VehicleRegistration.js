@@ -33,7 +33,7 @@ export default class VehicleRegistration extends React.Component{
              }
             });
         const showList = (item, index) => {
-            if (this.state.vehicleName.localeCompare(item.name) == 0){
+            if (this.state.vehicleName.toLowerCase() === item.name.toLowerCase()){
               this.setState({
                  vehicleExistStatus :"* This vehicle name is already exist!!!",
                  buttonStatus: {
