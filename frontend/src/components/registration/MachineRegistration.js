@@ -75,8 +75,8 @@ export default class MachineRegistration extends React.Component{
         className="mb-2" 
         name="machineName" 
         placeholder="Machine Name" 
-        autocomplete="off"
-        maxlength = "30"
+        autoComplete="off"
+        maxLength = "30"
         minLength = "5"
         onChange={
           e => {
