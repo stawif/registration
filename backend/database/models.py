@@ -168,7 +168,7 @@ class MachineWork(models.Model):
     This is a type of work owner do for party in mining
     """
     party = models.ForeignKey(MachineParty, on_delete=models.CASCADE)
-    machine = models.OneToOneField(Machine, on_delete=models.CASCADE)    
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)    
     date = models.DateField()
     drilling_feet = models.IntegerField(blank=False)
     diesel_amount = models.IntegerField(blank=False)
@@ -192,17 +192,19 @@ class VehicleWork(models.Model):
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.date    
+        template = '{0.party} {0.date}'
+        return template.format(self)    
 
-class VeicleWorkVehicles(models.Model):
+class VehicleWorkVehicles(models.Model):
     """
     All vehicles that are used in VehicleWork
     """
     vehicle_work = models.ForeignKey(VehicleWork, on_delete=models.CASCADE)
-    Vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.vehicle_work    
+        template = '{0.vehicle_work} {0.vehicle}'
+        return template.format(self)    
 
 class DailyWork(models.Model):
     """

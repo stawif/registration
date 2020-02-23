@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , ItemSerializer,
                             PartySerializer,PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
-                            MachineWorkSerializer)
+                            MachineWorkSerializer , VehicleWorkSerializer,VehicleWorkVehicleSerializer)
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
-                        MachineParty,PurchaseParty,VehicleParty,MachineWork)
+                        MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles)
 from rest_framework.response import Response
-from django.http import Http404
+from django.http import Http404 ,JsonResponse
 from rest_framework import status
 # Create your views here.
 
@@ -220,7 +220,7 @@ class AddPurchaseParty(APIView):
 
 class AddMachineWork(APIView):
     """
-    View to Add New Purchase Party in Database.
+    View to Add New MAchine Work in Database.
     """
     def post(self,request):
         machine_party_list = MachineParty.objects.all().values('name')
@@ -228,10 +228,12 @@ class AddMachineWork(APIView):
         machine_work_list = MachineWork.objects.all().values('party','machine')
         dict1 = {'name':request.data['party']}
         dict2 = {'name':request.data['machine']}
-        party_id = MachineParty.objects.get(name=request.data['party'])
-        machine_id = Machine.objects.get(name=request.data['machine'])
-        dict3 = {"party":party_id.id,"machine":machine_id.id}
-        print(dict3,machine_work_list)
+        try:
+            party_id = MachineParty.objects.get(name=request.data['party'])
+            machine_id = Machine.objects.get(name=request.data['machine'])
+            dict3 = {"party":party_id.id,"machine":machine_id.id}
+        except Exception as e:
+            return Response("Party or MAchine does not Exists in Machine or Machine Party List.")
         if dict1 not in machine_party_list:
             return Response('Machine Party Does not exists.')
         elif dict2 not in machine_list:
@@ -246,7 +248,48 @@ class AddMachineWork(APIView):
                     return Response("Machine Work Created ")
             except Exception as e:
                 return Response("Data is not correct.")
-            return Response("Working.......")
-        
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        return Response("Working",status=status.HTTP_400_BAD_REQUEST)
+class AddVehicleWork(APIView):
+    """
+    View to Add New Vehicle Work in Database.
+    """
+    def post(self,request):
+        vehicle_party_list = VehicleParty.objects.all().values('name')
+        vehicle_list = Vehicle.objects.all().values('name')
+        dict1 = {'name':request.data['party']}
+        dict2 = {'name':request.data['vehicle']}
+        length = len(dict2['name'])
+        for i in range(length):
+            dict3 = {"name":dict2['name'][i]}
+            print(dict3)
+            print(vehicle_list)
+            if dict3 not in vehicle_list:
+                return Response("Vehicle Does not exists.")
+        if dict1 not in vehicle_party_list:
+            return Response('Vehicle Party Does not exists.')
+        else:
+            party_id = VehicleParty.objects.get(name=request.data['party'])
+            if request.data:
+                 vehicle_work = VehicleWork.objects.create(party=party_id,date=request.data['date'],
+                 five_feet=float(request.data['five_feet']),two_half_feet=float(request.data['two_half_feet']),remark=request.data['remark'])
+                 for i in range(length):
+                     vehicle_id = Vehicle.objects.get(name=dict2['name'][i])
+                     vehicle = VehicleWorkVehicles.objects.create(vehicle=vehicle_id,vehicle_work=vehicle_work)
+                 return Response("Vehicle Work Added",status = status.HTTP_201_CREATED)
+            else:
+                return Response("Vehicle Added.....")
+
+        return Response("under construction.")
+
+
+
+
+
+
+
+
+
+
+
+

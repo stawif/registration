@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Owner,Machine, Vehicle, Recorder, Party, Item , MachineParty,VehicleParty,PurchaseParty,MachineWork
+from .models import Owner,Machine, Vehicle, Recorder, Party, Item , MachineParty,VehicleParty,PurchaseParty,MachineWork , VehicleWork,VehicleWorkVehicles
 admin.site.register(Owner)
 admin.site.register(Machine)
 admin.site.register(Vehicle)
@@ -10,3 +10,5 @@ admin.site.register(MachineParty)
 admin.site.register(VehicleParty)
 admin.site.register(PurchaseParty)
 admin.site.register(MachineWork)
+admin.site.register(VehicleWork)
+admin.site.register(VehicleWorkVehicles)

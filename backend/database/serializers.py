@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (Machine , Owner , Vehicle , Recorder , Party , Item , MachineParty,PurchaseParty,VehicleParty,
-                    MachineWork)
+                    MachineWork,VehicleWork,VehicleWorkVehicles)
 
 class MachineSerializer(serializers.ModelSerializer):
     """
@@ -73,3 +73,19 @@ class MachineWorkSerializer(serializers.ModelSerializer):
     class Meta:
         model = MachineWork
         fields = ['party','machine','drilling_feet','diesel_amount','remark']
+
+class VehicleWorkSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Vehice Work Model.
+    """
+    class Meta:
+        model = VehicleWork
+        fields = ['party','date','five_feet','two_half_feet','remark']
+
+class VehicleWorkVehicleSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Vehicle Work Vehicle Model.
+    """
+    class Meta:
+        model = VehicleWorkVehicles
+        fields = ['vehicle_work','vehicle']
