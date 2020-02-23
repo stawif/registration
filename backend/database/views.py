@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , ItemSerializer,
-                            PartySerializer,PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer)
+                            PartySerializer,PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
+                            MachineWorkSerializer)
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
-                        MachineParty,PurchaseParty,VehicleParty)
+                        MachineParty,PurchaseParty,VehicleParty,MachineWork)
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
@@ -217,3 +218,35 @@ class AddPurchaseParty(APIView):
         
         return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
 
+class AddMachineWork(APIView):
+    """
+    View to Add New Purchase Party in Database.
+    """
+    def post(self,request):
+        machine_party_list = MachineParty.objects.all().values('name')
+        machine_list = Machine.objects.all().values('name')
+        machine_work_list = MachineWork.objects.all().values('party','machine')
+        dict1 = {'name':request.data['party']}
+        dict2 = {'name':request.data['machine']}
+        party_id = MachineParty.objects.get(name=request.data['party'])
+        machine_id = Machine.objects.get(name=request.data['machine'])
+        dict3 = {"party":party_id.id,"machine":machine_id.id}
+        print(dict3,machine_work_list)
+        if dict1 not in machine_party_list:
+            return Response('Machine Party Does not exists.')
+        elif dict2 not in machine_list:
+            return Response("Machine Does not  exists.")
+        elif dict3 in machine_work_list:
+            return Response("This Machine Work already exists for this party.")
+        else:
+            try:
+                if request.data:
+                    machine_work = MachineWork.objects.create(party=party_id,machine=machine_id,date=request.data['date'],
+                    drilling_feet=float(request.data['drilling_feet']),diesel_amount=float(request.data['diesel_amount']),remark=request.data['remark'])
+                    return Response("Machine Work Created ")
+            except Exception as e:
+                return Response("Data is not correct.")
+            return Response("Working.......")
+        
+
+        return Response("Working",status=status.HTTP_400_BAD_REQUEST)

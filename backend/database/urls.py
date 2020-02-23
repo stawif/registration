@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , ItemList , AddItem,
-                    MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , AddVehicleParty)
+                    MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
+                    AddVehicleParty,AddMachineWork)
 
 urlpatterns = [
     path('machine-registration/',AddMachine.as_view()),
@@ -16,4 +17,5 @@ urlpatterns = [
     path('machine-party-registration/',AddMachineParty.as_view()),
     path('vehicle-party-registration/',AddVehicleParty.as_view()),
     path('purchase-party-registration/',AddPurchaseParty.as_view()),
+    path('enter-machineparty-work/',AddMachineWork.as_view()),
 ]

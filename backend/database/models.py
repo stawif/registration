@@ -174,8 +174,12 @@ class MachineWork(models.Model):
     diesel_amount = models.IntegerField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
 
+    # def __str__(self):
+    #     return self.party," ",str(self.date)    
+
     def __str__(self):
-        return self.date    
+        template = '{0.party} {0.date}'
+        return template.format(self)
 
 class VehicleWork(models.Model):
     """
