@@ -14,9 +14,6 @@ export default class PartyRegistration extends React.Component{
       partyExistMessage: "",
       buttonStatus: {
           visibility: 'visible'
-      },
-      radioButtonStyle: {
-          float: 'left'
       }
     }
 

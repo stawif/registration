@@ -10,6 +10,7 @@ export default class MachinePartyRegistration extends React.Component{
       partyContact: "",
       partyVillage: "",
       partyList: {},
+      machineParty: {},
       partyExistMessage: "",
       buttonStatus: {
           visibility: 'visible'
