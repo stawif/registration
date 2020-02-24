@@ -9,6 +9,7 @@ export default class MachineRegistration extends React.Component{
       machineName: "",
       machineExistStatus: "",
       machineList: {},
+      responseMessage: "",
       buttonStatus: {
         visibility: 'visible'
       }
@@ -55,6 +56,9 @@ export default class MachineRegistration extends React.Component{
         }
         ).then(res => {
           this.state.fetchProduct();
+          this.setState({
+            responseMessage: res.data
+          });
         }
         ).catch(error => {
           alert( error.response.request._response )
@@ -75,8 +79,8 @@ export default class MachineRegistration extends React.Component{
         className="mb-2" 
         name="machineName" 
         placeholder="Machine Name" 
-        autocomplete="off"
-        maxlength = "30"
+        autoComplete="off"
+        maxLength = "30"
         minLength = "5"
         onChange={
           e => {
@@ -88,6 +92,7 @@ export default class MachineRegistration extends React.Component{
         />
     </div>    
     <p>{this.state.machineExistStatus}</p>     
+    <p>{this.state.responseMessage}</p>
     <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
     </form>  
     );

@@ -82,8 +82,8 @@ export default class PartyRegistration extends React.Component{
             className="mb-2" 
             name="partyName" 
             placeholder="Party Name" 
-            autocomplete="off"
-            maxlength = "30"
+            autoComplete="off"
+            maxLength = "30"
             minLength = "5"
             onChange={
                 e => {
@@ -102,8 +102,8 @@ export default class PartyRegistration extends React.Component{
             className="mb-2" 
             name="partyContact" 
             placeholder="Party Contact" 
-            autocomplete="off"
-            maxlength = "10"
+            autoComplete="off"
+            maxLength = "10"
             minLength = "10"
             onChange={
                 e => {
@@ -121,8 +121,8 @@ export default class PartyRegistration extends React.Component{
             className="mb-2" 
             name="partyVillage" 
             placeholder="Party Village" 
-            autocomplete="off"
-            maxlength = "30"
+            autoComplete="off"
+            maxLength = "30"
             minLength = "5"
             onChange={
                 e => {

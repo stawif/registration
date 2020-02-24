@@ -11,6 +11,7 @@ export default class MachinePartyRegistration extends React.Component{
       partyVillage: "",
       partyList: {},
       partyExistMessage: "",
+      responseMessage: "",
       buttonStatus: {
           visibility: 'visible'
       }
@@ -23,7 +24,10 @@ export default class MachinePartyRegistration extends React.Component{
       this.state.partyList = jsonPartyList;
     }
     
+    
     this.state.fetchProduct(); 
+
+
 
     // Check existence of party name 
     this.state.checkparty = () => {
@@ -59,6 +63,9 @@ export default class MachinePartyRegistration extends React.Component{
         }
         ).then(res => {
           this.state.fetchProduct();
+          this.setState({
+            responseMessage: res.data
+          });         
         }
         ).catch(error => {
           alert( error.response.request._response )
@@ -80,8 +87,8 @@ export default class MachinePartyRegistration extends React.Component{
             className="mb-2" 
             name="partyName" 
             placeholder="Party Name" 
-            autocomplete="off"
-            maxlength = "30"
+            autoComplete="off"
+            maxLength = "30"
             minLength = "5"
             onChange={
                 e => {
@@ -100,8 +107,8 @@ export default class MachinePartyRegistration extends React.Component{
             className="mb-2" 
             name="partyContact" 
             placeholder="Party Contact" 
-            autocomplete="off"
-            maxlength = "10"
+            autoComplete="off"
+            maxLength = "10"
             minLength = "10"
             onChange={
                 e => {
@@ -119,8 +126,8 @@ export default class MachinePartyRegistration extends React.Component{
             className="mb-2" 
             name="partyVillage" 
             placeholder="Party Village" 
-            autocomplete="off"
-            maxlength = "30"
+            autoComplete="off"
+            maxLength = "30"
             minLength = "5"
             onChange={
                 e => {
@@ -131,6 +138,7 @@ export default class MachinePartyRegistration extends React.Component{
         />
 
     </div>    
+    <p>{this.state.responseMessage}</p>
     <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
     </form>  
     );

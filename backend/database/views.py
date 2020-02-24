@@ -27,7 +27,7 @@ class AddMachine(APIView):
             serializer = MachineSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response("Machine added", status=status.HTTP_201_CREATED)
             return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
 
 class MachineList(APIView):
@@ -65,7 +65,7 @@ class AddVehicle(APIView):
             serializer = VehicleSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response("Vehicle added", status=status.HTTP_201_CREATED)
             return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
 
 class AddRecorder(APIView):

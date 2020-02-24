@@ -75,8 +75,8 @@ export default class VehicleRegistration extends React.Component{
         className="mb-2" 
         name="vehicleName" 
         placeholder="vehicle Name" 
-        autocomplete="off"
-        maxlength = "30"
+        autoComplete="off"
+        maxLength = "30"
         minLength = "5"
         onChange={
           e => {
