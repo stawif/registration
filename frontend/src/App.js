@@ -6,6 +6,7 @@ import ItemRegistration from './components/registration/ItemRegistration';
 import MachinePartyRegistration from './components/registration/MachinePartyRegistration';
 import VehiclePartyRegistration from './components/registration/VehiclePartyRegistration';
 import PurchasePartyRegistration from './components/registration/PurchasePartyRegistration';
+import MachineWorkEntry from './components/entry/MachineWorkEntry';
 
 
 class App extends React.Component{
@@ -121,10 +122,15 @@ class App extends React.Component{
 						</div>
 					</div>
 				</div>
+
+
+				<MachineWorkEntry/>
 			</div>
 		);
 	}	
+	
 }
+
 
 
 export default App;

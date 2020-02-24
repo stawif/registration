@@ -30,6 +30,7 @@ export default class MachinePartyRegistration extends React.Component{
     this.state.fetchProduct(); 
 
 
+
     // Check existence of party name 
     this.state.checkparty = () => {
       try {
