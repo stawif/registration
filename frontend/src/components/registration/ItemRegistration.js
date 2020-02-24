@@ -11,6 +11,7 @@ export default class ItemRegistration extends React.Component{
       itemQuantity: 0,
       itemList: {},
       itemExistMessage: "",
+      responseMessage: "",
       buttonStatus: {
           visibility: 'visible'
       }
@@ -18,9 +19,9 @@ export default class ItemRegistration extends React.Component{
 
     // Fetch item list from server
     this.state.fetchProduct = async () =>{
-      const responseitemList = await fetch("http://127.0.0.1:8000/list-of-item/");
-      const jsonitemList = await responseitemList.json();
-      this.state.itemList = jsonitemList;
+      const responseItemList = await fetch("http://127.0.0.1:8000/list-of-item/");
+      const jsonItemList = await responseItemList.json();
+      this.state.itemList = jsonItemList;
     }
     
     this.state.fetchProduct(); 
@@ -59,6 +60,9 @@ export default class ItemRegistration extends React.Component{
         }
         ).then(res => {
           this.state.fetchProduct();
+          this.setState({
+            responseMessage: res.data
+          });
         }
         ).catch(error => {
           alert( error.response.request._response )
@@ -132,6 +136,7 @@ export default class ItemRegistration extends React.Component{
         <hr/>
 
     </div>    
+    <p>{this.state.responseMessage}</p>
     <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
     </form>  
     );

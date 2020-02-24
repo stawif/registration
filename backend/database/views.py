@@ -21,7 +21,7 @@ class AddMachine(APIView):
         Condition to check Whether a machine is already exists or not.
         """
         if request.data in machine_name_list:
-            return Response("Machine Already Exists.")
+            return Response("machine already exists")
         else:
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
             serializer = MachineSerializer(data=request.data)
@@ -59,7 +59,7 @@ class AddVehicle(APIView):
         Condition to check Whether a Vehicle is already exists or not.
         """
         if request.data in vehicle_name_list:
-            return Response("Vehicle Already Exists.")
+            return Response("vehicle already exists")
         else:
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
             serializer = VehicleSerializer(data=request.data)
@@ -79,14 +79,14 @@ class AddRecorder(APIView):
         Condition to check Whether a Recorder is already exists or not.
         """
         if request.data['username'] in recorder_name_list:
-            return Response("username Already Exists./n Please choose another username")
+            return Response("username already exists")
         else:
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
             serializer = RecorderSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response("Recorder Created", status=status.HTTP_201_CREATED)
-            return Response("Please provide Correct Details/User already exists.",status=status.HTTP_400_BAD_REQUEST)
+                return Response("Recorder created", status=status.HTTP_201_CREATED)
+            return Response("Either recorder exists or details are incorrect",status=status.HTTP_400_BAD_REQUEST)
 
 class ItemList(APIView):
     """
@@ -110,14 +110,14 @@ class AddItem(APIView):
         Condition to check Whether a Item is already exists or not.
         """
         if item_dict in item_list:
-            return Response("Item Already Exists.")
+            return Response("item already exists")
         else:
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
             serializer = ItemSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response("StoreItem Added", status=status.HTTP_201_CREATED)
-            return Response("Please provide Correct Details/Item already exists.",status=status.HTTP_400_BAD_REQUEST)
+                return Response("Store item added", status=status.HTTP_201_CREATED)
+            return Response("Either exists or incorrect details",status=status.HTTP_400_BAD_REQUEST)
 
 class MachinePartyList(APIView):
     """
@@ -145,12 +145,12 @@ class AddMachineParty(APIView):
             try:
                 n = Party.objects.create(owner=owner,contact=contact,village=village)
                 n2 = MachineParty.objects.create(credit_id=n,name=name)
-                return Response("party added.")
+                return Response("Party added")
             except Exception:
                 n.delete()
-                return Response("Party not Created.Network problem.")
+                return Response("party not created because of network issue")
 
-        return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
+        return Response("please provide correct details",status=status.HTTP_400_BAD_REQUEST)
 
 class VehiclePartyList(APIView):
     """
@@ -178,12 +178,12 @@ class AddVehicleParty(APIView):
             try:
                 n = Party.objects.create(owner=owner,contact=contact,village=village)
                 n2 = VehicleParty.objects.create(credit_id=n,name=name)
-                return Response("party added.")
+                return Response("Party added")
             except Exception:
                 n.delete()
-                return Response("Party not Created.Network problem.")
+                return Response("party not created because of network issue")
 
-        return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
+        return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
 
 class PurchasePartyList(APIView):
     """
@@ -211,12 +211,12 @@ class AddPurchaseParty(APIView):
             try:
                 n = Party.objects.create(owner=owner,contact=contact,village=village)
                 n2 = PurchaseParty.objects.create(credit_id=n,name=name)
-                return Response("party added.")
+                return Response("Party added")
             except Exception:
                 n.delete()
-                return Response("Party not Created.Network problem.")
+                return Response("party not created because of network issue")
         
-        return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
+        return Response("please provide correct data.",status=status.HTTP_400_BAD_REQUEST)
 
 class AddMachineWork(APIView):
     """
@@ -233,21 +233,21 @@ class AddMachineWork(APIView):
             machine_id = Machine.objects.get(name=request.data['machine'])
             dict3 = {"party":party_id.id,"machine":machine_id.id}
         except Exception as e:
-            return Response("Party or MAchine does not Exists in Machine or Machine Party List.")
+            return Response("Party or Machine does not exists")
         if dict1 not in machine_party_list:
-            return Response('Machine Party Does not exists.')
+            return Response('Machine party does not exists')
         elif dict2 not in machine_list:
-            return Response("Machine Does not  exists.")
+            return Response("Machine does not exists")
         elif dict3 in machine_work_list:
-            return Response("This Machine Work already exists for this party.")
+            return Response("This Machine Work already exists for this party")
         else:
             try:
                 if request.data:
                     machine_work = MachineWork.objects.create(party=party_id,machine=machine_id,date=request.data['date'],
                     drilling_feet=float(request.data['drilling_feet']),diesel_amount=float(request.data['diesel_amount']),remark=request.data['remark'])
-                    return Response("Machine Work Created ")
+                    return Response("Machine work added")
             except Exception as e:
-                return Response("Data is not correct.")
+                return Response("Details are not correct")
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class AddVehicleWork(APIView):
@@ -265,9 +265,9 @@ class AddVehicleWork(APIView):
             print(dict3)
             print(vehicle_list)
             if dict3 not in vehicle_list:
-                return Response("Vehicle Does not exists.")
+                return Response("vehicle does not exists")
         if dict1 not in vehicle_party_list:
-            return Response('Vehicle Party Does not exists.')
+            return Response('vehicle party does not exists')
         else:
             party_id = VehicleParty.objects.get(name=request.data['party'])
             if request.data:
@@ -276,11 +276,11 @@ class AddVehicleWork(APIView):
                  for i in range(length):
                      vehicle_id = Vehicle.objects.get(name=dict2['name'][i])
                      vehicle = VehicleWorkVehicles.objects.create(vehicle=vehicle_id,vehicle_work=vehicle_work)
-                 return Response("Vehicle Work Added",status = status.HTTP_201_CREATED)
+                 return Response("Vehicle work added",status = status.HTTP_201_CREATED)
             else:
-                return Response("Vehicle Added.....")
+                 return Response("Vehicle added.....")
 
-        return Response("under construction.")
+        return Response("under construction")
 
 
 

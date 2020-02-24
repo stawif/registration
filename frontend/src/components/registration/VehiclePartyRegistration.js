@@ -18,9 +18,9 @@ export default class VehiclePartyRegistration extends React.Component{
 
     // Fetch party list from server
     this.state.fetchProduct = async () =>{
-      const responsepartyList = await fetch("http://127.0.0.1:8000/list-of-vehicleparty/");
-      const jsonpartyList = await responsepartyList.json();
-      this.state.partyList = jsonpartyList;
+      const responsePartyList = await fetch("http://127.0.0.1:8000/list-of-vehicleparty/");
+      const jsonPartyList = await responsePartyList.json();
+      this.state.partyList = jsonPartyList;
     }
     
     this.state.fetchProduct(); 

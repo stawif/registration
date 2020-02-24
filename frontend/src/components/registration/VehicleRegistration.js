@@ -16,9 +16,9 @@ export default class VehicleRegistration extends React.Component{
 
     // Fetch vehicle list from server
     this.state.fetchProduct = async () =>{
-      const responsevehicleList = await fetch("http://127.0.0.1:8000/list-of-vehicles/");
-      const jsonvehicleList = await responsevehicleList.json();
-      this.state.vehicleList = jsonvehicleList;
+      const responseVehicleList = await fetch("http://127.0.0.1:8000/list-of-vehicles/");
+      const jsonVehicleList = await responseVehicleList.json();
+      this.state.vehicleList = jsonVehicleList;
     }
     
     this.state.fetchProduct(); 

@@ -10,18 +10,22 @@ export default class MachinePartyRegistration extends React.Component{
       partyContact: "",
       partyVillage: "",
       partyList: {},
-      machineParty: {},
+      machineList: {},
       partyExistMessage: "",
       buttonStatus: {
           visibility: 'visible'
       }
     }
 
-    // Fetch party list from server
+    // Fetch party and machine list from server
     this.state.fetchProduct = async () =>{
-      const responsepartyList = await fetch("http://127.0.0.1:8000/list-of-machineparty/");
-      const jsonpartyList = await responsepartyList.json();
-      this.state.partyList = jsonpartyList;
+      const responsePartyList = await fetch("http://127.0.0.1:8000/list-of-machineparty/");
+      const jsonPartyList = await responsePartyList.json();
+      this.state.partyList = jsonPartyList;
+      
+      const reponseMachineList = await fetch("http://127.0.0.1:8000/list-of-machines/");
+      const jsonMachineList = await reponseMachineList();
+      this.state.machineList = jsonMachineList;
     }
     
     this.state.fetchProduct(); 
@@ -50,7 +54,7 @@ export default class MachinePartyRegistration extends React.Component{
       } 
       catch (err) {}
     }
-
+     
     this.state.onSubmit =(e) => {
         axios.post('http://127.0.0.1:8000/machine-party-registration/', 
         {
