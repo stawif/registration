@@ -91,7 +91,7 @@ class MixDebit(models.Model):
     spend_amount = models.IntegerField(blank=False)
 
     def __str__(self):
-        return self.pk    
+        return str(self.pk)
 
 class Worker(models.Model):
     """
@@ -119,7 +119,7 @@ class DailyExpense(models.Model):
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.debit_id   
+        return str(self.debit_id)
 
 class MachineParty(models.Model):
     """
@@ -128,7 +128,7 @@ class MachineParty(models.Model):
     credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
 
-    def __str__(self):
+    def __str__(self):  
         return self.name
 
 
@@ -245,7 +245,7 @@ class Purchase(models.Model):
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.debit_id    
+        return str(self.debit_id)    
 
 class Supply(models.Model):
     """

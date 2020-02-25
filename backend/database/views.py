@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , ItemSerializer,
                             PartySerializer,PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
-                            MachineWorkSerializer , VehicleWorkSerializer,VehicleWorkVehicleSerializer)
+                            MachineWorkSerializer , VehicleWorkSerializer,VehicleWorkVehicleSerializer,WorkerSerializer)
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
-                        MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles)
+                        MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles,
+                        MixDebit,Worker,Purchase,DailyExpense)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse
 from rest_framework import status
@@ -259,11 +260,9 @@ class AddVehicleWork(APIView):
         vehicle_list = Vehicle.objects.all().values('name')
         dict1 = {'name':request.data['party']}
         dict2 = {'name':request.data['vehicle']}
-        length = len(dict2['name'])
-        for i in range(length):
+        number_of_vehicle = len(dict2['name'])
+        for i in range(number_of_vehicle):
             dict3 = {"name":dict2['name'][i]}
-            print(dict3)
-            print(vehicle_list)
             if dict3 not in vehicle_list:
                 return Response("Vehicle Does not exists.")
         if dict1 not in vehicle_party_list:
@@ -273,18 +272,112 @@ class AddVehicleWork(APIView):
             if request.data:
                  vehicle_work = VehicleWork.objects.create(party=party_id,date=request.data['date'],
                  five_feet=float(request.data['five_feet']),two_half_feet=float(request.data['two_half_feet']),remark=request.data['remark'])
-                 for i in range(length):
+                 for i in range(number_of_vehicle):
                      vehicle_id = Vehicle.objects.get(name=dict2['name'][i])
                      vehicle = VehicleWorkVehicles.objects.create(vehicle=vehicle_id,vehicle_work=vehicle_work)
                  return Response("Vehicle Work Added",status = status.HTTP_201_CREATED)
             else:
                 return Response("Vehicle Added.....")
 
-        return Response("under construction.")
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class AddWorker(APIView):
+    """
+    View to Add New Worker in Database.
+    """
+    def post(self,request):
+        owner = Owner.objects.get(id=1)
+        if request.data:
+            try:
+                mix_debit_create = MixDebit.objects.create(owner=owner,date=request.data['date'],spend_amount=request.data['advance'])
+            except Exception:
+                return Response("Please provide correct data",status=status.HTTP_400_BAD_REQUEST)
+            try:
+                worker_create = Worker.objects.create(owner=owner,debit_id=mix_debit_create,name=request.data['name'],contact=int(request.data['contact']),
+                village=request.data['village'],salary=float(request.data['salary']),advance=float(request.data['advance']),exit_date=request.data['exit_date'])
+                return Response(status=status.HTTP_201_CREATED)
+            except Exception:
+                mix_debit_create.delete()
+                return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+class AddDailyExpense(APIView):
+    """
+    View to Add Daily Expenses in Database.
+    """
+    def post(self,request):
+        owner = Owner.objects.get(id=1)
+        if request.data:
+            try:
+                mix_debit_create = MixDebit.objects.create(owner=owner,date=request.data['date'],spend_amount=float(request.data['expense']))
+            except Exception:
+                return Response("Please provide correct data",status=status.HTTP_400_BAD_REQUEST)
+            try:
+                daily_expense_create = DailyExpense.objects.create(owner=owner,debit_id=mix_debit_create,expense=float(request.data['expense']),
+                remark=request.data['remark'])
+                return Response(status=status.HTTP_201_CREATED)
+            except Exception:
+                mix_debit_create.delete()
+                return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class AddPurchase(APIView):
+    """
+    View to Add Purchase in Database.
+    """
+    def post(self,request):
+        owner = Owner.objects.get(id=1)
+        try:
+            purchase_party = PurchaseParty.objects.get(name=request.data['party'])
+        except Exception:
+            return Response("Purchase Party Does not Exists.")
+        try:
+            item_instance = Item.objects.get(name=request.data['item'])
+        except Exception:
+            return Response("Item Does not Exists.Please Add item.")
+        try:
+            mix_debit_create = MixDebit.objects.create(owner=owner,date=request.data['date'],spend_amount=request.data['paid'])
+        except Exception:
+            return Response("Please provide correct data",status=status.HTTP_400_BAD_REQUEST)
+        try:
+            purchase_create = Purchase.objects.create(party=purchase_party,item=item_instance,debit_id=mix_debit_create,rate=float(request.data['rate']),
+            net_amount=float(request.data['net_amount']),paid=float(request.data['paid']),remaining=float(request.data['remaining']),remark=request.data['remark'])
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception:
+                mix_debit_create.delete()
+                return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 
