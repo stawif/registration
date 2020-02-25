@@ -25,11 +25,9 @@ fetch("http://127.0.0.1:8000/list-of-machines/")
 //below function is used to store api data in a array
 function partyListFunction(data) {
   data.map(item => partyNamesFromApi.push(item.name));
-  console.log("partyNameFromApi", partyNamesFromApi);
 }
 function machineListFunction(data) {
   data.map(item => machineNamesFromApi.push(item.name));
-  console.log("machineNameFromApi", machineNamesFromApi);
 }
 
 export default class MachineWorkEntry extends React.Component {
@@ -38,14 +36,12 @@ export default class MachineWorkEntry extends React.Component {
 
     this.state = {
       date: null,
-
-      selectedMachine: null,
-      selectedParty: null,
-
-      remark: null,
-      dieselamount: null,
-      drillingFeet: null,
-
+      selectedMachine: "",
+      selectedParty: "",
+      remark: "",
+      dieselamount: 0,
+      drillingFeet: 0,
+      responseMessage: "",
       buttonStatus: {
         visibility: "visible"
       },
@@ -108,6 +104,9 @@ export default class MachineWorkEntry extends React.Component {
              remark: this.state.remark          
             })
            .then(res => {
+             this.setState({
+               responseMessage: res.data
+             });
            })
            .catch(error => {
              alert(error.response.request._response);
@@ -145,7 +144,7 @@ export default class MachineWorkEntry extends React.Component {
             suggestions={partyNamesFromApi}
             callbackFromParent={this.myCallbackForSelectedParty}
             checkFromParent={this.state.checkparty}
-            placeholderfrom={"enter Party name"}
+            placeholderfrom={"Party name"}
           />
 
           <p>{this.state.partyExistMessage}</p>
@@ -154,7 +153,7 @@ export default class MachineWorkEntry extends React.Component {
           <Autocomplete
             suggestions={machineNamesFromApi}
             callbackFromParent={this.myCallbackForSelectedMachine}
-            placeholderfrom={"enter Machine name"}
+            placeholderfrom={"Machine name"}
             checkFromParent={this.state.checkmachine}
           />
 
@@ -221,6 +220,7 @@ export default class MachineWorkEntry extends React.Component {
             required
           />
         </div>
+        <p>{this.state.responseMessage}</p>
         <button
           type="submit"
           className="btn btn-outline-dark"

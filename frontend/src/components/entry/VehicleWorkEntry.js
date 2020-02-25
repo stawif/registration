@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
-
 const partyNamesFromApi = [];
 const vehicleNamesFromApi = [];
 
@@ -25,11 +24,9 @@ fetch("http://127.0.0.1:8000/list-of-vehicles/")
 //below function is used to store api data in a array
 function partyListFunction(data) {
   data.map(item => partyNamesFromApi.push(item.name));
-  console.log("partyNameFromApi", partyNamesFromApi);
 }
 function vehicleListFunction(data) {
   data.map(item => vehicleNamesFromApi.push(item.name));
-  console.log("vehicleNameFromApi", vehicleNamesFromApi);
 }
 
 export default class VehicleWorkEntry extends React.Component {
@@ -38,14 +35,12 @@ export default class VehicleWorkEntry extends React.Component {
 
     this.state = {
       date: null,
-
-      selectedVehicle: null,
-      selectedParty: null,
-
-      remark: null,
-      dieselamount: null,
-      drillingFeet: null,
-
+      selectedVehicle: [],
+      selectedParty: "",
+      remark: "",
+      fiveFeet: 0,
+      twoHalfFeet: 0,
+      responseMessage: "",
       buttonStatus: {
         visibility: "visible"
       },
@@ -94,28 +89,28 @@ export default class VehicleWorkEntry extends React.Component {
           }
         };
         vehicleNamesFromApi.forEach(showList);
-      } catch (err) {}
+      } 
+      catch (err) {}
     };
 
     this.state.onSubmit = e => {
-         /*axios
+         axios
            .post("http://127.0.0.1:8000/enter-vehicleparty-work/", {
-             name: this.state.partyName,
-             contact: this.state.partyContact,
-             village: this.state.partyVillage
+             party: this.state.selectedParty,
+             vehicle: this.state.selectedVehicle,
+             date: this.state.date,
+             five_feet: this.state.fiveFeet,
+             two_half_feet: this.state.twoHalfFeet,
+             remark: this.state.remark
            })
            .then(res => {
-             this.state.fetchProduct();
+             this.setState({
+               responseMessage: res.data
+             });
            })
            .catch(error => {
              alert(error.response.request._response);
-           });*/
-      console.log(this.state.date);
-      console.log(this.state.dieselamount);
-      console.log(this.state.drillingFeet);
-      console.log(this.state.remark);
-      console.log(this.state.selectedParty);
-      console.log(this.state.selectedVehicle);
+          });      
 
       e.target.reset();
       e.preventDefault();
@@ -129,7 +124,15 @@ export default class VehicleWorkEntry extends React.Component {
     };
 
     this.state.getDate();
+
+    this.handleMultipleVehicle = this.handleMultipleVehicle.bind(this);
   }
+
+  handleMultipleVehicle = async e => {
+    await this.setState({
+      selectedVehicle: Array.from(e.target.selectedOptions, (item) => item.value)
+    });
+};
 
   myCallbackForSelectedParty = dataFromChild => {
     this.state.selectedParty = dataFromChild;
@@ -145,20 +148,27 @@ export default class VehicleWorkEntry extends React.Component {
         onSubmit={e => this.state.onSubmit(e)}
       >
         <p className="headingViewPart">Vehicle Party Registration</p>
-        <div className="pt-5">
+      <div className="pt-5">
+          
           <Autocomplete
             suggestions={partyNamesFromApi}
             callbackFromParent={this.myCallbackForSelectedParty}
             checkFromParent={this.state.checkparty}
-            placeholderfrom={"enter Party name"}
+            placeholderfrom={"Party name"}
           />
           <p>{this.state.partyExistMessage}</p>
-          <Autocomplete
-            suggestions={vehicleNamesFromApi}
-            callbackFromParent={this.myCallbackForSelectedVehicle}
-            placeholderfrom={"enter Vehicle name"}
-            checkFromParent={this.state.checkvehicle}
-          />
+
+          {<select class="form-control" name="vehicles" 
+            onChange={e => this.handleMultipleVehicle(e)}
+            multiple
+            required>
+            { vehicleNamesFromApi.map(item => (
+              <option value={item}>{item}</option>
+            )) }
+          </select>}
+
+          <br/>
+
           <input
             type="date"
             //data-date=""
@@ -170,6 +180,10 @@ export default class VehicleWorkEntry extends React.Component {
             }}
             required
           />
+
+          <br/>
+          <br/>
+
           <input
             type="text"
             className="mb-2"
@@ -177,35 +191,46 @@ export default class VehicleWorkEntry extends React.Component {
             placeholder="Remark"
             autoComplete="off"
             maxLength="30"
-            //minLength="5"
             onChange={e => {
               this.state.remark = e.target.value;
             }}
-            //required
           />
+
+          <br/>
+          <br/>
+
           <input
             type="number"
             className="mb-2"
-            name="dieselAmount"
-            placeholder="Diesel Amount"
+            name="fiveFeet"
+            placeholder="5 Feet"
             autoComplete="off"
             onChange={e => {
-              this.state.dieselamount = e.target.value;
+              this.setState({
+                fiveFeet: e.target.value
+              });
             }}
             required
           />
+
+          <br/>
+          <br/>
+
           <input
             type="number"
             className="mb-2"
-            name="drillingFeet"
-            placeholder="Drilling Feet"
+            name="twoHalfFeet"
+            placeholder="2.5 Feet"
             autoComplete="off"
             onChange={e => {
-              this.state.drillingFeet = e.target.value;
+              this.setState({
+                twoHalfFeet: e.target.value
+              });
             }}
             required
           />
         </div>
+          <p>{ this.state.responseMessage }</p>
         <button
           type="submit"
           className="btn btn-outline-dark"
