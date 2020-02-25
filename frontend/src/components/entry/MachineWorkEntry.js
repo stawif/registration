@@ -100,7 +100,8 @@ export default class MachinePartyRegistration extends React.Component {
           }
         };
         this.state.partyList.forEach(showList);
-      } catch (err) {}
+      } 
+      catch (err) {}
     };
 
     this.state.onSubmit = e => {
@@ -155,7 +156,8 @@ export default class MachinePartyRegistration extends React.Component {
       >
         <p className="headingViewPart">Machine Party Registration</p>
         <div className="pt-5">
-          <Autocomplete suggestions={languages} />
+          <Autocomplete suggestions={languages} 
+          />
 
           <input
             type="date"

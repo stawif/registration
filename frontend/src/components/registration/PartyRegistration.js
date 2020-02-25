@@ -12,6 +12,7 @@ export default class PartyRegistration extends React.Component{
       partyType: "",
       partyList: {},
       partyExistMessage: "",
+      responseMessage: "",
       buttonStatus: {
           visibility: 'visible'
       }
@@ -61,6 +62,9 @@ export default class PartyRegistration extends React.Component{
         }
         ).then(res => {
           this.state.fetchProduct();
+          this.setState({
+            responseMessage: res.data
+          });
         }
         ).catch(error => {
           alert( error.response.request._response )
@@ -188,6 +192,7 @@ export default class PartyRegistration extends React.Component{
     
 
     </div>    
+    <p>{this.state.responseMessage}</p>
     <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
     </form>  
     );
