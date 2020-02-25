@@ -7,6 +7,7 @@ import MachinePartyRegistration from './components/registration/MachinePartyRegi
 import VehiclePartyRegistration from './components/registration/VehiclePartyRegistration';
 import PurchasePartyRegistration from './components/registration/PurchasePartyRegistration';
 import MachineWorkEntry from './components/entry/MachineWorkEntry';
+import VehicleWorkEntry from './components/entry/VehicleWorkEntry';
 
 
 class App extends React.Component{
@@ -19,7 +20,9 @@ class App extends React.Component{
 				itemReg: "itemRegistration",
 				machinePartyReg: "machinePartyRegistration",
 				vehiclePartyReg: "vehiclePartyRegistration",
-				purchasePartyReg: "purchasePartyRegistration"
+				purchasePartyReg: "purchasePartyRegistration",
+				addMachineWork: "addMachineWork",
+				addVehicleWork: "addVehicleWork"
 			},
 			currentPage: "machineRegistration"
 		}
@@ -56,6 +59,12 @@ class App extends React.Component{
 		}
 		else if(this.state.currentPage === this.state.allPages.purchasePartyReg){
 			currentComponent = <PurchasePartyRegistration />
+		}
+		else if(this.state.currentPage === this.state.allPages.addMachineWork){
+			currentComponent = <MachineWorkEntry />
+		}
+		else if(this.state.currentPage === this.state.allPages.addVehicleWork){
+			currentComponent = <VehicleWorkEntry />
 		}
 		else{
 			currentComponent = <MachineRegistration />
@@ -95,9 +104,8 @@ class App extends React.Component{
 										Entry
 										</a>
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-											<a className="dropdown-item" href="">Machine Work</a>
-											<a className="dropdown-item" href="">Vehicle Work</a>
-											<a className="dropdown-item" href="">Daily Work</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineWork) }>Machine Work</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleWork) } >Vehicle Work</a>
 										</div>
 									</li>
 									<li className="nav-item">
@@ -123,15 +131,11 @@ class App extends React.Component{
 					</div>
 				</div>
 
-
-				<MachineWorkEntry/>
 			</div>
 		);
 	}	
 	
 }
-
-
 
 export default App;
 

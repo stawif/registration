@@ -3,9 +3,9 @@ import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
 
 const partyNamesFromApi = [];
-const machineNamesFromApi = [];
+const vehicleNamesFromApi = [];
 
-fetch("http://127.0.0.1:8000/list-of-machineparty/")
+fetch("http://127.0.0.1:8000/list-of-vehicleparty/")
   .then(res => res.json())
   .then(out => {
     partyListFunction(out);
@@ -14,10 +14,10 @@ fetch("http://127.0.0.1:8000/list-of-machineparty/")
     throw err;
   });
 
-fetch("http://127.0.0.1:8000/list-of-machines/")
+fetch("http://127.0.0.1:8000/list-of-vehicles/")
   .then(res => res.json())
   .then(out => {
-    machineListFunction(out);
+    vehicleListFunction(out);
   })
   .catch(err => {
     throw err;
@@ -27,19 +27,19 @@ function partyListFunction(data) {
   data.map(item => partyNamesFromApi.push(item.name));
   console.log("partyNameFromApi", partyNamesFromApi);
 }
-function machineListFunction(data) {
-  data.map(item => machineNamesFromApi.push(item.name));
-  console.log("machineNameFromApi", machineNamesFromApi);
+function vehicleListFunction(data) {
+  data.map(item => vehicleNamesFromApi.push(item.name));
+  console.log("vehicleNameFromApi", vehicleNamesFromApi);
 }
 
-export default class MachineWorkEntry extends React.Component {
+export default class VehicleWorkEntry extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       date: null,
 
-      selectedMachine: null,
+      selectedVehicle: null,
       selectedParty: null,
 
       remark: null,
@@ -73,11 +73,10 @@ export default class MachineWorkEntry extends React.Component {
           }
         };
         partyNamesFromApi.forEach(showList);
-      } 
-      catch (err) {}
+      } catch (err) {}
     };
 
-    this.state.checkmachine = dataFromChild => {
+    this.state.checkvehicle = dataFromChild => {
       try {
         this.setState({
           buttonStatus: {
@@ -94,24 +93,30 @@ export default class MachineWorkEntry extends React.Component {
           } else {
           }
         };
-        machineNamesFromApi.forEach(showList);
+        vehicleNamesFromApi.forEach(showList);
       } catch (err) {}
     };
 
     this.state.onSubmit = e => {
-          axios.post("http://127.0.0.1:8000/enter-machineparty-work/", {
-             party: this.state.selectedParty,
-             machine: this.state.selectedMachine,
-             date: this.state.date,
-             drilling_feet: this.state.drillingFeet,
-             diesel_amount: this.state.dieselamount,
-             remark: this.state.remark          
-            })
+         /*axios
+           .post("http://127.0.0.1:8000/enter-vehicleparty-work/", {
+             name: this.state.partyName,
+             contact: this.state.partyContact,
+             village: this.state.partyVillage
+           })
            .then(res => {
+             this.state.fetchProduct();
            })
            .catch(error => {
              alert(error.response.request._response);
-           });
+           });*/
+      console.log(this.state.date);
+      console.log(this.state.dieselamount);
+      console.log(this.state.drillingFeet);
+      console.log(this.state.remark);
+      console.log(this.state.selectedParty);
+      console.log(this.state.selectedVehicle);
+
       e.target.reset();
       e.preventDefault();
     };
@@ -129,8 +134,8 @@ export default class MachineWorkEntry extends React.Component {
   myCallbackForSelectedParty = dataFromChild => {
     this.state.selectedParty = dataFromChild;
   };
-  myCallbackForSelectedMachine = dataFromChild => {
-    this.state.selectedMachine = dataFromChild;
+  myCallbackForSelectedVehicle = dataFromChild => {
+    this.state.selectedVehicle = dataFromChild;
   };
 
   render() {
@@ -139,7 +144,7 @@ export default class MachineWorkEntry extends React.Component {
         className="form-container form-group"
         onSubmit={e => this.state.onSubmit(e)}
       >
-        <p className="headingViewPart">Machine Party Registration</p>
+        <p className="headingViewPart">Vehicle Party Registration</p>
         <div className="pt-5">
           <Autocomplete
             suggestions={partyNamesFromApi}
@@ -147,20 +152,13 @@ export default class MachineWorkEntry extends React.Component {
             checkFromParent={this.state.checkparty}
             placeholderfrom={"enter Party name"}
           />
-
           <p>{this.state.partyExistMessage}</p>
-          <br/>
-
           <Autocomplete
-            suggestions={machineNamesFromApi}
-            callbackFromParent={this.myCallbackForSelectedMachine}
-            placeholderfrom={"enter Machine name"}
-            checkFromParent={this.state.checkmachine}
+            suggestions={vehicleNamesFromApi}
+            callbackFromParent={this.myCallbackForSelectedVehicle}
+            placeholderfrom={"enter Vehicle name"}
+            checkFromParent={this.state.checkvehicle}
           />
-
-          <br/>
-          <br/>
-
           <input
             type="date"
             //data-date=""
@@ -172,10 +170,6 @@ export default class MachineWorkEntry extends React.Component {
             }}
             required
           />
-
-          <br/>
-          <br/>
-
           <input
             type="text"
             className="mb-2"
@@ -189,10 +183,6 @@ export default class MachineWorkEntry extends React.Component {
             }}
             //required
           />
-
-          <br/>
-          <br/>
-
           <input
             type="number"
             className="mb-2"
@@ -204,11 +194,6 @@ export default class MachineWorkEntry extends React.Component {
             }}
             required
           />
-
-          <br/>
-          <br/>
-
-
           <input
             type="number"
             className="mb-2"

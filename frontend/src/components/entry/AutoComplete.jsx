@@ -28,6 +28,7 @@ class Autocomplete extends Component {
   onChange = e => {
     const { suggestions } = this.props;
     const userInput = e.currentTarget.value;
+    
 
     // Filter our suggestions that don't contain the user's input
     const filteredSuggestions = suggestions.filter(
@@ -40,7 +41,10 @@ class Autocomplete extends Component {
       filteredSuggestions,
       showSuggestions: true,
       userInput: e.currentTarget.value
+      
     });
+    this.props.checkFromParent(e.currentTarget.value)
+    this.props.callbackFromParent(e.currentTarget.value);
   };
 
   onClick = e => {
@@ -50,6 +54,8 @@ class Autocomplete extends Component {
       showSuggestions: false,
       userInput: e.currentTarget.innerText
     });
+    this.props.callbackFromParent(e.currentTarget.innerText);
+    this.props.checkFromParent(e.currentTarget.innerText);
   };
 
   onKeyDown = e => {
@@ -129,10 +135,11 @@ class Autocomplete extends Component {
       <Fragment>
         <input
           type="text"
-          placeholder="Enter Party Name"
+          placeholder= {this.props.placeholderfrom}
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={userInput}
+          required
         />
         {suggestionsListComponent}
       </Fragment>
