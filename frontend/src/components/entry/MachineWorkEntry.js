@@ -39,7 +39,7 @@ export default class MachineWorkEntry extends React.Component {
       selectedMachine: "",
       selectedParty: "",
       remark: "",
-      dieselamount: 0,
+      dieselAmount: 0,
       drillingFeet: 0,
       responseMessage: "",
       buttonStatus: {
@@ -100,7 +100,7 @@ export default class MachineWorkEntry extends React.Component {
              machine: this.state.selectedMachine,
              date: this.state.date,
              drilling_feet: this.state.drillingFeet,
-             diesel_amount: this.state.dieselamount,
+             diesel_amount: this.state.dieselAmount,
              remark: this.state.remark          
             })
            .then(res => {
@@ -111,6 +111,8 @@ export default class MachineWorkEntry extends React.Component {
            .catch(error => {
              alert(error.response.request._response);
            });
+      console.log("drilling feet : "+typeof this.state.drillingFeet);
+      console.log("diesel feet : "+typeof this.state.dieselAmount);     
       e.target.reset();
       e.preventDefault();
     };
@@ -199,7 +201,7 @@ export default class MachineWorkEntry extends React.Component {
             placeholder="Diesel Amount"
             autoComplete="off"
             onChange={e => {
-              this.state.dieselamount = e.target.value;
+              this.state.dieselAmount = parseInt(e.target.value);
             }}
             required
           />
@@ -215,7 +217,7 @@ export default class MachineWorkEntry extends React.Component {
             placeholder="Drilling Feet"
             autoComplete="off"
             onChange={e => {
-              this.state.drillingFeet = e.target.value;
+              this.state.drillingFeet = parseInt(e.target.value);
             }}
             required
           />

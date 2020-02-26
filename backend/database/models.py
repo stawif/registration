@@ -1,6 +1,7 @@
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
+from datetime import datetime  
 
 class Owner(models.Model):
     """
@@ -87,11 +88,24 @@ class MixDebit(models.Model):
     A class to generalize debit type
     """
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    date = models.DateField(blank=False)
-    spend_amount = models.IntegerField(blank=False)
+    date = models.DateField(default=datetime.now, blank=False)
+    spend_amount = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.pk    
+        return str(self.pk)
+
+
+class PurchaseParty(models.Model):
+    """
+    Parties that gives work related to purchase
+    """
+    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
+    debit_id = models.OneToOneField(MixDebit, on_delete=models.CASCADE)
+    name = models.CharField(max_length=30,blank=False)
+
+    def __str__(self):
+        return self.name
+
 
 class Worker(models.Model):
     """
@@ -119,7 +133,7 @@ class DailyExpense(models.Model):
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.debit_id   
+        return str(self.debit_id)
 
 class MachineParty(models.Model):
     """
@@ -128,7 +142,7 @@ class MachineParty(models.Model):
     credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
 
-    def __str__(self):
+    def __str__(self):  
         return self.name
 
 
@@ -143,19 +157,6 @@ class VehicleParty(models.Model):
         return self.name
 
     
-
-class PurchaseParty(models.Model):
-    """
-    Parties that gives work related to purchase
-    """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
-    name = models.CharField(max_length=30,blank=False)
-
-    def __str__(self):
-        return self.name
-
-    
-
 class DailyParty(models.Model):
     """
     Parties that gives work for one day
@@ -237,15 +238,14 @@ class Purchase(models.Model):
     """
     party = models.ForeignKey(PurchaseParty, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    debit_id = models.OneToOneField(MixDebit, on_delete=models.CASCADE)
+    date = models.DateField(default=datetime.now, blank=False)    
+    quantity = models.IntegerField(blank=False)
     rate = models.IntegerField(blank=False)
     net_amount = models.IntegerField(blank=False)
-    paid = models.IntegerField(blank=False)
-    remaining = models.IntegerField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.debit_id    
+        return str(self.party)    
 
 class Supply(models.Model):
     """

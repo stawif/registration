@@ -8,6 +8,7 @@ import VehiclePartyRegistration from './components/registration/VehiclePartyRegi
 import PurchasePartyRegistration from './components/registration/PurchasePartyRegistration';
 import MachineWorkEntry from './components/entry/MachineWorkEntry';
 import VehicleWorkEntry from './components/entry/VehicleWorkEntry';
+import PurchaseEntry from './components/entry/PurchaseEntry';
 
 
 class App extends React.Component{
@@ -22,7 +23,8 @@ class App extends React.Component{
 				vehiclePartyReg: "vehiclePartyRegistration",
 				purchasePartyReg: "purchasePartyRegistration",
 				addMachineWork: "addMachineWork",
-				addVehicleWork: "addVehicleWork"
+				addVehicleWork: "addVehicleWork",
+				addPurchaseDetail: "addPurchaseDetail"
 			},
 			currentPage: "machineRegistration"
 		}
@@ -66,6 +68,9 @@ class App extends React.Component{
 		else if(this.state.currentPage === this.state.allPages.addVehicleWork){
 			currentComponent = <VehicleWorkEntry />
 		}
+		else if(this.state.currentPage === this.state.allPages.addPurchaseDetail){
+			currentComponent = <PurchaseEntry/>
+		}
 		else{
 			currentComponent = <MachineRegistration />
 		} 
@@ -106,6 +111,7 @@ class App extends React.Component{
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineWork) }>Machine Work</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleWork) } >Vehicle Work</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addPurchaseDetail) } >Purchase Entry</a>
 										</div>
 									</li>
 									<li className="nav-item">
