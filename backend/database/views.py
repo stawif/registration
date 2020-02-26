@@ -349,12 +349,16 @@ class AddPurchase(APIView):
             net_amount = api_quantity*api_rate
             api_remark = request.data['remark']
             api_date = request.data['date']
+            
             purchase_create = Purchase.objects.create(party=purchase_party,item=item_instance,rate=api_rate,
             date =api_date,quantity=api_quantity,net_amount=net_amount,remark=api_remark)
+            
+            new_quantity = item_instance.quantity+api_quantity
+            Item.objects.filter(name=request.data['item']).update(quantity=new_quantity)          
+            
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             print(e)
-            mix_debit_create.delete()
             return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
         #return Response(status=status.HTTP_400_BAD_REQUEST)
 

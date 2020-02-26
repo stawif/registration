@@ -39,7 +39,6 @@ export default class PurchaseEntry extends React.Component {
       selectedItem: "",
       selectedParty: "",
       remark: "",
-      paid: 0,
       quantity: 0,
       rate: 0,
       responseMessage: "",
@@ -100,7 +99,6 @@ export default class PurchaseEntry extends React.Component {
              party: this.state.selectedParty,
              item: this.state.selectedItem,
              date: this.state.date,
-             paid: this.state.paid,
              quantity: this.state.quantity,
              rate: this.state.rate,
              remark: this.state.remark          
@@ -194,23 +192,6 @@ export default class PurchaseEntry extends React.Component {
               });
             }}
             //required
-          />
-
-          <br/>
-          <br/>
-
-          <input
-            type="number"
-            className="mb-2"
-            name="paid"
-            placeholder="Paid amount"
-            autoComplete="off"
-            onChange={e => {
-                this.setState({
-                    paid: parseInt(e.target.value)
-                });
-              }}
-            required
           />
 
           <br/>
