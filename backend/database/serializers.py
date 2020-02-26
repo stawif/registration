@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (Machine , Owner , Vehicle , Recorder , Party , Item , MachineParty,PurchaseParty,VehicleParty,
-                    MachineWork,VehicleWork,VehicleWorkVehicles,MixDebit,Worker,Purchase,DailyExpense)
+                    MachineWork,VehicleWork,VehicleWorkVehicles,MixDebit,Worker,Purchase)
 
 class MachineSerializer(serializers.ModelSerializer):
     """
@@ -33,6 +33,14 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['owner','name','measurement','quantity']
+
+class WorkerSerializer(serializers.ModelSerializer):
+    """
+    Serializer for worker model
+    """
+    class Meta:
+        model = Worker
+        fields = ['owner','name','contact','village','salary']
 
 class PartySerializer(serializers.ModelSerializer):
     """
@@ -98,22 +106,6 @@ class MixDebitSerializer(serializers.ModelSerializer):
         model = MixDebit
         fields = ['owner','date','spend_amount']
 
-class WorkerSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the worker Model.
-    """
-    class Meta:
-        model = Worker
-        fields = ['owner','debit_id','name','village','contact','salary','advance','exit_date']
-
-class DailyExpenseSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Daily Expensse Model.
-    """
-    class Meta:
-        model = DailyExpense
-        fields = ['owner','debit_id','expense','remark']
-
 class PurchaseSerializer(serializers.ModelSerializer):
     """
     Serializer for the Purchase Model.
@@ -121,3 +113,11 @@ class PurchaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchase
         fields = ['party','item','debit_id','rate','net_amount','paid','remaining','remark']
+
+"""
+class DailyExpenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DailyExpense
+        fields = ['owner','debit_id','expense','remark']
+
+"""

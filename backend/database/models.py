@@ -117,23 +117,10 @@ class Worker(models.Model):
     contact = models.IntegerField(blank=False)
     village = models.CharField(max_length=30,blank=False)
     salary = models.IntegerField(blank=False)
-    advance = models.IntegerField(blank=False)
-    exit_date = models.DateField()
+    exit_date = models.DateField(blank=True,null=True)
 
     def __str__(self):
         return self.name    
-
-class DailyExpense(models.Model):
-    """
-    Owner has some daily expenses
-    """
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    debit_id = models.OneToOneField(MixDebit,on_delete=models.CASCADE)
-    expense = models.IntegerField(blank=False)
-    remark = models.CharField(max_length=50, blank=True)
-
-    def __str__(self):
-        return str(self.debit_id)
 
 class MachineParty(models.Model):
     """
@@ -297,3 +284,16 @@ class Debit(models.Model):
 
     def __str__(self):
         return self.debit_id   
+
+
+"""
+class DailyExpense(models.Model):
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    debit_id = models.OneToOneField(MixDebit,on_delete=models.CASCADE)
+    expense = models.IntegerField(blank=False)
+    remark = models.CharField(max_length=50, blank=True)
+
+    def __str__(self):
+        return str(self.debit_id)
+
+"""

@@ -5,7 +5,7 @@ from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerial
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles,
-                        MixDebit,Worker,Purchase,DailyExpense)
+                        MixDebit,Worker,Purchase)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse
 from rest_framework import status
@@ -96,6 +96,15 @@ class ItemList(APIView):
     def get(self,request):
         queryset = Item.objects.all()
         serializer = ItemSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class WorkerList(APIView):
+    """
+    View to return List of party
+    """
+    def get(self,request):
+        queryset = Worker.objects.all()
+        serializer = WorkerSerializer(queryset,many=True)
         return Response(serializer.data)
 
 class AddItem(APIView):
@@ -289,46 +298,6 @@ class AddVehicleWork(APIView):
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class AddWorker(APIView):
-    """
-    View to Add New Worker in Database.
-    """
-    def post(self,request):
-        owner = Owner.objects.get(id=1)
-        if request.data:
-            try:
-                mix_debit_create = MixDebit.objects.create(owner=owner,date=request.data['date'],spend_amount=request.data['advance'])
-            except Exception:
-                return Response("Please provide correct data",status=status.HTTP_400_BAD_REQUEST)
-            try:
-                worker_create = Worker.objects.create(owner=owner,debit_id=mix_debit_create,name=request.data['name'],contact=int(request.data['contact']),
-                village=request.data['village'],salary=float(request.data['salary']),advance=float(request.data['advance']),exit_date=request.data['exit_date'])
-                return Response(status=status.HTTP_201_CREATED)
-            except Exception:
-                mix_debit_create.delete()
-                return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
-
-class AddDailyExpense(APIView):
-    """
-    View to Add Daily Expenses in Database.
-    """
-    def post(self,request):
-        owner = Owner.objects.get(id=1)
-        if request.data:
-            try:
-                mix_debit_create = MixDebit.objects.create(owner=owner,date=request.data['date'],spend_amount=float(request.data['expense']))
-            except Exception:
-                return Response("Please provide correct data",status=status.HTTP_400_BAD_REQUEST)
-            try:
-                daily_expense_create = DailyExpense.objects.create(owner=owner,debit_id=mix_debit_create,expense=float(request.data['expense']),
-                remark=request.data['remark'])
-                return Response(status=status.HTTP_201_CREATED)
-            except Exception:
-                mix_debit_create.delete()
-                return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
 class AddPurchase(APIView):
     """
     View to Add Purchase in Database.
@@ -362,9 +331,23 @@ class AddPurchase(APIView):
             return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
         #return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-
-
-
+class AddWorker(APIView):
+    """
+    View to Add New Worker in Database.
+    """
+    def post(self,request):
+        owner = Owner.objects.get(id=1)
+        if request.data:
+            try:
+                mix_debit_create = MixDebit.objects.create(owner=owner,date=request.data['date'],spend_amount=request.data['advance'])
+            except Exception:
+                return Response("Please provide correct data",status=status.HTTP_400_BAD_REQUEST)
+            try:
+                worker_create = Worker.objects.create(owner=owner,debit_id=mix_debit_create,name=request.data['name'],contact=int(request.data['contact']),
+                village=request.data['village'],salary=float(request.data['salary']))
+                return Response(status=status.HTTP_201_CREATED)
+            except Exception as e:
+                print(e)
+                mix_debit_create.delete()
+                return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)

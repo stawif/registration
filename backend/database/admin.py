@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (Owner,Machine, Vehicle, Recorder, Party, Item , MachineParty,VehicleParty,
-                    PurchaseParty,MachineWork , VehicleWork,VehicleWorkVehicles,Worker,Purchase,DailyExpense,MixDebit)
+                    PurchaseParty,MachineWork , VehicleWork,VehicleWorkVehicles,Worker,Purchase,MixDebit)
 admin.site.register(Owner)
 admin.site.register(Machine)
 admin.site.register(Vehicle)
@@ -15,5 +15,4 @@ admin.site.register(VehicleWork)
 admin.site.register(VehicleWorkVehicles)
 admin.site.register(Worker)
 admin.site.register(Purchase)
-admin.site.register(DailyExpense)
 admin.site.register(MixDebit)

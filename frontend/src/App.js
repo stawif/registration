@@ -3,6 +3,7 @@ import './homePage.css';
 import MachineRegistration from './components/registration/MachineRegistration';
 import VehicleRegistration from './components/registration/VehicleRegistration';
 import ItemRegistration from './components/registration/ItemRegistration';
+import WorkerRegistration from './components/registration/WorkerRegistration';
 import MachinePartyRegistration from './components/registration/MachinePartyRegistration';
 import VehiclePartyRegistration from './components/registration/VehiclePartyRegistration';
 import PurchasePartyRegistration from './components/registration/PurchasePartyRegistration';
@@ -22,6 +23,7 @@ class App extends React.Component{
 				machinePartyReg: "machinePartyRegistration",
 				vehiclePartyReg: "vehiclePartyRegistration",
 				purchasePartyReg: "purchasePartyRegistration",
+				workerReg: "workerRegistration",
 				addMachineWork: "addMachineWork",
 				addVehicleWork: "addVehicleWork",
 				addPurchaseDetail: "addPurchaseDetail"
@@ -71,6 +73,9 @@ class App extends React.Component{
 		else if(this.state.currentPage === this.state.allPages.addPurchaseDetail){
 			currentComponent = <PurchaseEntry/>
 		}
+		else if(this.state.currentPage === this.state.allPages.workerReg){
+			currentComponent = <WorkerRegistration/>
+		}
 		else{
 			currentComponent = <MachineRegistration />
 		} 
@@ -99,6 +104,7 @@ class App extends React.Component{
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineReg) }>Machine</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleReg) } >Vehicle</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.itemReg) } >Item</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.workerReg) } >Worker</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machinePartyReg) } >Machine Party</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyReg) } >Vehicle Party</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyReg) } >Purchase Party</a>
