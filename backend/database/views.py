@@ -6,11 +6,7 @@ from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerial
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles,
-<<<<<<< HEAD
-                        MixDebit,Worker,Purchase,DailyWork,DailyParty)
-=======
-                        MixDebit,Worker,Purchase,MachineSupply,VehicleSupply)
->>>>>>> 1a8c8c2695da678bfa5f785d2883ade167f6e99c
+                        MixDebit,Worker,Purchase,DailyWork,DailyParty,MachineSupply,VehicleSupply)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse
 from rest_framework import status
@@ -159,7 +155,8 @@ class AddMachineParty(APIView):
             village=request.data['village']
             try:
                 party_instance = Party.objects.create(owner=owner,contact=contact,village=village)
-            except Exception:
+            except Exception as e:
+                print(e)
                 return Response("Data is not sufficient",status=status.HTTP_404_NOT_FOUND)
             try:
                 machine_party_instance = MachineParty.objects.create(credit_id=party_instance,name=name)
@@ -389,6 +386,7 @@ class AddDailyWork(APIView):
         except Exception as e:
              return Response('please provide all data',status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
 class AddMachineSupply(APIView):
     """
     View for supply entry for machine

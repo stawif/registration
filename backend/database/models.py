@@ -72,7 +72,7 @@ class Party(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     contact = models.IntegerField(blank=False)
     village = models.CharField(max_length=30,blank=False)
-    date = models.DateField(blank=False)  #Add aunto now date
+    date = models.DateField(default=datetime.now,blank=False)  #Add aunto now date
     total_credit = models.IntegerField(default=0)   
 
     def __str__(self):
@@ -247,7 +247,7 @@ class VehicleSupply(models.Model):
     quantity = models.IntegerField(blank=False)
 
     def __str__(self):
-        return self.pk    
+        return str(self.pk)    
 
 class MachineSupply(models.Model):
     """

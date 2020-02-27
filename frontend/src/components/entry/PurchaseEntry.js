@@ -44,9 +44,6 @@ export default class PurchaseEntry extends React.Component {
       responseMessage: "",
       buttonStatus: {
         visibility: "visible"
-      },
-      radioButtonStyle: {
-        float: "left"
       }
     };
 

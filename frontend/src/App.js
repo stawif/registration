@@ -10,6 +10,9 @@ import PurchasePartyRegistration from './components/registration/PurchasePartyRe
 import MachineWorkEntry from './components/entry/MachineWorkEntry';
 import VehicleWorkEntry from './components/entry/VehicleWorkEntry';
 import PurchaseEntry from './components/entry/PurchaseEntry';
+import MachineSupplyEntry from './components/entry/MachineSupplyEntry';
+import VehicleSupplyEntry from './components/entry/VehicleSupplyEntry';
+import DailyWorkEntry from './components/entry/DailyWorkEntry';
 
 
 class App extends React.Component{
@@ -26,7 +29,10 @@ class App extends React.Component{
 				workerReg: "workerRegistration",
 				addMachineWork: "addMachineWork",
 				addVehicleWork: "addVehicleWork",
-				addPurchaseDetail: "addPurchaseDetail"
+				addPurchaseDetail: "addPurchaseDetail",
+				addMachineSupply: "addMachineSupply",
+				addVehicleSupply: "addVehicleSupply",
+				addDailyWork: "addDailyWork"
 			},
 			currentPage: "machineRegistration"
 		}
@@ -76,6 +82,15 @@ class App extends React.Component{
 		else if(this.state.currentPage === this.state.allPages.workerReg){
 			currentComponent = <WorkerRegistration/>
 		}
+		else if(this.state.currentPage === this.state.allPages.addMachineSupply){
+			currentComponent = <MachineSupplyEntry/>
+		}
+		else if(this.state.currentPage === this.state.allPages.addVehicleSupply){
+			currentComponent = <VehicleSupplyEntry/>
+		}
+		else if(this.state.currentPage === this.state.allPages.addDailyWork){
+			currentComponent = <DailyWorkEntry/>
+		}
 		else{
 			currentComponent = <MachineRegistration />
 		} 
@@ -117,7 +132,10 @@ class App extends React.Component{
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineWork) }>Machine Work</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleWork) } >Vehicle Work</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addDailyWork) } >Daily Work</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addPurchaseDetail) } >Purchase Entry</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineSupply) } >Machine Supply</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleSupply) } >Vehicle Supply</a>
 										</div>
 									</li>
 									<li className="nav-item">
