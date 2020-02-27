@@ -102,7 +102,7 @@ export default class WorkerRegistration extends React.Component{
             minLength = "5"
             onChange={
                 e => {
-                    this.state.workerName = e.target.value;
+                    this.workerName = e.target.value;
                     this.state.checkworker();
                 }
             } 
@@ -122,7 +122,7 @@ export default class WorkerRegistration extends React.Component{
             minLength = "10"
             onChange={
                 e => {
-                    this.state.workerContact = parseInt(e.target.value);
+                    this.workerContact = parseInt(e.target.value);
                 }
             } 
             required
@@ -141,7 +141,7 @@ export default class WorkerRegistration extends React.Component{
             minLength = "5"
             onChange={
                 e => {
-                    this.state.workerVillage = e.target.value;
+                    this.workerVillage = e.target.value;
                 }
             } 
             required
@@ -158,7 +158,7 @@ export default class WorkerRegistration extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.workerSalary = parseInt(e.target.value);
+                    this.workerSalary = parseInt(e.target.value);
                 }
             } 
             required
@@ -173,7 +173,7 @@ export default class WorkerRegistration extends React.Component{
             defaultValue={this.state.date}
             name="date"
             onChange={e => {
-              this.state.entryDate = e.target.value;
+              this.entryDate = e.target.value;
             }}
             required
           />
@@ -189,7 +189,7 @@ export default class WorkerRegistration extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.advance = parseInt(e.target.value);
+                    this.advance = parseInt(e.target.value);
                 }
             } 
             required

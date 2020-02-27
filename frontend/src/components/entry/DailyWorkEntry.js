@@ -73,7 +73,7 @@ export default class DailyWorkEntry extends React.Component{
             minLength = "5"
             onChange={
                 e => {
-                    this.state.partyName = e.target.value;
+                    this.partyName = e.target.value;
                 }
             } 
             required
@@ -92,7 +92,7 @@ export default class DailyWorkEntry extends React.Component{
             minLength = "10"
             onChange={
                 e => {
-                    this.state.partyContact = parseInt(e.target.value);
+                    this.partyContact = parseInt(e.target.value);
                 }
             } 
             required
@@ -111,7 +111,7 @@ export default class DailyWorkEntry extends React.Component{
             minLength = "5"
             onChange={
                 e => {
-                    this.state.partyVillage = e.target.value;
+                    this.partyVillage = e.target.value;
                 }
             } 
             required
@@ -126,7 +126,7 @@ export default class DailyWorkEntry extends React.Component{
             defaultValue={this.state.date}
             name="date"
             onChange={e => {
-              this.state.date = e.target.value;
+              this.date = e.target.value;
             }}
             required
           />
@@ -142,7 +142,7 @@ export default class DailyWorkEntry extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.fiveFeet = parseInt(e.target.value);
+                    this.fiveFeet = parseInt(e.target.value);
                 }
             } 
             required
@@ -159,7 +159,7 @@ export default class DailyWorkEntry extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.advance = parseInt(e.target.value);
+                    this.advance = parseInt(e.target.value);
                 }
             } 
             required
@@ -176,7 +176,7 @@ export default class DailyWorkEntry extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.twoHalfFeet = parseInt(e.target.value);
+                    this.twoHalfFeet = parseInt(e.target.value);
                 }
             } 
             required
@@ -193,7 +193,7 @@ export default class DailyWorkEntry extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.twoHalfFeetRate = parseInt(e.target.value);
+                    this.twoHalfFeetRate = parseInt(e.target.value);
                 }
             } 
             required
@@ -210,7 +210,7 @@ export default class DailyWorkEntry extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.dieselSpend = parseInt(e.target.value);
+                    this.dieselSpend = parseInt(e.target.value);
                 }
             } 
             required

@@ -128,10 +128,10 @@ export default class MachineWorkEntry extends React.Component {
   }
 
   myCallbackForSelectedParty = dataFromChild => {
-    this.state.selectedParty = dataFromChild;
+    this.selectedParty = dataFromChild;
   };
   myCallbackForSelectedMachine = dataFromChild => {
-    this.state.selectedMachine = dataFromChild;
+    this.selectedMachine = dataFromChild;
   };
 
   render() {
@@ -169,7 +169,7 @@ export default class MachineWorkEntry extends React.Component {
             defaultValue={this.state.date}
             name="date"
             onChange={e => {
-              this.state.date = e.target.value;
+              this.date = e.target.value;
             }}
             required
           />
@@ -186,7 +186,7 @@ export default class MachineWorkEntry extends React.Component {
             maxLength="30"
             //minLength="5"
             onChange={e => {
-              this.state.remark = e.target.value;
+              this.remark = e.target.value;
             }}
             //required
           />
@@ -201,7 +201,7 @@ export default class MachineWorkEntry extends React.Component {
             placeholder="Diesel Amount"
             autoComplete="off"
             onChange={e => {
-              this.state.dieselAmount = parseInt(e.target.value);
+              this.dieselAmount = parseInt(e.target.value);
             }}
             required
           />
@@ -217,7 +217,7 @@ export default class MachineWorkEntry extends React.Component {
             placeholder="Drilling Feet"
             autoComplete="off"
             onChange={e => {
-              this.state.drillingFeet = parseInt(e.target.value);
+              this.drillingFeet = parseInt(e.target.value);
             }}
             required
           />

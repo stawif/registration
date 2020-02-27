@@ -92,7 +92,7 @@ export default class MachinePartyRegistration extends React.Component{
             minLength = "5"
             onChange={
                 e => {
-                    this.state.partyName = e.target.value;
+                    this.partyName = e.target.value;
                     this.state.checkparty();
                 }
             } 
@@ -112,7 +112,7 @@ export default class MachinePartyRegistration extends React.Component{
             minLength = "10"
             onChange={
                 e => {
-                    this.state.partyContact = e.target.value;
+                    this.partyContact = e.target.value;
                 }
             } 
             required
@@ -131,7 +131,7 @@ export default class MachinePartyRegistration extends React.Component{
             minLength = "5"
             onChange={
                 e => {
-                    this.state.partyVillage = e.target.value;
+                    this.partyVillage = e.target.value;
                 }
             } 
             required

@@ -126,10 +126,10 @@ export default class PurchaseEntry extends React.Component {
   }
 
   myCallbackForSelectedParty = dataFromChild => {
-    this.state.selectedParty = dataFromChild;
+    this.selectedParty = dataFromChild;
   };
   myCallbackForselectedItem = dataFromChild => {
-    this.state.selectedItem = dataFromChild;
+    this.selectedItem = dataFromChild;
   };
 
   render() {
@@ -167,7 +167,7 @@ export default class PurchaseEntry extends React.Component {
             defaultValue={this.state.date}
             name="date"
             onChange={e => {
-              this.state.date = e.target.value;
+              this.date = e.target.value;
             }}
             required
           />

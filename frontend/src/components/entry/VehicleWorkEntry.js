@@ -135,10 +135,10 @@ export default class VehicleWorkEntry extends React.Component {
 };
 
   myCallbackForSelectedParty = dataFromChild => {
-    this.state.selectedParty = dataFromChild;
+    this.selectedParty = dataFromChild;
   };
   myCallbackForSelectedVehicle = dataFromChild => {
-    this.state.selectedVehicle = dataFromChild;
+    this.selectedVehicle = dataFromChild;
   };
 
   render() {
@@ -158,7 +158,7 @@ export default class VehicleWorkEntry extends React.Component {
           />
           <p>{this.state.partyExistMessage}</p>
 
-          {<select class="form-control" name="vehicles" 
+          {<select className="form-control" name="vehicles" 
             onChange={e => this.handleMultipleVehicle(e)}
             multiple
             required>
@@ -171,12 +171,11 @@ export default class VehicleWorkEntry extends React.Component {
 
           <input
             type="date"
-            //data-date=""
             data-date-format="YYYY-MM-DD"
             defaultValue={this.state.date}
             name="date"
             onChange={e => {
-              this.state.date = e.target.value;
+              this.date = e.target.value;
             }}
             required
           />
@@ -192,7 +191,7 @@ export default class VehicleWorkEntry extends React.Component {
             autoComplete="off"
             maxLength="30"
             onChange={e => {
-              this.state.remark = e.target.value;
+              this.remark = e.target.value;
             }}
           />
 

@@ -89,7 +89,7 @@ export default class ItemRegistration extends React.Component{
             minLength = "2"
             onChange={
                 e => {
-                    this.state.itemName = e.target.value;
+                    this.itemName = e.target.value;
                     this.state.checkitem();
                 }
             } 
@@ -109,7 +109,7 @@ export default class ItemRegistration extends React.Component{
             minLength = "1"
             onChange={
                 e => {
-                    this.state.itemMeasurement = e.target.value;
+                    this.itemMeasurement = e.target.value;
                 }
             } 
             required
@@ -127,7 +127,7 @@ export default class ItemRegistration extends React.Component{
             minLength = "1"
             onChange={
                 e => {
-                    this.state.itemQuantity = e.target.value;
+                    this.itemQuantity = e.target.value;
                 }
             } 
             required

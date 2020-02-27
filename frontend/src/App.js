@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React from 'react'; //
 import './homePage.css';
 import MachineRegistration from './components/registration/MachineRegistration';
 import VehicleRegistration from './components/registration/VehicleRegistration';
@@ -109,43 +109,43 @@ class App extends React.Component{
 							<div className="collapse navbar-collapse" id="navbarSupportedContent">
 								<ul className="navbar-nav mr-auto">
 									<li className="nav-item active">
-										<a className="nav-link" href="">Logout<span className="sr-only">(current)</span></a>
+										<a className="nav-link" href="#!">Logout<span className="sr-only">(current)</span></a>
 									</li>
 									<li className="nav-item">
-										<a className="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<a className="nav-link dropdown-toggle" href="#!" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										Registration
 										</a>
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineReg) }>Machine</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleReg) } >Vehicle</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.itemReg) } >Item</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.workerReg) } >Worker</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machinePartyReg) } >Machine Party</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyReg) } >Vehicle Party</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyReg) } >Purchase Party</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.machineReg) }>Machine</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleReg) } >Vehicle</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.itemReg) } >Item</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.workerReg) } >Worker</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.machinePartyReg) } >Machine Party</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyReg) } >Vehicle Party</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyReg) } >Purchase Party</a>
 										</div>
 									</li>
 									<li className="nav-item dropdown">
-										<a className="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<a className="nav-link dropdown-toggle" href="#!" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										Entry
 										</a>
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineWork) }>Machine Work</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleWork) } >Vehicle Work</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addDailyWork) } >Daily Work</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addPurchaseDetail) } >Purchase Entry</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineSupply) } >Machine Supply</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleSupply) } >Vehicle Supply</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineWork) }>Machine Work</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleWork) } >Vehicle Work</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.addDailyWork) } >Daily Work</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.addPurchaseDetail) } >Purchase Entry</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineSupply) } >Machine Supply</a>
+											<a className="dropdown-item" href="#!" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleSupply) } >Vehicle Supply</a>
 										</div>
 									</li>
 									<li className="nav-item">
-										<a className="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<a className="nav-link dropdown-toggle" href="#!" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										Display
 										</a>
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-											<a className="dropdown-item" href="">Account</a>
-											<a className="dropdown-item" href="">Party status</a>
-											<a className="dropdown-item" href="">Store status</a>
+											<a className="dropdown-item" href="#!">Account</a>
+											<a className="dropdown-item" href="#!">Party status</a>
+											<a className="dropdown-item" href="#!">Store status</a>
 										</div>
 									</li>
 								</ul>

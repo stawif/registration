@@ -124,10 +124,10 @@ export default class MachineSupplyEntry extends React.Component {
   }
 
   myCallbackForSelectedParty = dataFromChild => {
-    this.state.selectedParty = dataFromChild;
+    this.selectedParty = dataFromChild;
   };
   myCallbackForselectedItem = dataFromChild => {
-    this.state.selectedItem = dataFromChild;
+    this.selectedItem = dataFromChild;
   };
 
   render() {

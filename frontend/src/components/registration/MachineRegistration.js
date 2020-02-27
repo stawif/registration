@@ -84,7 +84,7 @@ export default class MachineRegistration extends React.Component{
         minLength = "5"
         onChange={
           e => {
-          this.state.machineName = e.target.value;
+          this.machineName = e.target.value;
           this.state.checkMachine();
         }
         } 

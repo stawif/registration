@@ -84,7 +84,7 @@ export default class VehicleRegistration extends React.Component{
         minLength = "5"
         onChange={
           e => {
-          this.state.vehicleName = e.target.value;
+          this.vehicleName = e.target.value;
           this.state.checkvehicle();
         }
         } 
