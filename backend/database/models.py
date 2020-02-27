@@ -72,7 +72,7 @@ class Party(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     contact = models.IntegerField(blank=False)
     village = models.CharField(max_length=30,blank=False)
-    date = models.DateField(blank=False,auto_now_add=True)  #Add aunto now date
+    date = models.DateField(blank=False)  #Add aunto now date
     total_credit = models.IntegerField(default=0)   
 
     def __str__(self):
@@ -151,6 +151,9 @@ class DailyParty(models.Model):
     credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
 
+    def __str__(self):
+        return self.name
+
 class MachineWork(models.Model):
     """
     This is a type of work owner do for party in mining
@@ -199,15 +202,15 @@ class DailyWork(models.Model):
     This is a type of  work owner do for a party
     """
     party = models.ForeignKey(DailyParty, on_delete=models.CASCADE)
-    five_feet = models.IntegerField(blank=False)
-    five_feet_rate = models.IntegerField(blank=False)
-    two_half_feet = models.IntegerField(blank=False)
-    two_half_feet_rate = models.IntegerField(blank=False)
-    diesel_spend = models.IntegerField(blank=False)
-    net_amount = models.IntegerField(blank=False)
+    five_feet = models.FloatField(blank=False)
+    five_feet_rate = models.FloatField(blank=False)
+    two_half_feet = models.FloatField(blank=False)
+    two_half_feet_rate = models.FloatField(blank=False)
+    diesel_spend = models.FloatField(blank=False)
+    net_amount = models.FloatField(blank=False)
 
     def __str__(self):
-        return self.pk    
+        return self.party.name    
      
 class DailyWorkVehicles(models.Model):
     """

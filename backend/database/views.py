@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , ItemSerializer,
                             PartySerializer,PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
-                            MachineWorkSerializer , VehicleWorkSerializer,VehicleWorkVehicleSerializer,WorkerSerializer)
+                            MachineWorkSerializer , VehicleWorkSerializer,VehicleWorkVehicleSerializer,WorkerSerializer,
+                            DailyWorkSerializer)
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles,
-                        MixDebit,Worker,Purchase)
+                        MixDebit,Worker,Purchase,DailyWork,DailyParty)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse
 from rest_framework import status
@@ -351,3 +352,24 @@ class AddWorker(APIView):
                 mix_debit_create.delete()
                 return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+class AddDailyWork(APIView):
+    """
+    View to Add New Worker in Database.
+    """
+    def post(self,request):
+        try:
+            net_amount = float(request.data['five_feet'])*float(request.data['five_feet_rate'])+float(request.data['two_half_feet'])*float(request.data['two_half_feet_rate'])
+        except Exception as e:
+            return Response("data is not correct",status=status.HTTP_404_NOT_FOUND)
+        try:
+            owner = Owner.objects.get(id=1)
+            party_instance = Party.objects.create(owner=owner,date=request.data['date'],village=request.data['village'],contact=request.data['contact'])
+            daily_party_instance = DailyParty.objects.create(credit_id=party_instance,name=request.data['name'])
+            daily_work_instance = DailyWork.objects.create(party=daily_party_instance,five_feet=float(request.data['five_feet']),five_feet_rate=float(request.data['five_feet_rate']),
+                                        two_half_feet=float(request.data['two_half_feet']),two_half_feet_rate=float(request.data['two_half_feet_rate']),diesel_spend=float(request.data['diesel_spend']),
+                                        net_amount=float(net_amount))
+            return Response('daily work added.',status=status.HTTP_201_CREATED)
+        except Exception as e:
+             return Response('please provide all data',status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
