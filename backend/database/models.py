@@ -89,7 +89,7 @@ class MixDebit(models.Model):
     """
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.now, blank=False)
-    spend_amount = models.IntegerField(default=0)
+    spend_amount = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.pk)
@@ -161,8 +161,8 @@ class MachineWork(models.Model):
     party = models.ForeignKey(MachineParty, on_delete=models.CASCADE)
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)    
     date = models.DateField()
-    drilling_feet = models.IntegerField(blank=False)
-    diesel_amount = models.IntegerField(blank=False)
+    drilling_feet = models.FloatField(blank=False)
+    diesel_amount = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
 
     # def __str__(self):
@@ -178,8 +178,8 @@ class VehicleWork(models.Model):
     """
     party = models.ForeignKey(VehicleParty, on_delete=models.CASCADE)
     date = models.DateField()
-    five_feet = models.IntegerField(blank=False)
-    two_half_feet = models.IntegerField(blank=False)
+    five_feet = models.FloatField(blank=False)
+    two_half_feet = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
@@ -230,8 +230,8 @@ class Purchase(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.now, blank=False)    
     quantity = models.IntegerField(blank=False)
-    rate = models.IntegerField(blank=False)
-    net_amount = models.IntegerField(blank=False)
+    rate = models.FloatField(blank=False)
+    net_amount = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
