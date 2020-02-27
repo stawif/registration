@@ -237,17 +237,30 @@ class Purchase(models.Model):
     def __str__(self):
         return str(self.party)    
 
-class Supply(models.Model):
+class VehicleSupply(models.Model):
     """
     Records of items supplied to any work
     """    
-    party = models.ForeignKey(Party, on_delete=models.CASCADE)
+    party = models.ForeignKey(VehicleParty, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     date = models.DateField()
     quantity = models.IntegerField(blank=False)
 
     def __str__(self):
         return self.pk    
+
+class MachineSupply(models.Model):
+    """
+    Records of items supplied to any work
+    """    
+    party = models.ForeignKey(MachineParty, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    date = models.DateField()
+    quantity = models.IntegerField(blank=False)
+
+    def __str__(self):
+        return str(self.pk)    
+
 
 class Account(models.Model):
     """
