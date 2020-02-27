@@ -5,7 +5,7 @@ from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerial
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles,
-                        MixDebit,Worker,Purchase)
+                        MixDebit,Worker,Purchase,MachineSupply,VehicleSupply)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse
 from rest_framework import status
@@ -33,11 +33,11 @@ class AddMachine(APIView):
 
 class MachineList(APIView):
     """
-    View to return List of Machines
+    View to return List of Vehicles.
     """
     def get(self,request):
         queryset = Machine.objects.all()
-        serializer = MachineSerializer(queryset,many=True)
+        serializer = MachinePartySerializer(queryset,many=True)
         return Response(serializer.data)
 
 class VehicleList(APIView):
@@ -341,7 +341,7 @@ class AddWorker(APIView):
             try:
                 mix_debit_create = MixDebit.objects.create(owner=owner,date=request.data['date'],spend_amount=request.data['advance'])
             except Exception:
-                return Response("Please provide correct data",status=status.HTTP_400_BAD_REQUEST)
+                return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
             try:
                 worker_create = Worker.objects.create(owner=owner,debit_id=mix_debit_create,name=request.data['name'],contact=int(request.data['contact']),
                 village=request.data['village'],salary=float(request.data['salary']))
@@ -349,5 +349,89 @@ class AddWorker(APIView):
             except Exception as e:
                 print(e)
                 mix_debit_create.delete()
-                return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
+                return Response('please provide all required datad',status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+class AddMachineSupply(APIView):
+    """
+    View for supply entry for machine
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        owner = Owner.objects.get(id=1)
+        if request.data:
+            # get all data from api
+            try:
+                api_party = request.data['party']
+                api_item = request.data['item']
+                api_date = request.data['date']
+                api_quantity = request.data['quantity']
+            except Exception as e:
+                print(e) 
+                return Response("please provide all information correctly",status=status.HTTP_204_NO_CONTENT)   
+            # get MachineParty instance from databse
+            try:
+                machine_party_i = MachineParty.objects.get(name=api_party)
+            except Exception as e:
+                print(e)
+                return Response("please provide a valid party name",status=status.HTTP_204_NO_CONTENT)        
+            # get Item instance from database
+            try:
+                item_i = Item.objects.get(name=api_item)
+            except Exception as e:
+                print(e)
+                return Response("please provide a valid item name",status=status.HTTP_204_NO_CONTENT)        
+            try:
+                machine_supply_create = MachineSupply.objects.create(party=machine_party_i,
+                item=item_i,date=api_date,quantity=api_quantity)
+
+                item_new_quantity = item_i.quantity - api_quantity
+                Item.objects.filter(pk=item_i.pk).update(quantity=item_new_quantity)          
+
+                return Response("{} is supplied to {} at {}".format(api_item,api_party,api_date),status=status.HTTP_201_CREATED)
+            except Exception as e:
+                print(e)
+                return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)    
+
+class AddVehicleSupply(APIView):
+    """
+    View for supply entry for vehicle
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        owner = Owner.objects.get(id=1)
+        if request.data:
+            # get all data from api
+            try:
+                api_party = request.data['party']
+                api_item = request.data['item']
+                api_date = request.data['date']
+                api_quantity = request.data['quantity']
+            except Exception as e:
+                print(e) 
+                return Response("please provide all information correctly",status=status.HTTP_204_NO_CONTENT)   
+            # get MachineParty instance from databse
+            try:
+                vehicle_party_i = VehicleParty.objects.get(name=api_party)
+            except Exception as e:
+                print(e)
+                return Response("please provide a valid party name",status=status.HTTP_204_NO_CONTENT)        
+            # get Item instance from database
+            try:
+                item_i = Item.objects.get(name=api_item)
+            except Exception as e:
+                print(e)
+                return Response("please provide a valid item name",status=status.HTTP_204_NO_CONTENT)        
+            try:
+                vehicle_supply_create = VehicleSupply.objects.create(party=vehicle_party_i,
+                item=item_i,date=api_date,quantity=api_quantity)
+
+                item_new_quantity = item_i.quantity - api_quantity
+                Item.objects.filter(pk=item_i.pk).update(quantity=item_new_quantity)          
+
+                return Response("{} is supplied to {} at {}".format(api_item,api_party,api_date),status=status.HTTP_201_CREATED)
+            except Exception as e:
+                print(e)
+                return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)                
