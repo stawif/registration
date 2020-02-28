@@ -46,7 +46,7 @@ class MachineList(APIView):
     """
     def get(self,request):
         queryset = Machine.objects.all()
-        serializer = MachinePartySerializer(queryset,many=True)
+        serializer = MachineSerializer(queryset,many=True)
         return Response(serializer.data)
 
 class VehicleList(APIView):
