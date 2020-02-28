@@ -2,39 +2,16 @@ import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
 
-const partyNamesFromApi = [];
-const itemNamesFromApi = [];
-
-fetch("http://127.0.0.1:8000/list-of-purchaseparty/")
-  .then(res => res.json())
-  .then(out => {
-    partyListFunction(out);
-  })
-  .catch(err => {
-    throw err;
-  });
-
-fetch("http://127.0.0.1:8000/list-of-item/")
-  .then(res => res.json())
-  .then(out => {
-    itemListFunction(out);
-  })
-  .catch(err => {
-    throw err;
-  });
-//below function is used to store api data in a array
-function partyListFunction(data) {
-  data.map(item => partyNamesFromApi.push(item.name));
-}
-function itemListFunction(data) {
-  data.map(item => itemNamesFromApi.push(item.name));
-}
 
 export default class PurchaseEntry extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+
+      partyNamesFromApi : [],
+      itemNamesFromApi : [],
+
       date: null,
       selectedItem: "",
       selectedParty: "",
@@ -47,6 +24,30 @@ export default class PurchaseEntry extends React.Component {
       }
     };
 
+
+    this.state.fetchProduct = async () => {
+      fetch("http://127.0.0.1:8000/list-of-purchaseparty/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.partyNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+
+      fetch("http://127.0.0.1:8000/list-of-item/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.itemNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+    };
+
+    console.log(this.state.machineNamesFromApi);
+    console.log(this.state.partyNamesFromApi);
+    this.state.fetchProduct();
     // Check existence of party name
     this.state.checkparty = dataFromChild => {
       try {
@@ -65,7 +66,7 @@ export default class PurchaseEntry extends React.Component {
           } else {
           }
         };
-        partyNamesFromApi.forEach(showList);
+        this.state.partyNamesFromApi.forEach(showList);
       } 
       catch (err) {}
     };
@@ -87,7 +88,7 @@ export default class PurchaseEntry extends React.Component {
           } else {
           }
         };
-        itemNamesFromApi.forEach(showList);
+        this.state.itemNamesFromApi.forEach(showList);
       } catch (err) {}
     };
 
@@ -108,9 +109,7 @@ export default class PurchaseEntry extends React.Component {
            .catch(error => {
              alert(error.response.request._response);
            });
-      console.log("paid type : "+typeof this.state.paid);     
-      console.log("quantity type : "+typeof this.state.quantity);     
-      console.log("rate type : "+typeof this.state.rate);     
+       
       e.target.reset();
       e.preventDefault();
     };
@@ -141,7 +140,7 @@ export default class PurchaseEntry extends React.Component {
         <p className="headingViewPart">Purchase Entry</p>
         <div className="pt-5">
           <Autocomplete
-            suggestions={partyNamesFromApi}
+            suggestions={this.state.partyNamesFromApi}
             callbackFromParent={this.myCallbackForSelectedParty}
             checkFromParent={this.state.checkparty}
             placeholderfrom={"Party name"}
@@ -151,7 +150,7 @@ export default class PurchaseEntry extends React.Component {
           <br/>
 
           <Autocomplete
-            suggestions={itemNamesFromApi}
+            suggestions={this.state.itemNamesFromApi}
             callbackFromParent={this.myCallbackForselectedItem}
             placeholderfrom={"Item name"}
             checkFromParent={this.state.checkitem}
@@ -213,13 +212,14 @@ export default class PurchaseEntry extends React.Component {
 
           <input
             type="number"
+            step="0.1"
             className="mb-2"
             name="rate"
             placeholder="Rate"
             autoComplete="off"
             onChange={e => {
                 this.setState({
-                    rate: parseInt(e.target.value)
+                    rate: e.target.value
                 });
               }}
             required

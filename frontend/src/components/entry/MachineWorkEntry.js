@@ -1,40 +1,14 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
-
-const partyNamesFromApi = [];
-const machineNamesFromApi = [];
-
-fetch("http://127.0.0.1:8000/list-of-machineparty/")
-  .then(res => res.json())
-  .then(out => {
-    partyListFunction(out);
-  })
-  .catch(err => {
-    throw err;
-  });
-
-fetch("http://127.0.0.1:8000/list-of-machines/")
-  .then(res => res.json())
-  .then(out => {
-    machineListFunction(out);
-  })
-  .catch(err => {
-    throw err;
-  });
-//below function is used to store api data in a array
-function partyListFunction(data) {
-  data.map(item => partyNamesFromApi.push(item.name));
-}
-function machineListFunction(data) {
-  data.map(item => machineNamesFromApi.push(item.name));
-}
-
 export default class MachineWorkEntry extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      partyNamesFromApi: [],
+      machineNamesFromApi: [],
+
       date: null,
       selectedMachine: "",
       selectedParty: "",
@@ -50,6 +24,29 @@ export default class MachineWorkEntry extends React.Component {
       }
     };
 
+    this.state.fetchProduct = async () => {
+      fetch("http://127.0.0.1:8000/list-of-machineparty/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.partyNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+
+      fetch("http://127.0.0.1:8000/list-of-machines/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.machineNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+    };
+
+    console.log(this.state.machineNamesFromApi);
+    console.log(this.state.partyNamesFromApi);
+    this.state.fetchProduct();
     // Check existence of party name
     this.state.checkparty = dataFromChild => {
       try {
@@ -58,7 +55,7 @@ export default class MachineWorkEntry extends React.Component {
             visibility: "hidden"
           }
         });
-        const showList = (item, index) => {
+        const showList = item => {
           if (dataFromChild.toLowerCase() === item.toLowerCase()) {
             this.setState({
               buttonStatus: {
@@ -68,9 +65,8 @@ export default class MachineWorkEntry extends React.Component {
           } else {
           }
         };
-        partyNamesFromApi.forEach(showList);
-      } 
-      catch (err) {}
+        this.state.partyNamesFromApi.forEach(showList);
+      } catch (err) {}
     };
 
     this.state.checkmachine = dataFromChild => {
@@ -80,7 +76,7 @@ export default class MachineWorkEntry extends React.Component {
             visibility: "hidden"
           }
         });
-        const showList = (item, index) => {
+        const showList = item => {
           if (dataFromChild.toLowerCase() === item.toLowerCase()) {
             this.setState({
               buttonStatus: {
@@ -90,29 +86,34 @@ export default class MachineWorkEntry extends React.Component {
           } else {
           }
         };
-        machineNamesFromApi.forEach(showList);
+        this.state.machineNamesFromApi.forEach(showList);
       } catch (err) {}
     };
 
     this.state.onSubmit = e => {
-          axios.post("http://127.0.0.1:8000/enter-machineparty-work/", {
-             party: this.state.selectedParty,
-             machine: this.state.selectedMachine,
-             date: this.state.date,
-             drilling_feet: this.state.drillingFeet,
-             diesel_amount: this.state.dieselAmount,
-             remark: this.state.remark          
-            })
-           .then(res => {
-             this.setState({
-               responseMessage: res.data
-             });
-           })
-           .catch(error => {
-             alert(error.response.request._response);
-           });
-      console.log("drilling feet : "+typeof this.state.drillingFeet);
-      console.log("diesel feet : "+typeof this.state.dieselAmount);     
+      axios
+        .post("http://127.0.0.1:8000/enter-machineparty-work/", {
+          party: this.state.selectedParty,
+          machine: this.state.selectedMachine,
+          date: this.state.date,
+          drilling_feet: this.state.drillingFeet,
+          diesel_amount: this.state.dieselAmount,
+          remark: this.state.remark
+        })
+        .then(res => {
+          this.setState({
+            responseMessage: res.data
+          });
+        })
+        .catch(error => {
+          alert(error.response.request._response);
+        });
+      console.log(this.state.selectedParty);
+      console.log(this.state.selectedMachine);
+      console.log(this.state.date);
+      console.log(this.state.drillingFeet);
+      console.log(this.state.dieselAmount);
+      console.log(this.state.remark);
       e.target.reset();
       e.preventDefault();
     };
@@ -140,27 +141,27 @@ export default class MachineWorkEntry extends React.Component {
         className="form-container form-group"
         onSubmit={e => this.state.onSubmit(e)}
       >
-        <p className="headingViewPart">Machine Party Registration</p>
+        <p className="headingViewPart">Machine Work Entry</p>
         <div className="pt-5">
           <Autocomplete
-            suggestions={partyNamesFromApi}
+            suggestions={this.state.partyNamesFromApi}
             callbackFromParent={this.myCallbackForSelectedParty}
             checkFromParent={this.state.checkparty}
             placeholderfrom={"Party name"}
           />
 
           <p>{this.state.partyExistMessage}</p>
-          <br/>
+          <br />
 
           <Autocomplete
-            suggestions={machineNamesFromApi}
+            suggestions={this.state.machineNamesFromApi}
             callbackFromParent={this.myCallbackForSelectedMachine}
             placeholderfrom={"Machine name"}
             checkFromParent={this.state.checkmachine}
           />
 
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <input
             type="date"
@@ -174,8 +175,8 @@ export default class MachineWorkEntry extends React.Component {
             required
           />
 
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <input
             type="text"
@@ -191,8 +192,8 @@ export default class MachineWorkEntry extends React.Component {
             //required
           />
 
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <input
             type="number"
@@ -206,9 +207,8 @@ export default class MachineWorkEntry extends React.Component {
             required
           />
 
-          <br/>
-          <br/>
-
+          <br />
+          <br />
 
           <input
             type="number"

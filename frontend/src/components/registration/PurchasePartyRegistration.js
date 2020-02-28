@@ -31,6 +31,7 @@ export default class PurchasePartyRegistration extends React.Component{
       try {
         this.setState({
              partyExistMessage :"",
+             responseMessage: "",
              buttonStatus: {
                  visibility: 'visible'           
              }

@@ -28,7 +28,6 @@ class Autocomplete extends Component {
   onChange = e => {
     const { suggestions } = this.props;
     const userInput = e.currentTarget.value;
-    
 
     // Filter our suggestions that don't contain the user's input
     const filteredSuggestions = suggestions.filter(
@@ -41,9 +40,8 @@ class Autocomplete extends Component {
       filteredSuggestions,
       showSuggestions: true,
       userInput: e.currentTarget.value
-      
     });
-    this.props.checkFromParent(e.currentTarget.value)
+    this.props.checkFromParent(e.currentTarget.value);
     this.props.callbackFromParent(e.currentTarget.value);
   };
 
@@ -135,7 +133,7 @@ class Autocomplete extends Component {
       <Fragment>
         <input
           type="text"
-          placeholder= {this.props.placeholderfrom}
+          placeholder={this.props.placeholderfrom}
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={userInput}

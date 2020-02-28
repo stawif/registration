@@ -1,40 +1,13 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
-
-const partyNamesFromApi = [];
-const itemNamesFromApi = [];
-
-fetch("http://127.0.0.1:8000/list-of-machineparty/")
-  .then(res => res.json())
-  .then(out => {
-    partyListFunction(out);
-  })
-  .catch(err => {
-    throw err;
-  });
-
-fetch("http://127.0.0.1:8000/list-of-item/")
-  .then(res => res.json())
-  .then(out => {
-    itemListFunction(out);
-  })
-  .catch(err => {
-    throw err;
-  });
-//below function is used to store api data in a array
-function partyListFunction(data) {
-  data.map(item => partyNamesFromApi.push(item.name));
-}
-function itemListFunction(data) {
-  data.map(item => itemNamesFromApi.push(item.name));
-}
-
 export default class MachineSupplyEntry extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      partyNamesFromApi: [],
+      itemNamesFromApi: [],
       date: null,
       selectedParty: "",
       selectedItem: "",
@@ -45,10 +18,32 @@ export default class MachineSupplyEntry extends React.Component {
       }
     };
 
+    this.state.fetchProduct = async () => {
+      fetch("http://127.0.0.1:8000/list-of-machineparty/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.partyNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+
+      fetch("http://127.0.0.1:8000/list-of-item/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.itemNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+    };
+
+    this.state.fetchProduct();
     // Check existence of party name
     this.state.checkparty = dataFromChild => {
       try {
         this.setState({
+          responseMessage: "",
           buttonStatus: {
             visibility: "hidden"
           }
@@ -63,14 +58,14 @@ export default class MachineSupplyEntry extends React.Component {
           } else {
           }
         };
-        partyNamesFromApi.forEach(showList);
-      } 
-      catch (err) {}
+        this.state.partyNamesFromApi.forEach(showList);
+      } catch (err) {}
     };
 
     this.state.checkitem = dataFromChild => {
       try {
         this.setState({
+          responseMessage: "",
           buttonStatus: {
             visibility: "hidden"
           }
@@ -85,32 +80,35 @@ export default class MachineSupplyEntry extends React.Component {
           } else {
           }
         };
-        itemNamesFromApi.forEach(showList);
+        this.state.itemNamesFromApi.forEach(showList);
       } catch (err) {}
     };
 
     this.state.onSubmit = e => {
-          axios.post("http://127.0.0.1:8000/enter-machine-supply/", {
-             party: this.state.selectedParty,
-             item: this.state.selectedItem,
-             date: this.state.date,
-             quantity: this.state.quantity,
-             rate: this.state.rate,
-             remark: this.state.remark          
-            })
-           .then(res => {
-             this.setState({
-               responseMessage: res.data
-             });
-           })
-           .catch(error => {
-             alert(error.response.request._response);
-           });
-      console.log("paid type : "+typeof this.state.paid);     
-      console.log("quantity type : "+typeof this.state.quantity);     
-      console.log("rate type : "+typeof this.state.rate);     
+      axios
+        .post("http://127.0.0.1:8000/enter-machine-supply/", {
+          party: this.state.selectedParty,
+          item: this.state.selectedItem,
+          date: this.state.date,
+          quantity: this.state.quantity,
+          rate: this.state.rate,
+          remark: this.state.remark
+        })
+        .then(res => {
+          this.setState({
+            responseMessage: res.data
+          });
+        })
+        .catch(error => {
+          alert(error.response.request._response);
+        });
+
       e.target.reset();
       e.preventDefault();
+      this.setState({
+        selectedParty: "",
+      selectedItem: ""
+      })
     };
 
     this.state.getDate = () => {
@@ -139,24 +137,24 @@ export default class MachineSupplyEntry extends React.Component {
         <p className="headingViewPart">Machine Supply Entry</p>
         <div className="pt-5">
           <Autocomplete
-            suggestions={partyNamesFromApi}
+            suggestions={this.state.partyNamesFromApi}
             callbackFromParent={this.myCallbackForSelectedParty}
             checkFromParent={this.state.checkparty}
             placeholderfrom={"Party name"}
           />
 
           <p>{this.state.partyExistMessage}</p>
-          <br/>
+          <br />
 
           <Autocomplete
-            suggestions={itemNamesFromApi}
+            suggestions={this.state.itemNamesFromApi}
             callbackFromParent={this.myCallbackForselectedItem}
             placeholderfrom={"Item name"}
             checkFromParent={this.state.checkitem}
           />
 
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <input
             type="date"
@@ -165,15 +163,15 @@ export default class MachineSupplyEntry extends React.Component {
             defaultValue={this.state.date}
             name="date"
             onChange={e => {
-                this.setState({
-                    date: e.target.value
-                });
+              this.setState({
+                date: e.target.value
+              });
             }}
             required
           />
 
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <input
             type="number"
@@ -182,13 +180,12 @@ export default class MachineSupplyEntry extends React.Component {
             placeholder="Quantity"
             autoComplete="off"
             onChange={e => {
-                this.setState({
-                    quantity: parseInt(e.target.value)
-                });
-              }}
+              this.setState({
+                quantity: parseInt(e.target.value)
+              });
+            }}
             required
           />
-
         </div>
         <p>{this.state.responseMessage}</p>
         <button

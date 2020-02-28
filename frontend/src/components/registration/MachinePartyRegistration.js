@@ -34,6 +34,7 @@ export default class MachinePartyRegistration extends React.Component{
       try {
         this.setState({
              partyExistMessage :"",
+             responseMessage: "",
              buttonStatus: {
                  visibility: 'visible'           
              }

@@ -29,6 +29,7 @@ export default class VehicleRegistration extends React.Component{
       try {
         this.setState({
              vehicleExistStatus :"",
+             responseMessage: "",
              buttonStatus: {
               visibility: 'visible'           
              }
@@ -85,6 +86,7 @@ export default class VehicleRegistration extends React.Component{
         onChange={
           e => {
           this.state.vehicleName = e.target.value;
+          //this.setState({ vehicleName: this.state.vehicleName });
           this.state.checkvehicle();
         }
         } 

@@ -21,6 +21,15 @@ export default class DailyWorkEntry extends React.Component{
       }
     }
 
+    this.state.onChange = () => {
+        
+          this.setState({
+            workerExistMessage: "",
+            responseMessage: ""
+          }
+          )
+        }
+
     this.state.onSubmit =(e) => {
         axios.post('http://127.0.0.1:8000/enter-daily-work/', 
         {
@@ -42,18 +51,20 @@ export default class DailyWorkEntry extends React.Component{
         ).catch(error => {
            console.log( error.response.request._response )
         });
-      console.log(this.state.partyName);  
-      console.log(this.state.partyContact);  
-      console.log(this.state.partyVillage);  
-      console.log(this.state.fiveFeet);  
-      console.log(this.state.fiveFeetRate);  
-      console.log(this.state.twoHalfFeet);  
-      console.log(this.state.twoHalfFeetRate);  
-      console.log(this.state.dieselSpend);  
-      console.log(this.state.date);  
+      
       e.target.reset();
       e.preventDefault();
     };
+
+    this.state.getDate = () => {
+        var curr = new Date();
+        curr.setDate(curr.getDate());
+        var date = curr.toISOString().substr(0, 10);
+        this.state.date = date;
+        console.log(this.state.date)
+      };
+  
+      this.state.getDate();
   
   }
  
@@ -74,6 +85,7 @@ export default class DailyWorkEntry extends React.Component{
             onChange={
                 e => {
                     this.state.partyName = e.target.value;
+                    this.state.onChange()
                 }
             } 
             required
@@ -86,13 +98,14 @@ export default class DailyWorkEntry extends React.Component{
             type="number" 
             className="mb-2" 
             name="partyContact" 
-            placeholder="Contact" 
+            placeholder="Phone No" 
             autoComplete="off"
             maxLength = "10"
             minLength = "10"
             onChange={
                 e => {
                     this.state.partyContact = parseInt(e.target.value);
+                    this.state.onChange()
                 }
             } 
             required
@@ -112,6 +125,7 @@ export default class DailyWorkEntry extends React.Component{
             onChange={
                 e => {
                     this.state.partyVillage = e.target.value;
+                    this.state.onChange()
                 }
             } 
             required
@@ -127,6 +141,7 @@ export default class DailyWorkEntry extends React.Component{
             name="date"
             onChange={e => {
               this.state.date = e.target.value;
+              this.state.onChange()
             }}
             required
           />
@@ -142,7 +157,8 @@ export default class DailyWorkEntry extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.fiveFeet = parseInt(e.target.value);
+                    this.state.fiveFeet = e.target.value;
+                    this.state.onChange()
                 }
             } 
             required
@@ -153,13 +169,15 @@ export default class DailyWorkEntry extends React.Component{
 
         <input 
             type="number" 
+            step="0.1"
             className="mb-2" 
             name="fiveFeetRate" 
             placeholder="5 Feet Rate" 
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.advance = parseInt(e.target.value);
+                    this.state.fiveFeetRate = e.target.value;
+                    this.state.onChange()
                 }
             } 
             required
@@ -176,7 +194,8 @@ export default class DailyWorkEntry extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.twoHalfFeet = parseInt(e.target.value);
+                    this.state.twoHalfFeet = e.target.value;
+                    this.state.onChange()
                 }
             } 
             required
@@ -187,13 +206,15 @@ export default class DailyWorkEntry extends React.Component{
             
         <input 
             type="number" 
+            step="0.1"
             className="mb-2" 
             name="twoHalfFeetRate" 
             placeholder="2.5 Feet Rate" 
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.twoHalfFeetRate = parseInt(e.target.value);
+                    this.state.twoHalfFeetRate = e.target.value;
+                    this.state.onChange()
                 }
             } 
             required
@@ -210,7 +231,8 @@ export default class DailyWorkEntry extends React.Component{
             autoComplete="off"
             onChange={
                 e => {
-                    this.state.dieselSpend = parseInt(e.target.value);
+                    this.state.dieselSpend = e.target.value;
+                    this.state.onChange()
                 }
             } 
             required
