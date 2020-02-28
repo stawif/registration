@@ -32,6 +32,7 @@ export default class PartyRegistration extends React.Component{
       try {
         this.setState({
              partyExistMessage :"",
+             responseMessage: "",
              buttonStatus: {
                  visibility: 'visible'           
              }

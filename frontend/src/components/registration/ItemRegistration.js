@@ -31,6 +31,7 @@ export default class ItemRegistration extends React.Component{
       try {
         this.setState({
              itemExistMessage :"",
+             responseMessage: "",
              buttonStatus: {
                  visibility: 'visible'           
              }
