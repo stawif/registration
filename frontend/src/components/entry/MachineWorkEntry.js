@@ -24,6 +24,7 @@ export default class MachineWorkEntry extends React.Component {
       }
     };
 
+    //Fetching Machines And Machine Parties from DataBase
     this.state.fetchProduct = async () => {
       fetch("http://127.0.0.1:8000/list-of-machineparty/")
         .then(res => res.json())
@@ -44,13 +45,13 @@ export default class MachineWorkEntry extends React.Component {
         });
     };
 
-    console.log(this.state.machineNamesFromApi);
-    console.log(this.state.partyNamesFromApi);
     this.state.fetchProduct();
+
     // Check existence of party name
     this.state.checkparty = dataFromChild => {
       try {
         this.setState({
+          responseMessage: "",
           buttonStatus: {
             visibility: "hidden"
           }
@@ -69,9 +70,11 @@ export default class MachineWorkEntry extends React.Component {
       } catch (err) {}
     };
 
+    //Check Existance for MAchine name
     this.state.checkmachine = dataFromChild => {
       try {
         this.setState({
+          responseMessage: "",
           buttonStatus: {
             visibility: "hidden"
           }
@@ -90,6 +93,7 @@ export default class MachineWorkEntry extends React.Component {
       } catch (err) {}
     };
 
+    //form Handler Submitting
     this.state.onSubmit = e => {
       axios
         .post("http://127.0.0.1:8000/enter-machineparty-work/", {
@@ -108,16 +112,12 @@ export default class MachineWorkEntry extends React.Component {
         .catch(error => {
           alert(error.response.request._response);
         });
-      console.log(this.state.selectedParty);
-      console.log(this.state.selectedMachine);
-      console.log(this.state.date);
-      console.log(this.state.drillingFeet);
-      console.log(this.state.dieselAmount);
-      console.log(this.state.remark);
+
       e.target.reset();
       e.preventDefault();
     };
 
+    //Getting Current Date
     this.state.getDate = () => {
       var curr = new Date();
       curr.setDate(curr.getDate());
@@ -128,9 +128,12 @@ export default class MachineWorkEntry extends React.Component {
     this.state.getDate();
   }
 
+  //Selected Party = Selected From AutoSuggestion
   myCallbackForSelectedParty = dataFromChild => {
     this.state.selectedParty = dataFromChild;
   };
+
+  //Selected Machine = Selected From AutoSuggestion
   myCallbackForSelectedMachine = dataFromChild => {
     this.state.selectedMachine = dataFromChild;
   };
@@ -165,7 +168,6 @@ export default class MachineWorkEntry extends React.Component {
 
           <input
             type="date"
-            //data-date=""
             data-date-format="YYYY-MM-DD"
             defaultValue={this.state.date}
             name="date"
@@ -185,11 +187,9 @@ export default class MachineWorkEntry extends React.Component {
             placeholder="Remark"
             autoComplete="off"
             maxLength="30"
-            //minLength="5"
             onChange={e => {
               this.state.remark = e.target.value;
             }}
-            //required
           />
 
           <br />
@@ -197,12 +197,13 @@ export default class MachineWorkEntry extends React.Component {
 
           <input
             type="number"
+            step="0.1"
             className="mb-2"
             name="dieselAmount"
             placeholder="Diesel Amount"
             autoComplete="off"
             onChange={e => {
-              this.state.dieselAmount = parseInt(e.target.value);
+              this.state.dieselAmount = e.target.value;
             }}
             required
           />
@@ -212,12 +213,13 @@ export default class MachineWorkEntry extends React.Component {
 
           <input
             type="number"
+            step="0.1"
             className="mb-2"
             name="drillingFeet"
             placeholder="Drilling Feet"
             autoComplete="off"
             onChange={e => {
-              this.state.drillingFeet = parseInt(e.target.value);
+              this.state.drillingFeet = e.target.value;
             }}
             required
           />

@@ -14,9 +14,7 @@ export default class WorkerRegistration extends React.Component {
       date: null,
       workerList: {},
       workerExistMessage: "",
-
       responseMessage: "",
-
       buttonStatus: {
         visibility: "visible"
       }
@@ -58,6 +56,7 @@ export default class WorkerRegistration extends React.Component {
       } catch (err) {}
     };
 
+    //Form Handler
     this.state.onSubmit = e => {
       axios
         .post("http://127.0.0.1:8000/worker-registration/", {
@@ -81,12 +80,13 @@ export default class WorkerRegistration extends React.Component {
       e.target.reset();
       e.preventDefault();
     };
+
+    //Getting Current Date
     this.state.getDate = () => {
       var curr = new Date();
       curr.setDate(curr.getDate());
       var date = curr.toISOString().substr(0, 10);
       this.state.date = date;
-      console.log(this.state.date);
     };
 
     this.state.getDate();
@@ -123,14 +123,11 @@ export default class WorkerRegistration extends React.Component {
             type="tel"
             className="mb-2"
             name="workerContact"
+            pattern="^\d{10}$"
             placeholder="Enter 10 digit Phone no"
             autoComplete="off"
-            pattern="^\d{10}$"
-            // maxLength="10"
-            // minLength="10"
             onChange={e => {
               this.state.workerContact = parseInt(e.target.value);
-              //this.state.validatePhone();
             }}
             required
           />

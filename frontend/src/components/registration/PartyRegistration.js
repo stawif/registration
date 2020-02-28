@@ -53,6 +53,7 @@ export default class PartyRegistration extends React.Component{
       catch (err) {}
     }
 
+    //Form Handler
     this.state.onSubmit =(e) => {
         axios.post('http://127.0.0.1:8000/party-registration/', 
         {
@@ -106,10 +107,9 @@ export default class PartyRegistration extends React.Component{
             type="number" 
             className="mb-2" 
             name="partyContact" 
-            placeholder="Party Contact" 
+            pattern="^\d{10}$"
+            placeholder="Enter 10 digit Phone no" 
             autoComplete="off"
-            maxLength = "10"
-            minLength = "10"
             onChange={
                 e => {
                     this.state.partyContact = e.target.value;
@@ -140,7 +140,7 @@ export default class PartyRegistration extends React.Component{
         <hr/>
 
         <div style={this.state.radioButtonStyle}>    
-            <div class="radio">
+            <div className="radio">
                 <label>
                     <input 
                         type="radio" 
@@ -155,7 +155,7 @@ export default class PartyRegistration extends React.Component{
                         Machine Party
                 </label>
             </div>
-            <div class="radio">
+            <div className="radio">
                 <label>
                     <input type="radio" name="optradio" value="Vehicle_work"
                         onChange={  
@@ -166,7 +166,7 @@ export default class PartyRegistration extends React.Component{
                         Vehicle Party
                 </label>
             </div>
-            <div class="radio">
+            <div className="radio">
                 <label>
                     <input type="radio" name="optradio" value="Daily_work"
                         onChange={  
@@ -177,7 +177,7 @@ export default class PartyRegistration extends React.Component{
                         Daily Party
                 </label>
             </div>        
-            <div class="radio">
+            <div className="radio">
                 <label>
                     <input type="radio" name="optradio" value="Purchase_party"
                         onChange={  

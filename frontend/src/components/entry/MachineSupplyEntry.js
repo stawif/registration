@@ -18,6 +18,7 @@ export default class MachineSupplyEntry extends React.Component {
       }
     };
 
+    //Fetching Products from database
     this.state.fetchProduct = async () => {
       fetch("http://127.0.0.1:8000/list-of-machineparty/")
         .then(res => res.json())
@@ -39,6 +40,7 @@ export default class MachineSupplyEntry extends React.Component {
     };
 
     this.state.fetchProduct();
+
     // Check existence of party name
     this.state.checkparty = dataFromChild => {
       try {
@@ -62,6 +64,7 @@ export default class MachineSupplyEntry extends React.Component {
       } catch (err) {}
     };
 
+    //Check Existance of Item Names
     this.state.checkitem = dataFromChild => {
       try {
         this.setState({
@@ -84,6 +87,7 @@ export default class MachineSupplyEntry extends React.Component {
       } catch (err) {}
     };
 
+    //Form Handler
     this.state.onSubmit = e => {
       axios
         .post("http://127.0.0.1:8000/enter-machine-supply/", {
@@ -91,7 +95,6 @@ export default class MachineSupplyEntry extends React.Component {
           item: this.state.selectedItem,
           date: this.state.date,
           quantity: this.state.quantity,
-          rate: this.state.rate,
           remark: this.state.remark
         })
         .then(res => {
@@ -107,10 +110,11 @@ export default class MachineSupplyEntry extends React.Component {
       e.preventDefault();
       this.setState({
         selectedParty: "",
-      selectedItem: ""
-      })
+        selectedItem: ""
+      });
     };
 
+    //Getting Current Date
     this.state.getDate = () => {
       var curr = new Date();
       curr.setDate(curr.getDate());
@@ -121,9 +125,12 @@ export default class MachineSupplyEntry extends React.Component {
     this.state.getDate();
   }
 
+  //Callback to set Selected Party to state
   myCallbackForSelectedParty = dataFromChild => {
     this.state.selectedParty = dataFromChild;
   };
+
+  //Callback to set Selected item to state
   myCallbackForselectedItem = dataFromChild => {
     this.state.selectedItem = dataFromChild;
   };
@@ -158,7 +165,6 @@ export default class MachineSupplyEntry extends React.Component {
 
           <input
             type="date"
-            //data-date=""
             data-date-format="YYYY-MM-DD"
             defaultValue={this.state.date}
             name="date"

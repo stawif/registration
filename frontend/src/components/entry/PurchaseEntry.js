@@ -1,17 +1,13 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
-
-
 export default class PurchaseEntry extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-
-      partyNamesFromApi : [],
-      itemNamesFromApi : [],
-
+      partyNamesFromApi: [],
+      itemNamesFromApi: [],
       date: null,
       selectedItem: "",
       selectedParty: "",
@@ -24,7 +20,7 @@ export default class PurchaseEntry extends React.Component {
       }
     };
 
-
+    //Fetching products from DataBase
     this.state.fetchProduct = async () => {
       fetch("http://127.0.0.1:8000/list-of-purchaseparty/")
         .then(res => res.json())
@@ -45,13 +41,13 @@ export default class PurchaseEntry extends React.Component {
         });
     };
 
-    console.log(this.state.machineNamesFromApi);
-    console.log(this.state.partyNamesFromApi);
     this.state.fetchProduct();
+
     // Check existence of party name
     this.state.checkparty = dataFromChild => {
       try {
         this.setState({
+          responseMessage: "",
           buttonStatus: {
             visibility: "hidden"
           }
@@ -67,13 +63,14 @@ export default class PurchaseEntry extends React.Component {
           }
         };
         this.state.partyNamesFromApi.forEach(showList);
-      } 
-      catch (err) {}
+      } catch (err) {}
     };
 
+    // Check existence of Item name
     this.state.checkitem = dataFromChild => {
       try {
         this.setState({
+          responseMessage: "",
           buttonStatus: {
             visibility: "hidden"
           }
@@ -92,28 +89,31 @@ export default class PurchaseEntry extends React.Component {
       } catch (err) {}
     };
 
+    //From Submit Handler
     this.state.onSubmit = e => {
-          axios.post("http://127.0.0.1:8000/enter-purchase-detail/", {
-             party: this.state.selectedParty,
-             item: this.state.selectedItem,
-             date: this.state.date,
-             quantity: this.state.quantity,
-             rate: this.state.rate,
-             remark: this.state.remark          
-            })
-           .then(res => {
-             this.setState({
-               responseMessage: res.data
-             });
-           })
-           .catch(error => {
-             alert(error.response.request._response);
-           });
-       
+      axios
+        .post("http://127.0.0.1:8000/enter-purchase-detail/", {
+          party: this.state.selectedParty,
+          item: this.state.selectedItem,
+          date: this.state.date,
+          quantity: this.state.quantity,
+          rate: this.state.rate,
+          remark: this.state.remark
+        })
+        .then(res => {
+          this.setState({
+            responseMessage: res.data
+          });
+        })
+        .catch(error => {
+          alert(error.response.request._response);
+        });
+
       e.target.reset();
       e.preventDefault();
     };
 
+    //Getting Current Date
     this.state.getDate = () => {
       var curr = new Date();
       curr.setDate(curr.getDate());
@@ -124,9 +124,12 @@ export default class PurchaseEntry extends React.Component {
     this.state.getDate();
   }
 
+  //assigning data to selectedParty
   myCallbackForSelectedParty = dataFromChild => {
     this.state.selectedParty = dataFromChild;
   };
+
+  //assigning data to selectedParty
   myCallbackForselectedItem = dataFromChild => {
     this.state.selectedItem = dataFromChild;
   };
@@ -147,7 +150,7 @@ export default class PurchaseEntry extends React.Component {
           />
 
           <p>{this.state.partyExistMessage}</p>
-          <br/>
+          <br />
 
           <Autocomplete
             suggestions={this.state.itemNamesFromApi}
@@ -156,12 +159,11 @@ export default class PurchaseEntry extends React.Component {
             checkFromParent={this.state.checkitem}
           />
 
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <input
             type="date"
-            //data-date=""
             data-date-format="YYYY-MM-DD"
             defaultValue={this.state.date}
             name="date"
@@ -171,8 +173,8 @@ export default class PurchaseEntry extends React.Component {
             required
           />
 
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <input
             type="text"
@@ -181,17 +183,15 @@ export default class PurchaseEntry extends React.Component {
             placeholder="Remark"
             autoComplete="off"
             maxLength="30"
-            //minLength="5"
             onChange={e => {
               this.setState({
-                  remark: e.target.value
+                remark: e.target.value
               });
             }}
-            //required
           />
 
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <input
             type="number"
@@ -200,15 +200,15 @@ export default class PurchaseEntry extends React.Component {
             placeholder="Quantity"
             autoComplete="off"
             onChange={e => {
-                this.setState({
-                    quantity: parseInt(e.target.value)
-                });
-              }}
+              this.setState({
+                quantity: parseInt(e.target.value)
+              });
+            }}
             required
           />
 
-          <br/>
-          <br/>
+          <br />
+          <br />
 
           <input
             type="number"
@@ -218,13 +218,12 @@ export default class PurchaseEntry extends React.Component {
             placeholder="Rate"
             autoComplete="off"
             onChange={e => {
-                this.setState({
-                    rate: e.target.value
-                });
-              }}
+              this.setState({
+                rate: e.target.value
+              });
+            }}
             required
           />
-
         </div>
         <p>{this.state.responseMessage}</p>
         <button
