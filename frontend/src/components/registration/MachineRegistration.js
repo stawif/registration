@@ -17,8 +17,7 @@ export default class MachineRegistration extends React.Component {
   
     
 
-    // Fetch machine list from server
-    
+  // Fetch machine list from server
   this.state.fetchProduct = async () => {
       const responseMachineList = await fetch(
         "http://127.0.0.1:8000/list-of-machines/"
@@ -86,6 +85,7 @@ export default class MachineRegistration extends React.Component {
       >
         <p className="headingViewPart">Machine Registration</p>
         <div className="pt-5">
+
           <input
             type="text"
             className="mb-2"
