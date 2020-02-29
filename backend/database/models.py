@@ -1,6 +1,6 @@
 from django.db import models
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save,post_save
 from datetime import datetime  
 
 class Owner(models.Model):
@@ -14,6 +14,11 @@ class Owner(models.Model):
 
     def __str__(self):
         return self.name    
+
+@receiver(post_save, sender= Owner)
+def gen_daily_expense_debit_id(sender, instance, **kwarge):
+    daily_expense_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"), spend_amount=0)
+    daily_expense_i.save()
 
 class Machine(models.Model):
     """
