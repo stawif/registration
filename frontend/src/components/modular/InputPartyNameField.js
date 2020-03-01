@@ -15,7 +15,6 @@ export default class InputPartyNameField extends Component {
         <input
           type="text"
           className="mb-2"
-          //value={}
           placeholder="Enter Party Name"
           autoComplete="off"
           maxLength="30"
