@@ -1,32 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { Table } from "react-fluid-table";
+import React from 'react';
 
-export default function VehicleDisplay() {
-  const [data, setData] = useState([]);
-  
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/list-of-vehicle/")
-      .then(response => response.json())
-      .then(data => setData(data));
-  }, []);
-
-  const columns = [
-    {
-      key: "owner",
-      name: "Owner Name",
-      width: 100
-    },
-    {
-      key: "name",
-      name: "Vehicle Name",
-      width: 100
-    }
-  ];
-  return (
-    <div>
-      <Table data={data} columns={columns} tableHeight={400} />
-    </div>
-  );
+class VehicleDisplay extends React.Component {
+	state = {
+		todos: []
+	}
+	componentDidMount() {
+		fetch('http://127.0.0.1:8000/list-of-vehicles/')
+		.then(res => res.json())
+		.then((data) => {
+		this.setState({ todos: data })
+		})
+	}
+	render() {
+		return (
+			<div>
+				<h1>Vehicle Names </h1>
+				<div>
+					<table className="table-borderd">
+						<tr>
+							<th>Owner</th>
+							<th>Name</th>
+						</tr>
+						{this.state.todos.map((todo) => (
+						<tr>
+							<td>{todo.owner}</td>
+							<td>{todo.name}</td>
+						</tr>
+						))}
+					</table>
+				</div>
+			</div>
+		);
+	}
 }
+export default VehicleDisplay;
 
