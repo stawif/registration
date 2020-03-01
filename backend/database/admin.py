@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (Owner,Machine, Vehicle, Recorder, Party, Item , MachineParty,VehicleParty,
-                    PurchaseParty,MachineWork , VehicleWork,VehicleWorkVehicles,Worker,Purchase,MixDebit,
-                    MachineSupply, VehicleSupply,DailyWork,DailyParty)
+                    PurchaseParty,MachineWork , VehicleWork,VehicleWorkVehicles,Worker,Purchase,MixDebit,DailyWork,DailyParty,
+                    MachineSupply, VehicleSupply)
 
 admin.site.register(Owner)
 admin.site.register(Machine)

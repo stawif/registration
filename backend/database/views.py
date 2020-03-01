@@ -6,8 +6,7 @@ from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerial
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles,
-                        MixDebit,Worker,Purchase,DailyWork,DailyParty,
-                        MixDebit,Worker,Purchase,MachineSupply,VehicleSupply)
+                        MixDebit,Worker,Purchase,DailyWork,DailyParty,MachineSupply,VehicleSupply)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse
 from rest_framework import status
@@ -47,7 +46,7 @@ class MachineList(APIView):
     """
     def get(self,request):
         queryset = Machine.objects.all()
-        serializer = MachinePartySerializer(queryset,many=True)
+        serializer = MachineSerializer(queryset,many=True)
         return Response(serializer.data)
 
 class VehicleList(APIView):
@@ -184,20 +183,32 @@ class AddMachineParty(APIView):
             api_village = request.data['village']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
+        try:
+            api_contact_i  = Party.objects.get(contact=api_contact)
+        except Exception as e:
+            print(e)
         machine_name = {"name":api_name}
         if machine_name in machine_party_list:
-            return Response('Party Already Exists in Machine Work.')
+            return Response('Party Already Exists in Machine Work ')
         else:
             try:
-                party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
-            except Exception:
-                return Response("Data is not sufficient",status=status.HTTP_404_NOT_FOUND)
-            try:
-                machine_party_i = MachineParty.objects.create(credit_id=party_i,name=api_name)
-                return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
-            except Exception:
-                party_i.delete()
-                return Response("Party not Created.Network problem.",status=status.HTTP_408_REQUEST_TIMEOUT)
+                if api_contact_i:
+                    try:
+                        machine_party_i = MachineParty.objects.create(credit_id=api_contact_i,name=api_name)
+                        return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
+                    except Exception:
+                        return Response("Party not Created.Network problem ",status=status.HTTP_408_REQUEST_TIMEOUT)
+            except :
+                try:
+                    party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
+                except Exception:
+                    return Response("Data is not sufficient",status=status.HTTP_404_NOT_FOUND)
+                try:
+                    machine_party_i = MachineParty.objects.create(credit_id=party_i,name=api_name)
+                    return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
+                except Exception:
+                    party_i.delete()
+                    return Response("Party not Created , Network problem ",status=status.HTTP_408_REQUEST_TIMEOUT)
 
         return Response("please provide correct details",status=status.HTTP_400_BAD_REQUEST)
 
@@ -225,20 +236,32 @@ class AddVehicleParty(APIView):
             api_village = request.data['village']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
+        try:
+            api_contact_i  = Party.objects.get(contact=api_contact)
+        except Exception as e:
+            print(e)
         vehicle_party = {"name":api_name}
         if vehicle_party in vehicle_party_list:
-            return Response('Party Already Exists in Vehicle Work.')
+            return Response('Party Already Exists in Vehicle Work')
         else:
             try:
-               party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
-            except Exception:
-                return Response("Data is not correct",status=status.HTTP_400_BAD_REQUEST)
-            try:
-                vehicle_party_i = VehicleParty.objects.create(credit_id=party_i,name=api_name)
-                return Response("{} party added".format(api_name,status=status.HTTP_201_CREATED))
-            except Exception:
-                party_i.delete()
-                return Response("Party not Created.Network problem.")
+                if api_contact_i:
+                    try:
+                        vehicle_party_i = VehicleParty.objects.create(credit_id=api_contact_i,name=api_name)
+                        return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
+                    except Exception:
+                        return Response("Party not Created, Network problem",status=status.HTTP_408_REQUEST_TIMEOUT)
+            except :
+                try:
+                    party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
+                except Exception:
+                    return Response("Data is not correct",status=status.HTTP_400_BAD_REQUEST)
+                try:
+                    vehicle_party_i = VehicleParty.objects.create(credit_id=party_i,name=api_name)
+                    return Response("{} party added".format(api_name,status=status.HTTP_201_CREATED))
+                except Exception:
+                    party_i.delete()
+                    return Response("Party not Created, Network problem")
 
         return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
 
@@ -462,6 +485,7 @@ class AddDailyWork(APIView):
         except Exception as e:
              return Response('please provide all data',status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
 class AddMachineSupply(APIView):
     """
     View for supply entry for machine
