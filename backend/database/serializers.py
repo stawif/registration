@@ -32,6 +32,14 @@ class ItemSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Item
+        fields = ['owner','name','measurement','quantity']
+
+class ItemListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Store Model.
+    """
+    class Meta:
+        model = Item
         fields = ['name','measurement','quantity']
 
 class WorkerSerializer(serializers.ModelSerializer):

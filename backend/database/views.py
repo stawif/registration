@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , ItemSerializer,
                             PartySerializer,PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
                             MachineWorkSerializer , VehicleWorkSerializer,VehicleWorkVehicleSerializer,WorkerSerializer,
-                            DailyWorkSerializer)
+                            DailyWorkSerializer,ItemListSerializer)
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles,
@@ -117,7 +117,7 @@ class ItemList(APIView):
     """
     def get(self,request):
         queryset = Item.objects.all()
-        serializer = ItemSerializer(queryset,many=True)
+        serializer = ItemListSerializer(queryset,many=True)
         return Response(serializer.data)
 
 class WorkerList(APIView):
