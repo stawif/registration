@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import InputCommonName from "../modular/InputCommonName";
 
 export default class MachineRegistration extends React.Component {
   constructor(props) {
@@ -13,9 +14,7 @@ export default class MachineRegistration extends React.Component {
       buttonStatus: {
         visibility: "visible"
       }
-    }
-  
-    
+    };
 
   // Fetch machine list from server
   this.state.fetchProduct = async () => {
@@ -52,10 +51,9 @@ export default class MachineRegistration extends React.Component {
         };
         this.state.machineList.forEach(showList);
       } catch (err) {}
-      console.log(this.state.machineName);
-      
     };
 
+    //Form Handler
     this.state.onSubmit = e => {
       axios
         .post("http://127.0.0.1:8000/machine-registration/", {
@@ -67,16 +65,12 @@ export default class MachineRegistration extends React.Component {
             responseMessage: res.data
           });
         })
-        .catch(error => {
-          //alert(error.response.request._response);
-        });
+        .catch(error => {});
       e.target.reset();
       e.preventDefault();
     };
   }
 
-  
-  
   render() {
     return (
       <form
@@ -85,26 +79,13 @@ export default class MachineRegistration extends React.Component {
       >
         <p className="headingViewPart">Machine Registration</p>
         <div className="pt-5">
-
-          <input
-            type="text"
-            className="mb-2"
-            name="machineName"
-            placeholder="Machine Name"
-            autoComplete="off"
-            maxLength="30"
-            minLength="5"
-            //value={this.state.machineName}
-            onChange=
-            {e => {
-              this.state.machineName = e.target.value;
-              // this.setState({ [e.target.name]: e.target.value });
-              // console.log(e.target.name,"as", e.target.value);
-              
-              this.state.checkMachine();
+          <InputCommonName
+            minLength={"5"}
+            placeholderParent={"Machine Name"}
+            callbackFromParent={dataFromChild => {
+              this.state.machineName = dataFromChild;
             }}
-            
-            required
+            checkFromParent={this.state.checkMachine}
           />
         </div>
         <p>{this.state.machineExistStatus}</p>
