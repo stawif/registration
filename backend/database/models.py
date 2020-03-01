@@ -164,6 +164,8 @@ class MachineWork(models.Model):
     drilling_feet = models.FloatField(blank=False)
     diesel_amount = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
+    average_feet = models.FloatField(default=0)
+    paid = models.BooleanField(default=False)
 
     # def __str__(self):
     #     return self.party," ",str(self.date)    
@@ -181,6 +183,7 @@ class VehicleWork(models.Model):
     five_feet = models.FloatField(blank=False)
     two_half_feet = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         template = '{0.party} {0.date}'
@@ -233,6 +236,7 @@ class Purchase(models.Model):
     rate = models.FloatField(blank=False)
     net_amount = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.party)    
