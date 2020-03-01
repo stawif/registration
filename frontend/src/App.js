@@ -195,15 +195,8 @@ class App extends React.Component{
 								</form>
 							</div>
 						</nav> 
-						<div id="viewPart" className="d-flex justify-content-center align-items-center">
+						<div id="viewPart" className="d-flex justify-content-center align-items-center scrollingSection">
 							{ currentComponent }
-							{/* <InputField
-								type= "text"
-								placeholder= "Riddhesh"
-								callBackFunction= {
-									data => console.log("Data from InputField : ",data)
-								}
-							/>*/}
 						</div>
 					</div>
 				</div>

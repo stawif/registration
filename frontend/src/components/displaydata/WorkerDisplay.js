@@ -15,7 +15,9 @@ class WorkerDisplay extends React.Component {
 		return (
 			<div>
 				<div>
-					<table className="table-borderd">
+					<p className="headingViewPart">Workers</p>
+					<table className="table">
+						<thead className="thead-dark">
 						<tr>
 							<th>Name</th>
 							<th>Contact</th>
@@ -24,6 +26,8 @@ class WorkerDisplay extends React.Component {
 							<th>Exit Date</th>
 							<th>Entry Date</th>
 						</tr>
+						</thead>
+						<tbody>
 						{this.state.todos.map((todo) => (
 						<tr>
 							<td>{todo.name}</td>
@@ -34,6 +38,7 @@ class WorkerDisplay extends React.Component {
 							<td>{todo.entry_date}</td>
 						</tr>
 						))}
+						</tbody>
 					</table>
 				</div>
 			</div>
