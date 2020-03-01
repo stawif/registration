@@ -231,20 +231,32 @@ class AddMachineParty(APIView):
             api_village = request.data['village']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
+        try:
+            api_contact_i  = Party.objects.get(contact=api_contact)
+        except Exception as e:
+            print(e)
         machine_name = {"name":api_name}
         if machine_name in machine_party_list:
-            return Response('Party Already Exists in Machine Work.')
+            return Response('Party Already Exists in Machine Work ')
         else:
             try:
-                party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
-            except Exception:
-                return Response("Data is not sufficient",status=status.HTTP_404_NOT_FOUND)
-            try:
-                machine_party_i = MachineParty.objects.create(credit_id=party_i,name=api_name)
-                return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
-            except Exception:
-                party_i.delete()
-                return Response("Party not Created.Network problem.",status=status.HTTP_408_REQUEST_TIMEOUT)
+                if api_contact_i:
+                    try:
+                        machine_party_i = MachineParty.objects.create(credit_id=api_contact_i,name=api_name)
+                        return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
+                    except Exception:
+                        return Response("party is already exists in machine party with same name and contact ",status=status.HTTP_408_REQUEST_TIMEOUT)
+            except :
+                try:
+                    party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
+                except Exception:
+                    return Response("Data is not sufficient",status=status.HTTP_404_NOT_FOUND)
+                try:
+                    machine_party_i = MachineParty.objects.create(credit_id=party_i,name=api_name)
+                    return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
+                except Exception:
+                    party_i.delete()
+                    return Response("Party not Created , Network problem ",status=status.HTTP_408_REQUEST_TIMEOUT)
 
         return Response("please provide correct details",status=status.HTTP_400_BAD_REQUEST)
 
@@ -272,20 +284,32 @@ class AddVehicleParty(APIView):
             api_village = request.data['village']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
+        try:
+            api_contact_i  = Party.objects.get(contact=api_contact)
+        except Exception as e:
+            print(e)
         vehicle_party = {"name":api_name}
         if vehicle_party in vehicle_party_list:
-            return Response('Party Already Exists in Vehicle Work.')
+            return Response('Party Already Exists in Vehicle Work')
         else:
             try:
-               party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
-            except Exception:
-                return Response("Data is not correct",status=status.HTTP_400_BAD_REQUEST)
-            try:
-                vehicle_party_i = VehicleParty.objects.create(credit_id=party_i,name=api_name)
-                return Response("{} party added".format(api_name,status=status.HTTP_201_CREATED))
-            except Exception:
-                party_i.delete()
-                return Response("Party not Created.Network problem.")
+                if api_contact_i:
+                    try:
+                        vehicle_party_i = VehicleParty.objects.create(credit_id=api_contact_i,name=api_name)
+                        return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
+                    except Exception:
+                        return Response("party is already exists in vehicle party with same name and contact",status=status.HTTP_408_REQUEST_TIMEOUT)
+            except :
+                try:
+                    party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
+                except Exception:
+                    return Response("Data is not correct",status=status.HTTP_400_BAD_REQUEST)
+                try:
+                    vehicle_party_i = VehicleParty.objects.create(credit_id=party_i,name=api_name)
+                    return Response("{} party added".format(api_name,status=status.HTTP_201_CREATED))
+                except Exception:
+                    party_i.delete()
+                    return Response("Party not Created, Network problem")
 
         return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
 
@@ -592,3 +616,36 @@ class AddVehicleSupply(APIView):
             except Exception as e:
                 print(e)
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)                
+
+class MachinePartyList(APIView):
+    """
+    View to return List of Machine Party.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        queryset = MachineParty.objects.all()
+        serializer = MachinePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class VehiclePartyList(APIView):
+    """
+    View to return List of Vehicle Party.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        queryset = VehicleParty.objects.all()
+        serializer = VehiclePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class WorkerList(APIView):
+    """
+    View to return List of Worker.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        queryset = Worker.objects.all()
+        serializer = WorkerSerializer(queryset,many=True)
+        return Response(serializer.data)
