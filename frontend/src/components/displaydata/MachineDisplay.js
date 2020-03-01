@@ -14,7 +14,7 @@ class MachineDisplay extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>Machine Names </h1>
+				<h1>Machine Names</h1>
 				<div>
 					<table className="table-borderd">
 						<tr>
