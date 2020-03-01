@@ -2,12 +2,8 @@ from django.urls import path
 from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , ItemList , AddItem,
                     MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
                     AddVehicleParty,AddMachineWork,AddVehicleWork,AddWorker,AddPurchase, WorkerList,AddDailyWork,
-<<<<<<< HEAD
-                    AddMachineSupply,AddVehicleSupply,MachinePartyList,VehiclePartyList,WorkerList,PartyContact,PartyThroughContact)
-=======
                     AddMachineSupply,AddVehicleSupply,MachinePartyList,VehiclePartyList,WorkerList, PartyContact,
                     PartyThroughContact)
->>>>>>> 595977d8096aebbc2c96bb3cf251037659f4c3fb
 
 urlpatterns = [
     path('machine-registration/',AddMachine.as_view()),

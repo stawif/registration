@@ -15,11 +15,22 @@ class MachinePartyDisplay extends React.Component {
 		return (
 			<div>
 				<h1>Machine Party Names </h1>
-				{this.state.todos.map((todo) => (
-					<div>
-					<h5>{todo.name}</h5>
-					</div>
-				))}
+				<div>
+					<table className="table-borderd">
+						<tr>
+							<th>Contact</th>
+							<th>Name</th>
+							<th>Village</th>
+						</tr>
+						{this.state.todos.map((todo) => (
+						<tr>
+							<td>{todo.contact}</td>
+							<td>{todo.name}</td>
+							<td>{todo.village}</td>
+						</tr>
+						))}
+					</table>
+				</div>
 			</div>
 		);
 	}
