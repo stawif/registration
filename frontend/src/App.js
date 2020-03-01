@@ -13,6 +13,8 @@ import PurchaseEntry from './components/entry/PurchaseEntry';
 import MachineSupplyEntry from './components/entry/MachineSupplyEntry';
 import VehicleSupplyEntry from './components/entry/VehicleSupplyEntry';
 import DailyWorkEntry from './components/entry/DailyWorkEntry';
+import MachineDisplay from './components/displaydata/MachineDisplay';
+import VehicleDisplay from './components/displaydata/VehicleDisplay';
 
 
 class App extends React.Component{
@@ -32,7 +34,9 @@ class App extends React.Component{
 				addPurchaseDetail: "addPurchaseDetail",
 				addMachineSupply: "addMachineSupply",
 				addVehicleSupply: "addVehicleSupply",
-				addDailyWork: "addDailyWork"
+				addDailyWork: "addDailyWork",
+				machineDisplay: "machineDisplay",
+				vehicleDisplay: "vehicleDisplay"
 			},
 			currentPage: "machineRegistration"
 		}
@@ -91,6 +95,12 @@ class App extends React.Component{
 		else if(this.state.currentPage === this.state.allPages.addDailyWork){
 			currentComponent = <DailyWorkEntry/>
 		}
+		else if(this.state.currentPage === this.state.allPages.machineDisplay){
+			currentComponent = <MachineDisplay/>
+		}
+		else if(this.state.currentPage === this.state.allPages.vehicleDisplay){
+			currentComponent = <VehicleDisplay/>
+		}
 		else{
 			currentComponent = <MachineRegistration />
 		} 
@@ -143,9 +153,8 @@ class App extends React.Component{
 										Display
 										</a>
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-											<a className="dropdown-item" href="">Account</a>
-											<a className="dropdown-item" href="">Party status</a>
-											<a className="dropdown-item" href="">Store status</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineDisplay) }>Machine Display</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleDisplay) }>Vehicle Display</a>
 										</div>
 									</li>
 								</ul>
