@@ -7,6 +7,63 @@ import InputPartyVillageField from "../modular/InputPartyVillageField";
 import InputRateField from "../modular/InputRateField";
 
 export default class DailyWorkEntry extends React.Component {
+  onChange = () => {
+    this.setState({
+      workerExistMessage: "",
+      responseMessage: ""
+    });
+  };
+
+  //Form Handler
+  onSubmit = e => {
+    axios
+      .post("http://127.0.0.1:8000/enter-daily-work/", {
+        name: this.state.partyName,
+        contact: this.state.partyContact,
+        village: this.state.partyVillage,
+        date: this.state.date,
+        five_feet: this.state.fiveFeet,
+        five_feet_rate: this.state.fiveFeetRate,
+        two_half_feet: this.state.twoHalfFeet,
+        two_half_feet_rate: this.state.twoHalfFeetRate,
+        diesel_spend: this.state.dieselSpend
+      })
+      .then(res => {
+        this.setState({
+          responseMessage: res.data
+        });
+      })
+      .catch(error => {
+        console.log(error.response.request._response);
+      });
+
+    e.target.reset();
+    e.preventDefault();
+  };
+
+  // toggle load status
+  toggleLoadStatus = async () => {
+    if (this.state.loadingStatus.visibility === "visible") {
+      await this.setState({
+        loadingStatus: {
+          visibility: "hidden"
+        },
+        loadedStatus: {
+          visibility: "visible"
+        }
+      });
+    } else {
+      await this.setState({
+        loadingStatus: {
+          visibility: "visible"
+        },
+        loadedStatus: {
+          visibility: "hidden"
+        }
+      });
+    }
+  };
+
   constructor(props) {
     super(props);
 
@@ -23,73 +80,38 @@ export default class DailyWorkEntry extends React.Component {
       responseMessage: "",
       buttonStatus: {
         visibility: "visible"
+      },
+      loadingStatus: {
+        visibility: "visible"
+      },
+      loadedStatus: {
+        visibility: "hidden"
       }
     };
 
-    this.state.onChange = () => {
-      this.setState({
-        workerExistMessage: "",
-        responseMessage: ""
-      });
-    };
-
-    //Form Handler
-    this.state.onSubmit =(e) => {
-      axios.post('http://127.0.0.1:8000/enter-daily-work/', 
-      {
-        name: this.state.partyName,
-        contact: this.state.partyContact,
-        village: this.state.partyVillage,
-        date: this.state.date,
-        five_feet: this.state.fiveFeet,
-        five_feet_rate: this.state.fiveFeetRate,
-        two_half_feet: this.state.twoHalfFeet,
-        two_half_feet_rate: this.state.twoHalfFeetRate,
-        diesel_spend: this.state.dieselSpend
-      }
-      ).then(res => {
-        this.setState({
-          responseMessage: res.data
-        });         
-      }
-      ).catch(error => {
-         console.log( error.response.request._response )
-      });
-
-      console.log(this.state.partyName);
-      console.log(this.state.partyContact);
-      console.log(this.state.partyVillage);
-      console.log(this.state.date);
-      console.log(this.state.fiveFeet);
-      console.log(this.state.fiveFeetRate);
-      console.log(this.state.twoHalfFeet);
-      console.log(this.state.twoHalfFeetRate);
-      console.log(this.state.dieselSpend);
-    
-    e.target.reset();
-    e.preventDefault();
-  };
-
-       
-
-     
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
+  }
+  componentDidMount() {
+    this.toggleLoadStatus();
   }
 
   render() {
     return (
       <form
         className="form-container form-group"
-        onSubmit={e => this.state.onSubmit(e)}
+        onSubmit={e => this.onSubmit(e)}
       >
         <p className="headingViewPart">Daily Work Entry</p>
         <div className="pt-5">
           <InputPartyNameField
             callbackFromParent={dataFromChild => {
               this.state.partyName = dataFromChild;
-              
-              
             }}
-            checkFromParent={e => {this.state.onChange()}}
+            checkFromParent={e => {
+              this.onChange();
+            }}
           />
 
           <p>{this.state.workerExistMessage}</p>
@@ -118,7 +140,7 @@ export default class DailyWorkEntry extends React.Component {
               this.state.date = dataFromChild;
             }}
           />
-          
+
           <br />
           <br />
 
@@ -130,7 +152,7 @@ export default class DailyWorkEntry extends React.Component {
             autoComplete="off"
             onChange={e => {
               this.state.fiveFeet = e.target.value;
-              this.state.onChange();
+              this.onChange();
             }}
             required
           />
@@ -156,7 +178,7 @@ export default class DailyWorkEntry extends React.Component {
             autoComplete="off"
             onChange={e => {
               this.state.twoHalfFeet = e.target.value;
-              this.state.onChange();
+              this.onChange();
             }}
             required
           />
@@ -181,7 +203,7 @@ export default class DailyWorkEntry extends React.Component {
             autoComplete="off"
             onChange={e => {
               this.state.dieselSpend = e.target.value;
-              this.state.onChange();
+              this.onChange();
             }}
             required
           />

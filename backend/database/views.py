@@ -283,6 +283,7 @@ class AddVehicleParty(APIView):
             api_contact = request.data['contact']
             api_village = request.data['village']
         except Exception as e:
+            print(e)
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         try:
             api_contact_i  = Party.objects.get(contact=api_contact)
