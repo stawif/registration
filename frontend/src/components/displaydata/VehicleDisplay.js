@@ -15,12 +15,20 @@ class VehicleDisplay extends React.Component {
 		return (
 			<div>
 				<h1>Vehicle Names </h1>
-				{this.state.todos.map((todo) => (
-					<div>
-					<h5>{todo.owner}</h5>
-					<h5>{todo.name}</h5>
-					</div>
-				))}
+				<div>
+					<table className="table-borderd">
+						<tr>
+							<th>Owner</th>
+							<th>Name</th>
+						</tr>
+						{this.state.todos.map((todo) => (
+						<tr>
+							<td>{todo.owner}</td>
+							<td>{todo.name}</td>
+						</tr>
+						))}
+					</table>
+				</div>
 			</div>
 		);
 	}
