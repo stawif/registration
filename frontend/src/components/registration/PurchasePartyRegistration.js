@@ -14,23 +14,67 @@ export default class PurchasePartyRegistration extends React.Component {
       partyVillage: "",
       partyList: {},
       partyExistMessage: "",
+      partyContacts: "",
+      responseMessage: "",
+      buttonStatus: {
+        visibility: "visible"
+      },
+      disabled: true
+    };
+
+   // Fetch party list and contact list from server
+   this.state.fetchProduct = async () => {
+    const responsePartyList = await fetch(
+      "http://127.0.0.1:8000/list-of-machineparty/"
+    );
+    const jsonPartyList = await responsePartyList.json();
+    this.state.partyList = jsonPartyList;
+    const responseContactList = await fetch(
+      "http://127.0.0.1:8000/list-of-partycontacts/"
+    );
+    const jsonContactList = await responseContactList.json();
+    this.state.partyContacts = jsonContactList;
+    console.log(this.state.partyContacts);
+  };
+
+  this.state.fetchProduct();
+
+  // Take name and village from contact
+  this.state.getNameVillage = matchContact => {
+    console.log(matchContact);
+
+    axios
+      .post("http://127.0.0.1:8000/party-through-contact/", {
+        contact: matchContact
+      })
+      .then(res => {
+        const jsonNameVillage = JSON.parse(res.data);
+
+        this.setState({
+          //disabled: !this.state.disabled,
+
+          partyName: jsonNameVillage.name,
+          partyVillage: jsonNameVillage.village
+        });
+        // this.state.partyName = jsonNameVillage.name;
+        // this.state.partyVillage = jsonNameVillage.village;
+        console.log("Name ", this.state.partyName);
+        console.log("Village ", this.state.partyVillage);
+      })
+      .catch(error => {
+        //console.log( error.response.request._response )
+      });
+  };
+
+  this.state.checkVillage = () => {
+    this.setState({
+      partyExistMessage: "",
       responseMessage: "",
       buttonStatus: {
         visibility: "visible"
       }
-    };
-
-    // Fetch party list from server
-    this.state.fetchProduct = async () => {
-      const responsePartyList = await fetch(
-        "http://127.0.0.1:8000/list-of-purchaseparty/"
-      );
-      const jsonPartyList = await responsePartyList.json();
-      this.state.partyList = jsonPartyList;
-    };
-
-    this.state.fetchProduct();
-
+    });
+  }
     // Check existence of party name
     this.state.checkparty = () => {
       try {
@@ -86,29 +130,77 @@ export default class PurchasePartyRegistration extends React.Component {
       >
         <p className="headingViewPart">Purchase Party Registration</p>
         <div className="pt-5">
-          <InputPartyNameField
-            callbackFromParent={dataFromChild => {
-              this.state.partyName = dataFromChild;
+        <input
+            type="number"
+            className="mb-2"
+            pattern="^\d{10}$"
+            name="partyContact"
+            placeholder="Party Contact"
+            autoComplete="off"
+            onChange={e => {
+              this.state.partyContact = e.target.value;
+              if (e.target.value.length === 10) {
+                if (this.state.partyContacts.indexOf(e.target.value) > -1) {
+                  this.state.getNameVillage(e.target.value);
+                } else
+                  this.setState({
+                    
+                    disabled: !this.state.disabled,
+                    partyName: "",
+                    partyVillage: ""
+                  });
+              }
             }}
-            checkFromParent={this.state.checkparty}
+            required
           />
 
-          <p>{this.state.partyExistMessage}</p>
-          <br />
-
-          <InputContactField
+          {/* <InputContactField
             callbackFromParent={dataFromChild => {
               this.state.partyContact = dataFromChild;
             }}
-          />
+          /> */}
 
           <br />
           <br />
 
-          <InputPartyVillageField
+          {/* <InputPartyVillageField
             callbackFromParent={dataFromChild => {
               this.state.partyVillage = dataFromChild;
             }}
+          /> */}
+
+          <input
+            type="text"
+            className="mb-2"
+            name="partyName"
+            placeholder="Party Name"
+            value={this.state.partyName}
+            autoComplete="off"
+            maxLength="30"
+            minLength="5"
+            onChange={e => {
+              this.state.partyName = e.target.value;
+              this.state.checkparty();
+            }}
+            required
+            disabled={this.state.disabled ? "disabled" : ""}
+          />
+
+          <input
+            type="text"
+            className="mb-2"
+            name="partyVillage"
+            placeholder="Party Village"
+            value={this.state.partyVillage}
+            autoComplete="off"
+            maxLength="30"
+            minLength="5"
+            onChange={e => {
+              this.state.partyVillage = e.target.value;
+              this.state.checkVillage();
+            }}
+            required
+            disabled={this.state.disabled ? "disabled" : ""}
           />
         </div>
         <p>{this.state.responseMessage}</p>
