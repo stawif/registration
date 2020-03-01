@@ -14,19 +14,21 @@ class MachineDisplay extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>Machine Names</h1>
+				<p className="headingViewPart">Machines</p>
 				<div>
-					<table className="table-borderd">
-						<tr>
-							<th>Owner</th>
-							<th>Name</th>
-						</tr>
-						{this.state.todos.map((todo) => (
-						<tr>
-							<td>{todo.owner}</td>
-							<td>{todo.name}</td>
-						</tr>
-						))}
+					<table className=" table table-borderd">
+						<thead className="thead-dark">
+							<tr>
+								<th>Name</th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.state.todos.map((todo) => (
+								<tr>
+									<td>{todo.name}</td>
+								</tr>
+							))}
+						</tbody>
 					</table>
 				</div>
 			</div>

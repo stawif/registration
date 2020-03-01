@@ -14,26 +14,31 @@ class WorkerDisplay extends React.Component {
 	render() {
 		return (
 			<div>
+				<p className="headingViewPart">Workers</p>
 				<div>
-					<table className="table-borderd">
-						<tr>
-							<th>Name</th>
-							<th>Contact</th>
-							<th>Village</th>
-							<th>Salary</th>
-							<th>Exit Date</th>
-							<th>Entry Date</th>
-						</tr>
-						{this.state.todos.map((todo) => (
-						<tr>
-							<td>{todo.name}</td>
-							<td>{todo.contact}</td>
-							<td>{todo.village}</td>
-							<td>{todo.salary}</td>
-							<td>{todo.exit_date}</td>
-							<td>{todo.entry_date}</td>
-						</tr>
-						))}
+					<table className=" table table-borderd">
+						<thead className="table-dark">
+							<tr>
+								<th>Name</th>
+								<th>Contact</th>
+								<th>Village</th>
+								<th>Salary</th>
+								<th>Exit Date</th>
+								<th>Entry Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.state.todos.map((todo) => (
+							<tr>
+								<td>{todo.name}</td>
+								<td>{todo.contact}</td>
+								<td>{todo.village}</td>
+								<td>{todo.salary}</td>
+								<td>{todo.exit_date}</td>
+								<td>{todo.entry_date}</td>
+							</tr>
+							))}
+						</tbody>
 					</table>
 				</div>
 			</div>
