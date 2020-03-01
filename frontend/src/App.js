@@ -15,6 +15,12 @@ import VehicleSupplyEntry from './components/entry/VehicleSupplyEntry';
 import DailyWorkEntry from './components/entry/DailyWorkEntry';
 import MachineDisplay from './components/displaydata/MachineDisplay';
 import VehicleDisplay from './components/displaydata/VehicleDisplay';
+import WorkerDisplay from './components/displaydata/WorkerDisplay';
+import ItemDisplay from './components/displaydata/ItemDisplay';
+import MachinePartyDisplay from './components/displaydata/MachinePartyDisplay';
+import VehiclePartyDisplay from './components/displaydata/VehiclePartyDisplay';
+import PurchasePartyDisplay from './components/displaydata/PurchasePartyDisplay';
+
 
 
 class App extends React.Component{
@@ -36,7 +42,12 @@ class App extends React.Component{
 				addVehicleSupply: "addVehicleSupply",
 				addDailyWork: "addDailyWork",
 				machineDisplay: "machineDisplay",
-				vehicleDisplay: "vehicleDisplay"
+				vehicleDisplay: "vehicleDisplay",
+				workerDispaly: "workerDisplay",
+				itemDisplay: "itemDisplay",
+				machinePartyDisplay: "machinePartyDisplay",
+				vehiclePartyDisplay: "vehiclePartyDisplay",
+				purchasePartyDisplay: "purchasePartyDisplay"
 			},
 			currentPage: "machineRegistration"
 		}
@@ -101,6 +112,21 @@ class App extends React.Component{
 		else if(this.state.currentPage === this.state.allPages.vehicleDisplay){
 			currentComponent = <VehicleDisplay/>
 		}
+		else if(this.state.currentPage === this.state.allPages.workerDisplay){
+			currentComponent = <WorkerDisplay/>
+		}
+		else if(this.state.currentPage === this.state.allPages.itemDisplay){
+			currentComponent = <ItemDisplay/>
+		}
+		else if(this.state.currentPage === this.state.allPages.machinePartyDisplay){
+			currentComponent = <MachinePartyDisplay/>
+		}
+		else if(this.state.currentPage === this.state.allPages.vehiclePartyDisplay){
+			currentComponent = <VehiclePartyDisplay/>
+		}
+		else if(this.state.currentPage === this.state.allPages.purchasePartyDisplay){
+			currentComponent = <PurchasePartyDisplay/>
+		}
 		else{
 			currentComponent = <MachineRegistration />
 		} 
@@ -155,6 +181,11 @@ class App extends React.Component{
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineDisplay) }>Machine Display</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleDisplay) }>Vehicle Display</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.workerDisplay) }>Worker Display</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.itemDisplay) }>Item Display</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machinePartyDisplay) }>Machine Party Display</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyDisplay) }>Vehicle Party Display</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyDisplay) }>Purchase Party Display</a>
 										</div>
 									</li>
 								</ul>

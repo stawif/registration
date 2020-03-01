@@ -16,7 +16,18 @@ class MachineDisplay extends React.Component {
 			<div>
 				<h1>Machine Names </h1>
 				{this.state.todos.map((todo) => (
-					<h5>{todo.name}</h5>
+					<div>
+						<table className="table-bordered">
+							<tr>
+								<th>Owner</th>
+								<th>Name</th>
+							</tr>
+							<tr>
+								<td>{todo.owner}</td>
+								<td>{todo.name}</td>
+							</tr>
+						</table>
+					</div>
 				))}
 			</div>
 		);
