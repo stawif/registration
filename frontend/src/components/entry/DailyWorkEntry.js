@@ -34,31 +34,45 @@ export default class DailyWorkEntry extends React.Component {
     };
 
     //Form Handler
-    this.state.onSubmit = e => {
-      axios
-        .post("http://127.0.0.1:8000/enter-daily-work/", {
-          name: this.state.partyName,
-          contact: this.state.partyContact,
-          village: this.state.partyVillage,
-          date: this.state.date,
-          five_feet: this.state.fiveFeet,
-          five_feet_rate: this.state.fiveFeetRate,
-          two_half_feet: this.state.twoHalfFeet,
-          two_half_feet_rate: this.state.twoHalfFeetRate,
-          diesel_spend: this.state.dieselSpend
-        })
-        .then(res => {
-          this.setState({
-            responseMessage: res.data
-          });
-        })
-        .catch(error => {
-          console.log(error.response.request._response);
-        });
+    this.state.onSubmit =(e) => {
+      axios.post('http://127.0.0.1:8000/enter-daily-work/', 
+      {
+        name: this.state.partyName,
+        contact: this.state.partyContact,
+        village: this.state.partyVillage,
+        date: this.state.date,
+        five_feet: this.state.fiveFeet,
+        five_feet_rate: this.state.fiveFeetRate,
+        two_half_feet: this.state.twoHalfFeet,
+        two_half_feet_rate: this.state.twoHalfFeetRate,
+        diesel_spend: this.state.dieselSpend
+      }
+      ).then(res => {
+        this.setState({
+          responseMessage: res.data
+        });         
+      }
+      ).catch(error => {
+         console.log( error.response.request._response )
+      });
 
-      e.target.reset();
-      e.preventDefault();
-    };
+      console.log(this.state.partyName);
+      console.log(this.state.partyContact);
+      console.log(this.state.partyVillage);
+      console.log(this.state.date);
+      console.log(this.state.fiveFeet);
+      console.log(this.state.fiveFeetRate);
+      console.log(this.state.twoHalfFeet);
+      console.log(this.state.twoHalfFeetRate);
+      console.log(this.state.dieselSpend);
+    
+    e.target.reset();
+    e.preventDefault();
+  };
+
+       
+
+     
   }
 
   render() {
@@ -72,8 +86,10 @@ export default class DailyWorkEntry extends React.Component {
           <InputPartyNameField
             callbackFromParent={dataFromChild => {
               this.state.partyName = dataFromChild;
+              
+              
             }}
-            checkFromParent={e => {}}
+            checkFromParent={e => {this.state.onChange()}}
           />
 
           <p>{this.state.workerExistMessage}</p>

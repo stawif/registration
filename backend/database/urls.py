@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , ItemList , AddItem,
                     MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
                     AddVehicleParty,AddMachineWork,AddVehicleWork,AddWorker,AddPurchase, WorkerList,AddDailyWork,
+
                     AddMachineSupply,AddVehicleSupply, PartyContact, PartyThroughContact)
 
 urlpatterns = [
