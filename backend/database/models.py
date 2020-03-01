@@ -75,7 +75,7 @@ class Party(models.Model):
     Party are the entity which gives work to owner
     """
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    contact = models.IntegerField(blank=False)
+    contact = models.IntegerField(primary_key=True, blank=False)
     village = models.CharField(max_length=30,blank=False)
     date = models.DateField(default=datetime.now,blank=False)  #Add aunto now date
     total_credit = models.IntegerField(default=0)   
@@ -104,9 +104,11 @@ class PurchaseParty(models.Model):
     """
     Parties that gives work related to purchase
     """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     debit_id = models.OneToOneField(MixDebit, on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
+    contact = models.IntegerField(blank=False)
+    village = models.CharField(max_length=50, blank=False)
 
     def __str__(self):
         return self.name

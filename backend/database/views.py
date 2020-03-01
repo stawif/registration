@@ -8,10 +8,58 @@ from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item ,
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles,
                         MixDebit,Worker,Purchase,DailyWork,DailyParty,MachineSupply,VehicleSupply)
 from rest_framework.response import Response
-from django.http import Http404 ,JsonResponse
+from django.http import Http404 ,JsonResponse,HttpResponse
 from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
+import json
 # Create your views here.
 
+"""
+api_ : represents that this data is comes from API
+_i : represents that this is a instance of model
+"""
+
+def PartyContact(request):
+    """
+    Return json packet with all parties contacts
+    """
+    contacts= []
+    party_i = Party.objects.all()
+    for party in party_i:
+        contacts.append(party.contact)
+    jsonPacket = json.dumps(contacts)
+    return JsonResponse(jsonPacket, safe=False)   
+
+class PartyThroughContact(APIView):
+    """
+    Return name and village through contact
+    """
+    def post(self, request):
+        api_contact = request.data['contact']
+        party_i = Party.objects.get(contact=api_contact)
+        derived_party_i= None 
+        try:
+            derived_party_i = MachineParty.objects.get(credit_id= party_i)
+            print("In machine")
+        except Exception:
+            try:
+                derived_party_i = VehicleParty.objects.get(credit_id= party_i)
+                print("In vehicle")
+            except Exception:
+                try:
+                    derived_party_i = DailyParty.objects.get(credit_id= party_i)        
+                    print("In daily")
+                except Exception as e:
+                    print(e)
+                    return HttpResponse("Can't find any party related to this contact") 
+        packet = {
+            "name": derived_party_i.name,
+            "village": party_i.village
+        }
+        jsonPacket = json.dumps(packet)
+        return JsonResponse(jsonPacket, safe= False)
+
+    
 class AddMachine(APIView):
     """
     View to Add New Machine in Database
@@ -265,8 +313,7 @@ class AddPurchaseParty(APIView):
             api_village = request.data['village']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
-        party_name = {"name":api_name}
-        if party_name in purchase_party_list:
+        if api_name in purchase_party_list:
             return Response('Party Already Exists in Purchase Work.')
         else:
             try:
@@ -274,12 +321,12 @@ class AddPurchaseParty(APIView):
             except Exception:
                 return Response("Error due to mix_debit_creation")
             try:
-                party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
-                purchase_party_instance = PurchaseParty.objects.create(credit_id=party_i,debit_id=mix_debit_create,name=api_name)
-                return Response("{}Party added".format(api_name),status=status.HTTP_201_CREATED)
-            except Exception:
-                party_i.delete()
-                return Response("Party not Created.Network problem.")
+                purchase_party_instance = PurchaseParty.objects.create(owner=owner,debit_id=mix_debit_create,name=api_name,contact=api_contact,village=api_village)
+                return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
+            except Exception as e:
+                print(e)
+                mix_debit_create.delete()
+                return Response("Party not Created due to Network problem.")
         return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
 
 class AddMachineWork(APIView):

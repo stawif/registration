@@ -12,22 +12,42 @@ export default class MachinePartyRegistration extends React.Component{
       partyList: {},
       partyExistMessage: "",
       responseMessage: "",
+      partyContacts: "",
       buttonStatus: {
           visibility: 'visible'
       }
     }
 
-    // Fetch party list from server
+    // Fetch party list and contact list from server
     this.state.fetchProduct = async () =>{
       const responsePartyList = await fetch("http://127.0.0.1:8000/list-of-machineparty/");
       const jsonPartyList = await responsePartyList.json();
       this.state.partyList = jsonPartyList;
+      const responseContactList = await fetch(
+        "http://127.0.0.1:8000/list-of-partycontacts/"
+      );
+      const jsonContactList = await responseContactList.json();
+      this.state.partyContacts = jsonContactList;
     }
     
     
     this.state.fetchProduct(); 
 
-
+    // Take name and village from contact
+    this.state.getNameVillage = (matchContact) => {
+      axios.post('http://127.0.0.1:8000/party-through-contact/', 
+      {
+        contact: matchContact
+      }
+      ).then(res => {
+        const jsonNameVillage= JSON.parse(res.data)
+        console.log("Name ",jsonNameVillage.name)
+        console.log("Village ",jsonNameVillage.village)
+      }
+      ).catch(error => {
+        console.log( error.response.request._response )
+      });
+    }    
 
     // Check existence of party name 
     this.state.checkparty = () => {
@@ -114,6 +134,11 @@ export default class MachinePartyRegistration extends React.Component{
             onChange={
                 e => {
                     this.state.partyContact = e.target.value;
+                    if(e.target.value.length === 10){
+                      if(this.state.partyContacts.indexOf(e.target.value)>-1){
+                        this.state.getNameVillage(e.target.value);
+                      }
+                    }
                 }
             } 
             required
