@@ -72,7 +72,7 @@ class PurchasePartySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = VehicleParty
-        fields = ['name']
+        fields = ['name','contact','village']
 
 class MachineWorkSerializer(serializers.ModelSerializer):
     """
