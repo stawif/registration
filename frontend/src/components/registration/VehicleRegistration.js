@@ -9,6 +9,7 @@ export default class VehicleRegistration extends React.Component{
       vehicleName: "",
       vehicleExistStatus: "",
       vehicleList: {},
+      responseMessage: "",
       buttonStatus: {
         visibility: 'visible'
       }
@@ -16,9 +17,9 @@ export default class VehicleRegistration extends React.Component{
 
     // Fetch vehicle list from server
     this.state.fetchProduct = async () =>{
-      const responsevehicleList = await fetch("http://127.0.0.1:8000/list-of-vehicles/");
-      const jsonvehicleList = await responsevehicleList.json();
-      this.state.vehicleList = jsonvehicleList;
+      const responseVehicleList = await fetch("http://127.0.0.1:8000/list-of-vehicles/");
+      const jsonVehicleList = await responseVehicleList.json();
+      this.state.vehicleList = jsonVehicleList;
     }
     
     this.state.fetchProduct(); 
@@ -28,12 +29,13 @@ export default class VehicleRegistration extends React.Component{
       try {
         this.setState({
              vehicleExistStatus :"",
+             responseMessage: "",
              buttonStatus: {
               visibility: 'visible'           
              }
             });
         const showList = (item, index) => {
-            if (this.state.vehicleName.localeCompare(item.name) == 0){
+            if (this.state.vehicleName.toLowerCase() === item.name.toLowerCase()){
               this.setState({
                  vehicleExistStatus :"* This vehicle name is already exist!!!",
                  buttonStatus: {
@@ -55,6 +57,9 @@ export default class VehicleRegistration extends React.Component{
         }
         ).then(res => {
           this.state.fetchProduct();
+          this.setState({
+            responseMessage: res.data
+          });
         }
         ).catch(error => {
           //alert( error.response.request._response )
@@ -75,12 +80,13 @@ export default class VehicleRegistration extends React.Component{
         className="mb-2" 
         name="vehicleName" 
         placeholder="vehicle Name" 
-        autocomplete="off"
-        maxlength = "30"
+        autoComplete="off"
+        maxLength = "30"
         minLength = "5"
         onChange={
           e => {
           this.state.vehicleName = e.target.value;
+          //this.setState({ vehicleName: this.state.vehicleName });
           this.state.checkvehicle();
         }
         } 
@@ -88,6 +94,7 @@ export default class VehicleRegistration extends React.Component{
         />
     </div>    
     <p>{this.state.vehicleExistStatus}</p>     
+    <p>{this.state.responseMessage}</p>
     <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
     </form>  
     );

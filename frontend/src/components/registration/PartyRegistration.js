@@ -12,19 +12,17 @@ export default class PartyRegistration extends React.Component{
       partyType: "",
       partyList: {},
       partyExistMessage: "",
+      responseMessage: "",
       buttonStatus: {
           visibility: 'visible'
-      },
-      radioButtonStyle: {
-          float: 'left'
       }
     }
 
     // Fetch party list from server
     this.state.fetchProduct = async () =>{
-      const responsepartyList = await fetch("http://127.0.0.1:8000/list-of-party/");
-      const jsonpartyList = await responsepartyList.json();
-      this.state.partyList = jsonpartyList;
+      const responsePartyList = await fetch("http://127.0.0.1:8000/list-of-party/");
+      const jsonPartyList = await responsePartyList.json();
+      this.state.partyList = jsonPartyList;
     }
     
     this.state.fetchProduct(); 
@@ -34,6 +32,7 @@ export default class PartyRegistration extends React.Component{
       try {
         this.setState({
              partyExistMessage :"",
+             responseMessage: "",
              buttonStatus: {
                  visibility: 'visible'           
              }
@@ -64,6 +63,9 @@ export default class PartyRegistration extends React.Component{
         }
         ).then(res => {
           this.state.fetchProduct();
+          this.setState({
+            responseMessage: res.data
+          });
         }
         ).catch(error => {
           alert( error.response.request._response )
@@ -85,8 +87,8 @@ export default class PartyRegistration extends React.Component{
             className="mb-2" 
             name="partyName" 
             placeholder="Party Name" 
-            autocomplete="off"
-            maxlength = "30"
+            autoComplete="off"
+            maxLength = "30"
             minLength = "5"
             onChange={
                 e => {
@@ -105,8 +107,8 @@ export default class PartyRegistration extends React.Component{
             className="mb-2" 
             name="partyContact" 
             placeholder="Party Contact" 
-            autocomplete="off"
-            maxlength = "10"
+            autoComplete="off"
+            maxLength = "10"
             minLength = "10"
             onChange={
                 e => {
@@ -124,8 +126,8 @@ export default class PartyRegistration extends React.Component{
             className="mb-2" 
             name="partyVillage" 
             placeholder="Party Village" 
-            autocomplete="off"
-            maxlength = "30"
+            autoComplete="off"
+            maxLength = "30"
             minLength = "5"
             onChange={
                 e => {
@@ -191,6 +193,7 @@ export default class PartyRegistration extends React.Component{
     
 
     </div>    
+    <p>{this.state.responseMessage}</p>
     <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
     </form>  
     );
