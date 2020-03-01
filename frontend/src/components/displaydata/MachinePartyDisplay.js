@@ -14,21 +14,25 @@ class MachinePartyDisplay extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>Machine Party Names </h1>
+				<p className="headingViewPart">Machine Parties</p>
 				<div>
-					<table className="table-borderd">
-						<tr>
-							<th>Contact</th>
-							<th>Name</th>
-							<th>Village</th>
-						</tr>
-						{this.state.todos.map((todo) => (
-						<tr>
-							<td>{todo.contact}</td>
-							<td>{todo.name}</td>
-							<td>{todo.village}</td>
-						</tr>
-						))}
+					<table className="table table-borderd">
+						<thead className="table-dark">
+							<tr>
+								<th>Contact</th>
+								<th>Name</th>
+								<th>Village</th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.state.todos.map((todo) => (
+								<tr>
+									<td>{todo.contact}</td>
+									<td>{todo.name}</td>
+									<td>{todo.village}</td>
+								</tr>
+							))}
+						</tbody>
 					</table>
 				</div>
 			</div>

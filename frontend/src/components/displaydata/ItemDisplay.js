@@ -14,23 +14,25 @@ class ItemDisplay extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>Item Names </h1>
+				<p className="headingViewPart">Items</p>
 				<div>
-					<table className="table-borderd">
-						<tr>
-							<th>Owner</th>
-							<th>Name</th>
-							<th>Measurement</th>
-							<th>Quantity</th>
-						</tr>
-						{this.state.todos.map((todo) => (
-						<tr>
-							<td>{todo.owner}</td>
-							<td>{todo.name}</td>
-							<td>{todo.measurement}</td>
-							<td>{todo.quantity}</td>
-						</tr>
-						))}
+					<table className="table table-borderd">
+						<thead className="table-dark">
+							<tr>
+								<th>Name</th>
+								<th>Measurement</th>
+								<th>Quantity</th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.state.todos.map((todo) => (
+								<tr>
+									<td>{todo.name}</td>
+									<td>{todo.measurement}</td>
+									<td>{todo.quantity}</td>
+								</tr>
+							))}
+						</tbody>
 					</table>
 				</div>
 			</div>

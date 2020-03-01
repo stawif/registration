@@ -14,19 +14,21 @@ class VehicleDisplay extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>Vehicle Names </h1>
+				<p className="headingViewPart">Vehicles</p>
 				<div>
-					<table className="table-borderd">
-						<tr>
-							<th>Owner</th>
-							<th>Name</th>
-						</tr>
-						{this.state.todos.map((todo) => (
-						<tr>
-							<td>{todo.owner}</td>
-							<td>{todo.name}</td>
-						</tr>
-						))}
+					<table className="table table-borderd">
+						<thead className="table-dark">
+							<tr>
+								<th>Name</th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.state.todos.map((todo) => (
+								<tr>
+									<td>{todo.name}</td>
+								</tr>
+							))}
+						</tbody>
 					</table>
 				</div>
 			</div>
