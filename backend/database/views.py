@@ -197,7 +197,7 @@ class AddMachineParty(APIView):
                         machine_party_i = MachineParty.objects.create(credit_id=api_contact_i,name=api_name)
                         return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
                     except Exception:
-                        return Response("Party not Created.Network problem ",status=status.HTTP_408_REQUEST_TIMEOUT)
+                        return Response("party is already exists in machine party with same name and contact ",status=status.HTTP_408_REQUEST_TIMEOUT)
             except :
                 try:
                     party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
@@ -250,7 +250,7 @@ class AddVehicleParty(APIView):
                         vehicle_party_i = VehicleParty.objects.create(credit_id=api_contact_i,name=api_name)
                         return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
                     except Exception:
-                        return Response("Party not Created, Network problem",status=status.HTTP_408_REQUEST_TIMEOUT)
+                        return Response("party is already exists in vehicle party with same name and contact",status=status.HTTP_408_REQUEST_TIMEOUT)
             except :
                 try:
                     party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
