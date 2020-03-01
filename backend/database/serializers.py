@@ -71,7 +71,7 @@ class PurchasePartySerializer(serializers.ModelSerializer):
     Serializer for the Vehicle Party Model.
     """
     class Meta:
-        model = VehicleParty
+        model = PurchaseParty
         fields = ['name','contact','village']
 
 class MachineWorkSerializer(serializers.ModelSerializer):
