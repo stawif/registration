@@ -32,7 +32,7 @@ class ItemSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Item
-        fields = ['name','measurement','quantity']
+        fields = ['owner','name','measurement','quantity']
 
 class WorkerSerializer(serializers.ModelSerializer):
     """

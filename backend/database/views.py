@@ -203,6 +203,7 @@ class AddItem(APIView):
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
             serializer = ItemSerializer(data=request.data)
             if serializer.is_valid():
+                print("Reacher here")
                 serializer.save()
                 return Response("{} Store item added".format(api_name), status=status.HTTP_201_CREATED)
             return Response("Either exists or incorrect details",status=status.HTTP_400_BAD_REQUEST)
