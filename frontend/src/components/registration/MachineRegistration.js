@@ -1,34 +1,25 @@
 import React from "react";
 import axios from "axios";
+import InputCommonName from "../modular/InputCommonName";
 
 export default class MachineRegistration extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      machineName: "",
-      machineExistStatus: "",
-      machineList: {},
-      responseMessage: "",
-      buttonStatus: {
-        visibility: "visible"
-      }
-    }
-  
-    
 
   // Fetch machine list from server
-  this.state.fetchProduct = async () => {
+  fetchProduct = async () => {
+   try{
       const responseMachineList = await fetch(
         "http://127.0.0.1:8000/list-of-machines/"
       );
       const jsonMachineList = await responseMachineList.json();
       this.state.machineList = jsonMachineList;
-    };
-    this.state.fetchProduct();
+   } 
+   catch{
+     this.toggleLoadStatus();
+   }
+  };
 
     // Check existence of machine name
-    this.state.checkMachine = () => {
+    checkMachine = () => {
       try {
         this.setState({
           machineExistStatus: "",
@@ -52,59 +43,95 @@ export default class MachineRegistration extends React.Component {
         };
         this.state.machineList.forEach(showList);
       } catch (err) {}
-      console.log(this.state.machineName);
-      
     };
-
-    this.state.onSubmit = e => {
+    
+    //Form Handler
+    onSubmit = e => {
       axios
         .post("http://127.0.0.1:8000/machine-registration/", {
           name: this.state.machineName
         })
         .then(res => {
-          this.state.fetchProduct();
+          this.fetchProduct();
           this.setState({
             responseMessage: res.data
           });
         })
-        .catch(error => {
-          //alert(error.response.request._response);
-        });
+        .catch(error => {});
       e.target.reset();
       e.preventDefault();
     };
+  
+  // toggle load status
+  toggleLoadStatus = async () =>{
+    if(this.state.loadingStatus.visibility === "visible"){
+      await this.setState({
+        loadingStatus: {
+          visibility: "hidden"
+        },
+        loadedStatus: {
+          visibility: "visible"
+        }
+      });
+    }
+    else{
+      await this.setState({
+        loadingStatus: {
+          visibility: "visible"
+        },
+        loadedStatus: {
+          visibility: "hidden"
+        }
+      });
+    }
   }
 
-  
-  
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      machineName: "",
+      machineExistStatus: "",
+      machineList: {},
+      responseMessage: "",
+      buttonStatus: {
+        visibility: "visible"
+      },
+      loadingStatus: {
+        visibility: "visible"
+      },
+      loadedStatus: {
+        visibility: "hidden"
+      }
+    };
+    this.fetchProduct = this.fetchProduct.bind(this);
+    this.checkMachine = this.checkMachine.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
+    this.fetchProduct();
+  }
+
+  componentDidMount(){
+    this.toggleLoadStatus();
+  }
+
   render() {
     return (
       <form
         className="form-container form-group"
-        onSubmit={e => this.state.onSubmit(e)}
+        onSubmit={e => this.onSubmit(e)}
       >
+        <h3 style={this.state.loadingStatus}>Loading...</h3>
+        <div style={this.state.loadedStatus}>  
         <p className="headingViewPart">Machine Registration</p>
         <div className="pt-5">
-
-          <input
-            type="text"
-            className="mb-2"
-            name="machineName"
-            placeholder="Machine Name"
-            autoComplete="off"
-            maxLength="30"
-            minLength="5"
-            //value={this.state.machineName}
-            onChange=
-            {e => {
-              this.state.machineName = e.target.value;
-              // this.setState({ [e.target.name]: e.target.value });
-              // console.log(e.target.name,"as", e.target.value);
-              
-              this.state.checkMachine();
+          <InputCommonName
+            minLength={"5"}
+            placeholderParent={"Machine Name"}
+            callbackFromParent={dataFromChild => {
+              this.state.machineName = dataFromChild;
             }}
-            
-            required
+            checkFromParent={this.checkMachine}
           />
         </div>
         <p>{this.state.machineExistStatus}</p>
@@ -116,6 +143,7 @@ export default class MachineRegistration extends React.Component {
         >
           Save
         </button>
+        </div>    
       </form>
     );
   }

@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
+import InputDateField from "../modular/InputDateField";
+import InputQuantityField from "../modular/InputQuantityField";
 export default class MachineSupplyEntry extends React.Component {
   constructor(props) {
     super(props);
@@ -18,6 +20,7 @@ export default class MachineSupplyEntry extends React.Component {
       }
     };
 
+    //Fetching Products from database
     this.state.fetchProduct = async () => {
       fetch("http://127.0.0.1:8000/list-of-machineparty/")
         .then(res => res.json())
@@ -39,6 +42,7 @@ export default class MachineSupplyEntry extends React.Component {
     };
 
     this.state.fetchProduct();
+
     // Check existence of party name
     this.state.checkparty = dataFromChild => {
       try {
@@ -62,6 +66,7 @@ export default class MachineSupplyEntry extends React.Component {
       } catch (err) {}
     };
 
+    //Check Existance of Item Names
     this.state.checkitem = dataFromChild => {
       try {
         this.setState({
@@ -84,18 +89,19 @@ export default class MachineSupplyEntry extends React.Component {
       } catch (err) {}
     };
 
+    //Form Handler
     this.state.onSubmit = e => {
       axios
         .post("http://127.0.0.1:8000/enter-machine-supply/", {
           party: this.state.selectedParty,
           item: this.state.selectedItem,
           date: this.state.date,
-          quantity: this.state.quantity,
-          rate: this.state.rate,
-          remark: this.state.remark
+          quantity: this.state.quantity
         })
-        .then(res => {
+        .then(res => {console.log(res.data);
           this.setState({
+            
+            
             responseMessage: res.data
           });
         })
@@ -107,26 +113,10 @@ export default class MachineSupplyEntry extends React.Component {
       e.preventDefault();
       this.setState({
         selectedParty: "",
-      selectedItem: ""
-      })
+        selectedItem: ""
+      });
     };
-
-    this.state.getDate = () => {
-      var curr = new Date();
-      curr.setDate(curr.getDate());
-      var date = curr.toISOString().substr(0, 10);
-      this.state.date = date;
-    };
-
-    this.state.getDate();
   }
-
-  myCallbackForSelectedParty = dataFromChild => {
-    this.state.selectedParty = dataFromChild;
-  };
-  myCallbackForselectedItem = dataFromChild => {
-    this.state.selectedItem = dataFromChild;
-  };
 
   render() {
     return (
@@ -138,7 +128,9 @@ export default class MachineSupplyEntry extends React.Component {
         <div className="pt-5">
           <Autocomplete
             suggestions={this.state.partyNamesFromApi}
-            callbackFromParent={this.myCallbackForSelectedParty}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedParty = dataFromChild;
+            }}
             checkFromParent={this.state.checkparty}
             placeholderfrom={"Party name"}
           />
@@ -148,7 +140,9 @@ export default class MachineSupplyEntry extends React.Component {
 
           <Autocomplete
             suggestions={this.state.itemNamesFromApi}
-            callbackFromParent={this.myCallbackForselectedItem}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedItem = dataFromChild;
+            }}
             placeholderfrom={"Item name"}
             checkFromParent={this.state.checkitem}
           />
@@ -156,35 +150,19 @@ export default class MachineSupplyEntry extends React.Component {
           <br />
           <br />
 
-          <input
-            type="date"
-            //data-date=""
-            data-date-format="YYYY-MM-DD"
-            defaultValue={this.state.date}
-            name="date"
-            onChange={e => {
-              this.setState({
-                date: e.target.value
-              });
+          <InputDateField
+            callbackFromParent={dataFromChild => {
+              this.state.date = dataFromChild;
             }}
-            required
           />
-
           <br />
           <br />
 
-          <input
-            type="number"
-            className="mb-2"
-            name="quantity"
-            placeholder="Quantity"
-            autoComplete="off"
-            onChange={e => {
-              this.setState({
-                quantity: parseInt(e.target.value)
-              });
+          <InputQuantityField
+            placeholder={"Quantity"}
+            callbackFromParent={dataFromChild => {
+              this.state.quantity = dataFromChild;
             }}
-            required
           />
         </div>
         <p>{this.state.responseMessage}</p>
