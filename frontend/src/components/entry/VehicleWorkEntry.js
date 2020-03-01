@@ -1,6 +1,9 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
+import InputDateField from "../modular/InputDateField";
+import InputRemarkField from "../modular/InputRemarkField";
+import InputRateField from "../modular/InputRateField.js";
 
 export default class VehicleWorkEntry extends React.Component {
   constructor(props) {
@@ -118,15 +121,6 @@ export default class VehicleWorkEntry extends React.Component {
       e.preventDefault();
     };
 
-    //To Replace Date Field with Current Date
-    this.state.getDate = () => {
-      var curr = new Date();
-      curr.setDate(curr.getDate());
-      var date = curr.toISOString().substr(0, 10);
-      this.state.date = date;
-    };
-
-    this.state.getDate();
     //This is a Function call to check multiple selected vehicles
     this.handleMultipleVehicle = this.handleMultipleVehicle.bind(this);
   }
@@ -182,66 +176,36 @@ export default class VehicleWorkEntry extends React.Component {
 
           <br />
 
-          <input
-            type="date"
-            data-date-format="YYYY-MM-DD"
-            defaultValue={this.state.date}
-            name="date"
-            onChange={e => {
-              this.state.date = e.target.value;
-            }}
-            required
-          />
-
-          <br />
-          <br />
-
-          <input
-            type="text"
-            className="mb-2"
-            name="remark"
-            placeholder="Remark"
-            autoComplete="off"
-            maxLength="30"
-            onChange={e => {
-              this.state.remark = e.target.value;
+          <InputDateField
+            callbackFromParent={dataFromChild => {
+              this.state.date = dataFromChild;
             }}
           />
 
           <br />
           <br />
 
-          <input
-            type="number"
-            step="0.1"
-            className="mb-2"
-            name="fiveFeet"
-            placeholder="5 Feet"
-            autoComplete="off"
-            onChange={e => {
-              this.setState({
-                fiveFeet: e.target.value
-              });
+          <InputRemarkField
+            callbackFromParent={dataFromChild => {
+              this.state.remark = dataFromChild;
             }}
-            required
+          />
+          <br />
+          <br />
+          <InputRateField
+            callbackFromParent={dataFromChild => {
+              this.state.fiveFeet = dataFromChild;
+            }}
+            placeholderParent={"5 Feet"}
           />
 
           <br />
           <br />
-
-          <input
-            type="number"
-            step="0.1"
-            className="mb-2"
-            name="twoHalfFeet"
-            placeholder="2.5 Feet"
-            autoComplete="off"
-            onChange={e => {
-              this.setState({
-                twoHalfFeet: e.target.value
-              });
+          <InputRateField
+            callbackFromParent={dataFromChild => {
+              this.state.twoHalfFeet = dataFromChild;
             }}
-            required
+            placeholderParent={"2.5 Feet"}
           />
         </div>
         <p>{this.state.responseMessage}</p>

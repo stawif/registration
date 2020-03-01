@@ -1,6 +1,9 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
+import InputDateField from "../modular/InputDateField";
+import InputRemarkField from "../modular/InputRemarkField";
+import InputQuantityField from "../modular/InputQuantityField";
 export default class MachineWorkEntry extends React.Component {
   constructor(props) {
     super(props);
@@ -113,30 +116,18 @@ export default class MachineWorkEntry extends React.Component {
           alert(error.response.request._response);
         });
 
+        console.log(this.state.selectedParty,
+          this.state.selectedMachine,
+          this.state.date,
+           this.state.drillingFeet,
+           this.state.dieselAmount,
+           this.state.remark);
+        
+
       e.target.reset();
       e.preventDefault();
     };
-
-    //Getting Current Date
-    this.state.getDate = () => {
-      var curr = new Date();
-      curr.setDate(curr.getDate());
-      var date = curr.toISOString().substr(0, 10);
-      this.state.date = date;
-    };
-
-    this.state.getDate();
   }
-
-  //Selected Party = Selected From AutoSuggestion
-  myCallbackForSelectedParty = dataFromChild => {
-    this.state.selectedParty = dataFromChild;
-  };
-
-  //Selected Machine = Selected From AutoSuggestion
-  myCallbackForSelectedMachine = dataFromChild => {
-    this.state.selectedMachine = dataFromChild;
-  };
 
   render() {
     return (
@@ -148,7 +139,9 @@ export default class MachineWorkEntry extends React.Component {
         <div className="pt-5">
           <Autocomplete
             suggestions={this.state.partyNamesFromApi}
-            callbackFromParent={this.myCallbackForSelectedParty}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedParty = dataFromChild;
+            }}
             checkFromParent={this.state.checkparty}
             placeholderfrom={"Party name"}
           />
@@ -158,7 +151,9 @@ export default class MachineWorkEntry extends React.Component {
 
           <Autocomplete
             suggestions={this.state.machineNamesFromApi}
-            callbackFromParent={this.myCallbackForSelectedMachine}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedMachine = dataFromChild;
+            }}
             placeholderfrom={"Machine name"}
             checkFromParent={this.state.checkmachine}
           />
@@ -166,62 +161,37 @@ export default class MachineWorkEntry extends React.Component {
           <br />
           <br />
 
-          <input
-            type="date"
-            data-date-format="YYYY-MM-DD"
-            defaultValue={this.state.date}
-            name="date"
-            onChange={e => {
-              this.state.date = e.target.value;
+          <InputDateField
+            callbackFromParent={dataFromChild => {
+              this.state.date = dataFromChild;
             }}
-            required
           />
-
           <br />
           <br />
 
-          <input
-            type="text"
-            className="mb-2"
-            name="remark"
-            placeholder="Remark"
-            autoComplete="off"
-            maxLength="30"
-            onChange={e => {
-              this.state.remark = e.target.value;
+          <InputRemarkField
+            callbackFromParent={dataFromChild => {
+              this.state.remark = dataFromChild;
             }}
           />
 
           <br />
           <br />
-
-          <input
-            type="number"
-            step="0.1"
-            className="mb-2"
-            name="dieselAmount"
-            placeholder="Diesel Amount"
-            autoComplete="off"
-            onChange={e => {
-              this.state.dieselAmount = e.target.value;
+          <InputQuantityField
+            placeholder={"Diesel Amount"}
+            callbackFromParent={dataFromChild => {
+              this.state.dieselAmount = parseInt(dataFromChild);
             }}
-            required
           />
 
           <br />
           <br />
 
-          <input
-            type="number"
-            step="0.1"
-            className="mb-2"
-            name="drillingFeet"
-            placeholder="Drilling Feet"
-            autoComplete="off"
-            onChange={e => {
-              this.state.drillingFeet = e.target.value;
+          <InputQuantityField
+            placeholder={"Drilling Feet"}
+            callbackFromParent={dataFromChild => {
+              this.state.drillingFeet = parseInt(dataFromChild);
             }}
-            required
           />
         </div>
         <p>{this.state.responseMessage}</p>

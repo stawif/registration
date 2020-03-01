@@ -1,5 +1,9 @@
 import React from "react";
 import axios from "axios";
+import InputPartyNameField from "../modular/InputPartyNameField";
+import InputContactField from "../modular/InputContactField";
+import InputPartyVillageField from "../modular/InputPartyVillageField";
+
 export default class VehiclePartyRegistration extends React.Component {
   constructor(props) {
     super(props);
@@ -81,52 +85,29 @@ export default class VehiclePartyRegistration extends React.Component {
       >
         <p className="headingViewPart">Vehicle Party Registration</p>
         <div className="pt-5">
-          <input
-            type="text"
-            className="mb-2"
-            name="partyName"
-            placeholder="Party Name"
-            autoComplete="off"
-            maxLength="30"
-            minLength="5"
-            onChange={e => {
-              this.state.partyName = e.target.value;
-              this.state.checkparty();
+          <InputPartyNameField
+            callbackFromParent={dataFromChild => {
+              this.state.partyName = dataFromChild;
             }}
-            required
+            checkFromParent={this.state.checkparty}
           />
 
           <p>{this.state.partyExistMessage}</p>
           <br />
 
-          <input
-            type="number"
-            className="mb-2"
-            name="partyContact"
-            pattern="^\d{10}$"
-            placeholder="Enter 10 digit Phone no"
-            autoComplete="off"
-            onChange={e => {
-              this.state.partyContact = e.target.value;
+          <InputContactField
+            callbackFromParent={dataFromChild => {
+              this.state.partyContact = dataFromChild;
             }}
-            required
           />
 
           <br />
           <br />
 
-          <input
-            type="text"
-            className="mb-2"
-            name="partyVillage"
-            placeholder="Party Village"
-            autoComplete="off"
-            maxLength="30"
-            minLength="5"
-            onChange={e => {
-              this.state.partyVillage = e.target.value;
+          <InputPartyVillageField
+            callbackFromParent={dataFromChild => {
+              this.state.partyVillage = dataFromChild;
             }}
-            required
           />
         </div>
         <p>{this.state.responseMessage}</p>

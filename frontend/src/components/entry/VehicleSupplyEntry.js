@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
+import InputDateField from "../modular/InputDateField";
+import InputQuantityField from "../modular/InputQuantityField";
 
 export default class VehicleSupplyEntry extends React.Component {
   constructor(props) {
@@ -109,27 +111,9 @@ export default class VehicleSupplyEntry extends React.Component {
       e.target.reset();
       e.preventDefault();
     };
-
-    //Getting Current Date for Entry
-    this.state.getDate = () => {
-      var curr = new Date();
-      curr.setDate(curr.getDate());
-      var date = curr.toISOString().substr(0, 10);
-      this.state.date = date;
-    };
-
-    this.state.getDate();
   }
 
-  //Callback to set Selected Party to state
-  myCallbackForSelectedParty = dataFromChild => {
-    this.state.selectedParty = dataFromChild;
-  };
 
-  //Callback to set Selected Item to state
-  myCallbackForselectedItem = dataFromChild => {
-    this.state.selectedItem = dataFromChild;
-  };
 
   render() {
     return (
@@ -141,7 +125,9 @@ export default class VehicleSupplyEntry extends React.Component {
         <div className="pt-5">
           <Autocomplete
             suggestions={this.state.partyNamesFromApi}
-            callbackFromParent={this.myCallbackForSelectedParty}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedParty = dataFromChild;
+            }}
             checkFromParent={this.state.checkparty}
             placeholderfrom={"Party name"}
           />
@@ -151,7 +137,9 @@ export default class VehicleSupplyEntry extends React.Component {
 
           <Autocomplete
             suggestions={this.state.itemNamesFromApi}
-            callbackFromParent={this.myCallbackForselectedItem}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedItem = dataFromChild;
+            }}
             placeholderfrom={"Item name"}
             checkFromParent={this.state.checkitem}
           />
@@ -159,34 +147,20 @@ export default class VehicleSupplyEntry extends React.Component {
           <br />
           <br />
 
-          <input
-            type="date"
-            data-date-format="YYYY-MM-DD"
-            defaultValue={this.state.date}
-            name="date"
-            onChange={e => {
-              this.setState({
-                date: e.target.value
-              });
+          <InputDateField
+            callbackFromParent={dataFromChild => {
+              this.state.date = dataFromChild;
             }}
-            required
           />
 
           <br />
           <br />
 
-          <input
-            type="number"
-            className="mb-2"
-            name="quantity"
-            placeholder="Quantity"
-            autoComplete="off"
-            onChange={e => {
-              this.setState({
-                quantity: parseInt(e.target.value)
-              });
+          <InputQuantityField
+          placeholder={"Quantity"}
+            callbackFromParent={dataFromChild => {
+              this.state.quantity = dataFromChild;
             }}
-            required
           />
         </div>
         <p>{this.state.responseMessage}</p>

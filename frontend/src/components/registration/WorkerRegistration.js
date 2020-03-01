@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
-
+import InputContactField from "../modular/InputContactField";
+import InputDateField from "../modular/InputDateField";
+import InputCommonName from "../modular/InputCommonName";
 export default class WorkerRegistration extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +22,8 @@ export default class WorkerRegistration extends React.Component {
       }
     };
 
+    console.log(this.state.date);
+
     // Fetch worker list from server
     this.state.fetchProduct = async () => {
       const responseWorkerList = await fetch(
@@ -32,7 +36,7 @@ export default class WorkerRegistration extends React.Component {
     this.state.fetchProduct();
 
     // Check existence of worker name
-    this.state.checkworker = () => {
+    this.state.checkWorker = () => {
       try {
         this.setState({
           workerExistMessage: "",
@@ -80,16 +84,6 @@ export default class WorkerRegistration extends React.Component {
       e.target.reset();
       e.preventDefault();
     };
-
-    //Getting Current Date
-    this.state.getDate = () => {
-      var curr = new Date();
-      curr.setDate(curr.getDate());
-      var date = curr.toISOString().substr(0, 10);
-      this.state.date = date;
-    };
-
-    this.state.getDate();
   }
 
   render() {
@@ -100,36 +94,22 @@ export default class WorkerRegistration extends React.Component {
       >
         <p className="headingViewPart">Machine Worker Registration</p>
         <div className="pt-5">
-          <input
-            type="text"
-            className="mb-2"
-            name="workerName"
-            placeholder="Worker Name"
-            autoComplete="off"
-            maxLength="30"
-            minLength="3"
-            onChange={e => {
-              this.state.workerName = e.target.value;
-
-              this.state.checkworker();
+          <InputCommonName
+            minLength={"3"}
+            placeholderParent={"Worker Name"}
+            callbackFromParent={dataFromChild => {
+              this.state.workerName = dataFromChild;
             }}
-            required
+            checkFromParent={this.state.checkWorker}
           />
 
           <p>{this.state.workerExistMessage}</p>
           <br />
 
-          <input
-            type="tel"
-            className="mb-2"
-            name="workerContact"
-            pattern="^\d{10}$"
-            placeholder="Enter 10 digit Phone no"
-            autoComplete="off"
-            onChange={e => {
-              this.state.workerContact = parseInt(e.target.value);
+          <InputContactField
+            callbackFromParent={dataFromChild => {
+              this.state.workerContact = dataFromChild;
             }}
-            required
           />
 
           <br />
@@ -167,15 +147,10 @@ export default class WorkerRegistration extends React.Component {
           <br />
           <br />
 
-          <input
-            type="date"
-            data-date-format="YYYY-MM-DD"
-            defaultValue={this.state.date}
-            name="date"
-            onChange={e => {
-              this.state.date = e.target.value;
+          <InputDateField
+            callbackFromParent={dataFromChild => {
+              this.state.date = dataFromChild;
             }}
-            required
           />
 
           <br />

@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import InputCommonName from "../modular/InputCommonName";
 
 export default class MachineRegistration extends React.Component {
   constructor(props) {
@@ -50,7 +51,6 @@ export default class MachineRegistration extends React.Component {
         };
         this.state.machineList.forEach(showList);
       } catch (err) {}
-      console.log(this.state.machineName);
     };
 
     //Form Handler
@@ -79,19 +79,13 @@ export default class MachineRegistration extends React.Component {
       >
         <p className="headingViewPart">Machine Registration</p>
         <div className="pt-5">
-          <input
-            type="text"
-            className="mb-2"
-            name="machineName"
-            placeholder="Machine Name"
-            autoComplete="off"
-            maxLength="30"
-            minLength="5"
-            onChange={e => {
-              this.state.machineName = e.target.value;
-              this.state.checkMachine();
+          <InputCommonName
+            minLength={"5"}
+            placeholderParent={"Machine Name"}
+            callbackFromParent={dataFromChild => {
+              this.state.machineName = dataFromChild;
             }}
-            required
+            checkFromParent={this.state.checkMachine}
           />
         </div>
         <p>{this.state.machineExistStatus}</p>

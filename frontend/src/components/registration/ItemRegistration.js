@@ -1,5 +1,7 @@
 import React from "react";
 import axios from "axios";
+import InputQuantityField from "../modular/InputQuantityField"
+import InputCommonName from "../modular/InputCommonName"
 
 export default class ItemRegistration extends React.Component {
   constructor(props) {
@@ -29,7 +31,7 @@ export default class ItemRegistration extends React.Component {
     this.state.fetchProduct();
 
     // Check existence of item name
-    this.state.checkitem = () => {
+    this.state.checkItem = () => {
       try {
         this.setState({
           itemExistMessage: "",
@@ -83,20 +85,15 @@ export default class ItemRegistration extends React.Component {
       >
         <p className="headingViewPart">Item Registration</p>
         <div className="pt-5">
-          <input
-            type="text"
-            className="mb-2"
-            name="itemName"
-            placeholder="Item Name"
-            autocomplete="off"
-            maxlength="30"
-            minLength="2"
-            onChange={e => {
-              this.state.itemName = e.target.value;
-              this.state.checkitem();
+        <InputCommonName
+            minLength={"2"}
+            placeholderParent={"Item Name"}
+            callbackFromParent={dataFromChild => {
+              this.state.itemName = dataFromChild;
             }}
-            required
+            checkFromParent={this.state.checkItem}
           />
+          
 
           <p>{this.state.itemExistMessage}</p>
           <br />
@@ -106,8 +103,8 @@ export default class ItemRegistration extends React.Component {
             className="mb-2"
             name="itemMeasurement"
             placeholder="Item Measurement"
-            autocomplete="off"
-            maxlength="30"
+            autoComplete="off"
+            maxLength="30"
             minLength="1"
             onChange={e => {
               this.state.itemMeasurement = e.target.value;
@@ -118,18 +115,14 @@ export default class ItemRegistration extends React.Component {
           <br />
           <br />
 
-          <input
-            type="number"
-            className="mb-2"
-            name="itemQuantity"
-            placeholder="Item Quantity"
-            autocomplete="off"
-            minLength="1"
-            onChange={e => {
-              this.state.itemQuantity = e.target.value;
+          <InputQuantityField
+          placeholder={"Quantity"}
+            callbackFromParent={dataFromChild => {
+              this.state.itemQuantity = dataFromChild;
             }}
-            required
           />
+
+          
 
           <hr />
         </div>

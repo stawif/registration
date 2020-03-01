@@ -1,6 +1,11 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
+import InputDateField from "../modular/InputDateField";
+import InputRemarkField from "../modular/InputRemarkField";
+import InputQuantityField from "../modular/InputQuantityField";
+import InputRateField from "../modular/InputRateField.js";
+
 export default class PurchaseEntry extends React.Component {
   constructor(props) {
     super(props);
@@ -91,48 +96,27 @@ export default class PurchaseEntry extends React.Component {
 
     //From Submit Handler
     this.state.onSubmit = e => {
-      axios
-        .post("http://127.0.0.1:8000/enter-purchase-detail/", {
-          party: this.state.selectedParty,
-          item: this.state.selectedItem,
-          date: this.state.date,
-          quantity: this.state.quantity,
-          rate: this.state.rate,
-          remark: this.state.remark
+      axios.post("http://127.0.0.1:8000/enter-purchase-detail/", {
+         party: this.state.selectedParty,
+         item: this.state.selectedItem,
+         date: this.state.date,
+         quantity: this.state.quantity,
+         rate: this.state.rate,
+         remark: this.state.remark          
         })
-        .then(res => {
-          this.setState({
-            responseMessage: res.data
-          });
-        })
-        .catch(error => {
-          alert(error.response.request._response);
-        });
-
-      e.target.reset();
-      e.preventDefault();
-    };
-
-    //Getting Current Date
-    this.state.getDate = () => {
-      var curr = new Date();
-      curr.setDate(curr.getDate());
-      var date = curr.toISOString().substr(0, 10);
-      this.state.date = date;
-    };
-
-    this.state.getDate();
+       .then(res => {
+         this.setState({
+           responseMessage: res.data
+         });
+       })
+       .catch(error => {
+         alert(error.response.request._response);
+       });
+   
+  e.target.reset();
+  e.preventDefault();
+};
   }
-
-  //assigning data to selectedParty
-  myCallbackForSelectedParty = dataFromChild => {
-    this.state.selectedParty = dataFromChild;
-  };
-
-  //assigning data to selectedParty
-  myCallbackForselectedItem = dataFromChild => {
-    this.state.selectedItem = dataFromChild;
-  };
 
   render() {
     return (
@@ -144,7 +128,9 @@ export default class PurchaseEntry extends React.Component {
         <div className="pt-5">
           <Autocomplete
             suggestions={this.state.partyNamesFromApi}
-            callbackFromParent={this.myCallbackForSelectedParty}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedParty = dataFromChild;
+            }}
             checkFromParent={this.state.checkparty}
             placeholderfrom={"Party name"}
           />
@@ -154,7 +140,9 @@ export default class PurchaseEntry extends React.Component {
 
           <Autocomplete
             suggestions={this.state.itemNamesFromApi}
-            callbackFromParent={this.myCallbackForselectedItem}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedItem = dataFromChild;
+            }}
             placeholderfrom={"Item name"}
             checkFromParent={this.state.checkitem}
           />
@@ -162,67 +150,38 @@ export default class PurchaseEntry extends React.Component {
           <br />
           <br />
 
-          <input
-            type="date"
-            data-date-format="YYYY-MM-DD"
-            defaultValue={this.state.date}
-            name="date"
-            onChange={e => {
-              this.state.date = e.target.value;
+          <InputDateField
+            callbackFromParent={dataFromChild => {
+              this.state.date = dataFromChild;
             }}
-            required
           />
-
           <br />
           <br />
 
-          <input
-            type="text"
-            className="mb-2"
-            name="remark"
-            placeholder="Remark"
-            autoComplete="off"
-            maxLength="30"
-            onChange={e => {
-              this.setState({
-                remark: e.target.value
-              });
+          <InputRemarkField
+            callbackFromParent={dataFromChild => {
+              this.state.remark = dataFromChild;
             }}
           />
 
           <br />
           <br />
 
-          <input
-            type="number"
-            className="mb-2"
-            name="quantity"
-            placeholder="Quantity"
-            autoComplete="off"
-            onChange={e => {
-              this.setState({
-                quantity: parseInt(e.target.value)
-              });
+          <InputQuantityField
+            placeholder={"Quantity"}
+            callbackFromParent={dataFromChild => {
+              this.state.quantity = dataFromChild;
             }}
-            required
           />
 
           <br />
           <br />
 
-          <input
-            type="number"
-            step="0.1"
-            className="mb-2"
-            name="rate"
-            placeholder="Rate"
-            autoComplete="off"
-            onChange={e => {
-              this.setState({
-                rate: e.target.value
-              });
+          <InputRateField
+            placeholderParent={"Rate"}
+            callbackFromParent={dataFromChild => {
+              this.state.rate = dataFromChild;
             }}
-            required
           />
         </div>
         <p>{this.state.responseMessage}</p>
