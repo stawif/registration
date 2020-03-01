@@ -15,20 +15,20 @@ class MachineDisplay extends React.Component {
 		return (
 			<div>
 				<h1>Machine Names </h1>
-				{this.state.todos.map((todo) => (
-					<div>
-						<table className="table-bordered">
-							<tr>
-								<th>Owner</th>
-								<th>Name</th>
-							</tr>
-							<tr>
-								<td>{todo.owner}</td>
-								<td>{todo.name}</td>
-							</tr>
-						</table>
-					</div>
-				))}
+				<div>
+					<table className="table-borderd">
+						<tr>
+							<th>Owner</th>
+							<th>Name</th>
+						</tr>
+						{this.state.todos.map((todo) => (
+						<tr>
+							<td>{todo.owner}</td>
+							<td>{todo.name}</td>
+						</tr>
+						))}
+					</table>
+				</div>
 			</div>
 		);
 	}
