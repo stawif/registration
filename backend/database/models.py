@@ -1,6 +1,6 @@
 from django.db import models
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save,post_save
 from datetime import datetime  
 
 class Owner(models.Model):
@@ -15,12 +15,17 @@ class Owner(models.Model):
     def __str__(self):
         return self.name    
 
+@receiver(post_save, sender= Owner)
+def gen_daily_expense_debit_id(sender, instance, **kwarge):
+    daily_expense_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"), spend_amount=0)
+    daily_expense_i.save()
+
 class Machine(models.Model):
     """
     Machines are assets of owner which are used in Work
     """
     owner = models.ForeignKey(Owner,on_delete=models.CASCADE)    
-    name = models.CharField(max_length=30,blank=False,unique=True)
+    name = models.CharField(primary_key=True,max_length=30,blank=False,unique=True)
   
     def __str__(self):
         return self.name    
@@ -70,7 +75,7 @@ class Party(models.Model):
     Party are the entity which gives work to owner
     """
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    contact = models.IntegerField(blank=False)
+    contact = models.IntegerField(primary_key=True, blank=False)
     village = models.CharField(max_length=30,blank=False)
     date = models.DateField(default=datetime.now,blank=False)  #Add aunto now date
     total_credit = models.IntegerField(default=0)   
@@ -104,9 +109,11 @@ class PurchaseParty(models.Model):
     """
     Parties that gives work related to purchase
     """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     debit_id = models.OneToOneField(MixDebit, on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
+    contact = models.IntegerField(blank=False)
+    village = models.CharField(max_length=50, blank=False)
 
     def __str__(self):
         return self.name

@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
+<<<<<<< HEAD
 
 const partyNamesFromApi = [];
 const itemNamesFromApi = [];
@@ -29,12 +30,22 @@ function partyListFunction(data) {
 function itemListFunction(data) {
   data.map(item => itemNamesFromApi.push(item.name));
 }
+=======
+import InputDateField from "../modular/InputDateField";
+import InputQuantityField from "../modular/InputQuantityField";
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
 
 export default class VehicleSupplyEntry extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+<<<<<<< HEAD
+=======
+      partyNamesFromApi: [],
+      itemNamesFromApi: [],
+
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
       date: null,
       selectedParty: "",
       selectedItem: "",
@@ -45,10 +56,40 @@ export default class VehicleSupplyEntry extends React.Component {
       }
     };
 
+<<<<<<< HEAD
+=======
+    //Fetching Products from Database to use them in AutoSugestion and for Checking While Entered Value Exists in Database or Not
+    this.state.fetchProduct = async () => {
+      fetch("http://127.0.0.1:8000/list-of-vehicleparty/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.partyNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+
+      fetch("http://127.0.0.1:8000/list-of-item/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.itemNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+    };
+
+    this.state.fetchProduct();
+
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
     // Check existence of party name
     this.state.checkparty = dataFromChild => {
       try {
         this.setState({
+<<<<<<< HEAD
+=======
+          responseMessage: "",
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
           buttonStatus: {
             visibility: "hidden"
           }
@@ -63,6 +104,7 @@ export default class VehicleSupplyEntry extends React.Component {
           } else {
           }
         };
+<<<<<<< HEAD
         partyNamesFromApi.forEach(showList);
       } 
       catch (err) {}
@@ -71,6 +113,17 @@ export default class VehicleSupplyEntry extends React.Component {
     this.state.checkitem = dataFromChild => {
       try {
         this.setState({
+=======
+        this.state.partyNamesFromApi.forEach(showList);
+      } catch (err) {}
+    };
+
+    //Check Existence of item list
+    this.state.checkitem = dataFromChild => {
+      try {
+        this.setState({
+          responseMessage: "",
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
           buttonStatus: {
             visibility: "hidden"
           }
@@ -85,6 +138,7 @@ export default class VehicleSupplyEntry extends React.Component {
           } else {
           }
         };
+<<<<<<< HEAD
         itemNamesFromApi.forEach(showList);
       } catch (err) {}
     };
@@ -129,6 +183,35 @@ export default class VehicleSupplyEntry extends React.Component {
   myCallbackForselectedItem = dataFromChild => {
     this.state.selectedItem = dataFromChild;
   };
+=======
+        this.state.itemNamesFromApi.forEach(showList);
+      } catch (err) {}
+    };
+
+    // Form Submit Handling
+    this.state.onSubmit = e => {
+      axios
+        .post("http://127.0.0.1:8000/enter-vehicle-supply/", {
+          party: this.state.selectedParty,
+          item: this.state.selectedItem,
+          date: this.state.date,
+          quantity: this.state.quantity
+        })
+        .then(res => {
+          this.setState({
+            responseMessage: res.data
+          });
+        })
+        .catch(error => {
+          alert(error.response.request._response);
+        });
+      e.target.reset();
+      e.preventDefault();
+    };
+  }
+
+
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
 
   render() {
     return (
@@ -139,22 +222,40 @@ export default class VehicleSupplyEntry extends React.Component {
         <p className="headingViewPart">Vehicle Supply Entry</p>
         <div className="pt-5">
           <Autocomplete
+<<<<<<< HEAD
             suggestions={partyNamesFromApi}
             callbackFromParent={this.myCallbackForSelectedParty}
+=======
+            suggestions={this.state.partyNamesFromApi}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedParty = dataFromChild;
+            }}
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
             checkFromParent={this.state.checkparty}
             placeholderfrom={"Party name"}
           />
 
           <p>{this.state.partyExistMessage}</p>
+<<<<<<< HEAD
           <br/>
 
           <Autocomplete
             suggestions={itemNamesFromApi}
             callbackFromParent={this.myCallbackForselectedItem}
+=======
+          <br />
+
+          <Autocomplete
+            suggestions={this.state.itemNamesFromApi}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedItem = dataFromChild;
+            }}
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
             placeholderfrom={"Item name"}
             checkFromParent={this.state.checkitem}
           />
 
+<<<<<<< HEAD
           <br/>
           <br/>
 
@@ -189,6 +290,26 @@ export default class VehicleSupplyEntry extends React.Component {
             required
           />
 
+=======
+          <br />
+          <br />
+
+          <InputDateField
+            callbackFromParent={dataFromChild => {
+              this.state.date = dataFromChild;
+            }}
+          />
+
+          <br />
+          <br />
+
+          <InputQuantityField
+          placeholder={"Quantity"}
+            callbackFromParent={dataFromChild => {
+              this.state.quantity = dataFromChild;
+            }}
+          />
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
         </div>
         <p>{this.state.responseMessage}</p>
         <button

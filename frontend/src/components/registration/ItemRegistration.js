@@ -1,11 +1,13 @@
 import React from "react";
 import axios from "axios";
+import InputQuantityField from "../modular/InputQuantityField"
+import InputCommonName from "../modular/InputCommonName"
 
-export default class ItemRegistration extends React.Component{
-  constructor(props){
+export default class ItemRegistration extends React.Component {
+  constructor(props) {
     super(props);
 
-    this.state={
+    this.state = {
       itemName: "",
       itemMeasurement: "",
       itemQuantity: 0,
@@ -13,132 +15,126 @@ export default class ItemRegistration extends React.Component{
       itemExistMessage: "",
       responseMessage: "",
       buttonStatus: {
-          visibility: 'visible'
+        visibility: "visible"
       }
-    }
+    };
 
     // Fetch item list from server
-    this.state.fetchProduct = async () =>{
-      const responseItemList = await fetch("http://127.0.0.1:8000/list-of-item/");
+    this.state.fetchProduct = async () => {
+      const responseItemList = await fetch(
+        "http://127.0.0.1:8000/list-of-item/"
+      );
       const jsonItemList = await responseItemList.json();
       this.state.itemList = jsonItemList;
-    }
-    
-    this.state.fetchProduct(); 
+    };
 
-    // Check existence of item name 
-    this.state.checkitem = () => {
+    this.state.fetchProduct();
+
+    // Check existence of item name
+    this.state.checkItem = () => {
       try {
         this.setState({
-             itemExistMessage :"",
-             buttonStatus: {
-                 visibility: 'visible'           
-             }
-            });
+          itemExistMessage: "",
+          responseMessage: "",
+          buttonStatus: {
+            visibility: "visible"
+          }
+        });
         const showList = (item, index) => {
-            if (this.state.itemName.toLowerCase() === item.name.toLowerCase()){
-              this.setState({
-                 itemExistMessage :"* This item name is already exist!!!",
-                    buttonStatus: {
-                  visibility: 'hidden'                 
-                 }
-              });
-            }
-            else{}
+          if (this.state.itemName.toLowerCase() === item.name.toLowerCase()) {
+            this.setState({
+              itemExistMessage: "* This item name is already exist!!!",
+              buttonStatus: {
+                visibility: "hidden"
+              }
+            });
+          } else {
+          }
         };
         this.state.itemList.forEach(showList);
-      } 
-      catch (err) {}
-    }
+      } catch (err) {}
+    };
 
-    this.state.onSubmit =(e) => {
-        axios.post('http://127.0.0.1:8000/item-registration/', 
-        {
+    //Form Handler
+    this.state.onSubmit = e => {
+      axios
+        .post("http://127.0.0.1:8000/item-registration/", {
           name: this.state.itemName,
           measurement: this.state.itemMeasurement,
           quantity: this.state.itemQuantity
-        }
-        ).then(res => {
+        })
+        .then(res => {
           this.state.fetchProduct();
           this.setState({
             responseMessage: res.data
           });
-        }
-        ).catch(error => {
-          alert( error.response.request._response )
+        })
+        .catch(error => {
+          alert(error.response.request._response);
         });
       e.target.reset();
       e.preventDefault();
     };
-  
   }
- 
-  render(){
+
+  render() {
     return (
-		<form className="form-container form-group" onSubmit={ e => this.state.onSubmit(e) }>
-         <p className="headingViewPart">Item Registration</p>
-		<div className="pt-5">
+      <form
+        className="form-container form-group"
+        onSubmit={e => this.state.onSubmit(e)}
+      >
+        <p className="headingViewPart">Item Registration</p>
+        <div className="pt-5">
+        <InputCommonName
+            minLength={"2"}
+            placeholderParent={"Item Name"}
+            callbackFromParent={dataFromChild => {
+              this.state.itemName = dataFromChild;
+            }}
+            checkFromParent={this.state.checkItem}
+          />
+          
 
-        <input 
-            type="text" 
-            className="mb-2" 
-            name="itemName" 
-            placeholder="Item Name" 
-            autocomplete="off"
-            maxlength = "30"
-            minLength = "2"
-            onChange={
-                e => {
-                    this.state.itemName = e.target.value;
-                    this.state.checkitem();
-                }
-            } 
+          <p>{this.state.itemExistMessage}</p>
+          <br />
+
+          <input
+            type="text"
+            className="mb-2"
+            name="itemMeasurement"
+            placeholder="Item Measurement"
+            autoComplete="off"
+            maxLength="30"
+            minLength="1"
+            onChange={e => {
+              this.state.itemMeasurement = e.target.value;
+            }}
             required
-        />
-        
-        <p>{this.state.itemExistMessage}</p>
-        <br/>  
+          />
 
-        <input 
-            type="text" 
-            className="mb-2" 
-            name="itemMeasurement" 
-            placeholder="Item Measurement" 
-            autocomplete="off"
-            maxlength = "30"
-            minLength = "1"
-            onChange={
-                e => {
-                    this.state.itemMeasurement = e.target.value;
-                }
-            } 
-            required
-        />
+          <br />
+          <br />
 
-        <br/>
-        <br/>
+          <InputQuantityField
+          placeholder={"Quantity"}
+            callbackFromParent={dataFromChild => {
+              this.state.itemQuantity = dataFromChild;
+            }}
+          />
 
-        <input 
-            type="number" 
-            className="mb-2" 
-            name="itemQuantity" 
-            placeholder="Item Quantity" 
-            autocomplete="off"
-            minLength = "1"
-            onChange={
-                e => {
-                    this.state.itemQuantity = e.target.value;
-                }
-            } 
-            required
-        />
+          
 
-        <hr/>
-
-    </div>    
-    <p>{this.state.responseMessage}</p>
-    <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
-    </form>  
+          <hr />
+        </div>
+        <p>{this.state.responseMessage}</p>
+        <button
+          type="submit"
+          className="btn btn-outline-dark"
+          style={this.state.buttonStatus}
+        >
+          Save
+        </button>
+      </form>
     );
   }
 }

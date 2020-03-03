@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import InputCommonName from "../modular/InputCommonName"
 
 export default class VehicleRegistration extends React.Component{
   constructor(props){
@@ -25,10 +26,11 @@ export default class VehicleRegistration extends React.Component{
     this.state.fetchProduct(); 
 
     // Check existence of vehicle name 
-    this.state.checkvehicle = () => {
+    this.state.checkVehicle = () => {
       try {
         this.setState({
              vehicleExistStatus :"",
+             responseMessage: "",
              buttonStatus: {
               visibility: 'visible'           
              }
@@ -60,9 +62,7 @@ export default class VehicleRegistration extends React.Component{
             responseMessage: res.data
           });
         }
-        ).catch(error => {
-          //alert( error.response.request._response )
-        });
+        ).catch(error => {});
       e.target.reset();
       e.preventDefault();
     };
@@ -74,22 +74,16 @@ export default class VehicleRegistration extends React.Component{
 		<form className="form-container form-group" onSubmit={ e => this.state.onSubmit(e) }>
     <p className="headingViewPart">vehicle Registration</p>
 		<div className="pt-5">
-        <input 
-        type="text" 
-        className="mb-2" 
-        name="vehicleName" 
-        placeholder="vehicle Name" 
-        autoComplete="off"
-        maxLength = "30"
-        minLength = "5"
-        onChange={
-          e => {
-          this.state.vehicleName = e.target.value;
-          this.state.checkvehicle();
-        }
-        } 
-        required
-        />
+
+    <InputCommonName
+            minLength={"5"}
+            placeholderParent={"Vehicle Name"}
+            callbackFromParent={dataFromChild => {
+              this.state.vehicleName = dataFromChild;
+            }}
+            checkFromParent={this.state.checkVehicle}
+          />
+        
     </div>    
     <p>{this.state.vehicleExistStatus}</p>     
     <p>{this.state.responseMessage}</p>

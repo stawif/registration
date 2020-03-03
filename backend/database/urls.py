@@ -2,10 +2,16 @@ from django.urls import path
 from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , ItemList , AddItem,
                     MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
                     AddVehicleParty,AddMachineWork,AddVehicleWork,AddWorker,AddPurchase, WorkerList,AddDailyWork,
+<<<<<<< HEAD
                     AddMachineSupply,AddVehicleSupply,MachinePartyList,VehiclePartyList,WorkerList,MachinePayment)
+=======
+                    AddMachineSupply,AddVehicleSupply,MachinePartyList,VehiclePartyList,WorkerList, PartyContact,
+                    PartyThroughContact)
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
 
 urlpatterns = [
     path('machine-registration/',AddMachine.as_view()),
+    path('list-of-partycontacts/',PartyContact),
     path('list-of-machines/',MachineList.as_view()),
     path('list-of-vehicles/',VehicleList.as_view()),
     path('list-of-item/',ItemList.as_view()),
@@ -13,6 +19,7 @@ urlpatterns = [
     path('list-of-machineparty/',MachinePartyList.as_view()),
     path('list-of-vehicleparty/',VehiclePartyList.as_view()),
     path('list-of-purchaseparty/',PurchasePartyList.as_view()),
+    path('party-through-contact/', PartyThroughContact.as_view()),
     path('vehicle-registration/',AddVehicle.as_view()),
     path('worker-registration/',AddWorker.as_view()),
     path('recorder-registration/',AddRecorder.as_view()),

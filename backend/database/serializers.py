@@ -33,6 +33,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['owner','name','measurement','quantity']
+<<<<<<< HEAD
 
 class ItemListSerializer(serializers.ModelSerializer):
     """
@@ -41,6 +42,8 @@ class ItemListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['name','measurement','quantity']
+=======
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
 
 class WorkerSerializer(serializers.ModelSerializer):
     """
@@ -86,8 +89,8 @@ class PurchasePartySerializer(serializers.ModelSerializer):
     Serializer for the Vehicle Party Model.
     """
     class Meta:
-        model = VehicleParty
-        fields = ['name']
+        model = PurchaseParty
+        fields = ['name','contact','village']
 
 class MachineWorkSerializer(serializers.ModelSerializer):
     """
