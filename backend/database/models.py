@@ -78,6 +78,12 @@ class Party(models.Model):
     def __str__(self):
         return str(self.pk)    
 
+class MixCredit(models.Model):
+    """
+    A class to generalize credit type
+    """
+    owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
+    date = models.DateField(blank=False)
 
 """
 Above models are complete
@@ -125,10 +131,11 @@ class MachineParty(models.Model):
     """
     Parties that gives work related to machine
     """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
+    credit_id = models.ForeignKey(MixCredit,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
     contact = models.IntegerField(blank=False)
     village = models.CharField(max_length=50,blank=False)
+    crasher = models.CharField(max_length=50,blank=False)
 
     def __str__(self):  
         return self.name
@@ -138,7 +145,7 @@ class VehicleParty(models.Model):
     """
     Parties that gives work related to vehicle
     """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
+    credit_id = models.ForeignKey(MixCredit,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
     contact = models.IntegerField(blank=False)
     village = models.CharField(max_length=50,blank=False)
@@ -147,16 +154,7 @@ class VehicleParty(models.Model):
         return self.name
 
     
-class DailyParty(models.Model):
-    """
-    Parties that gives work for one day
-    """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
-    name = models.CharField(max_length=30,blank=False)
-    village = models.CharField(max_length=50)
 
-    def __str__(self):
-        return self.name
 
 class MachineWork(models.Model):
     """
@@ -194,24 +192,15 @@ class VehicleWork(models.Model):
 
     def __str__(self):
         template = '{0.party} {0.date}'
-        return template.format(self)    
-
-class VehicleWorkVehicles(models.Model):
-    """
-    All vehicles that are used in VehicleWork
-    """
-    vehicle_work = models.ForeignKey(VehicleWork, on_delete=models.CASCADE)
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-
-    def __str__(self):
-        template = '{0.vehicle_work} {0.vehicle}'
-        return template.format(self)    
+        return template.format(self)       
 
 class DailyWork(models.Model):
     """
     This is a type of  work owner do for a party
     """
-    party = models.ForeignKey(DailyParty, on_delete=models.CASCADE)
+    credit_id = models.OneToOneField(MixCredit,on_delete=models.CASCADE)
+    name = models.CharField(max_length=50,blank=False)
+    vehicle = models.ForeignKey(Vehicle,on_delete=models.CASCADE)
     five_feet = models.FloatField(blank=False)
     five_feet_rate = models.FloatField(blank=False)
     two_half_feet = models.FloatField(blank=False)
