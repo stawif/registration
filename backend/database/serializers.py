@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import (Machine , Owner , Vehicle , Recorder , Party , Item , MachineParty,PurchaseParty,VehicleParty,
-                    MachineWork,VehicleWork,VehicleWorkVehicles,MixDebit,Worker,Purchase,DailyWork)
+from .models import (Machine , Owner , Vehicle , Recorder , Party , Material , MachineParty,PurchaseParty,VehicleParty,
+                    MachineWork,VehicleWork,MixDebit,Worker,Purchase,DailyWork)
 
 class MachineSerializer(serializers.ModelSerializer):
     """
@@ -26,24 +26,21 @@ class RecorderSerializer(serializers.ModelSerializer):
         model = Recorder
         fields = ['owner','username','password']
 
-class ItemSerializer(serializers.ModelSerializer):
+class MaterialSerializer(serializers.ModelSerializer):
     """
     Serializer for the Store Model.
     """
     class Meta:
-        model = Item
+        model = Material
         fields = ['owner','name','measurement','quantity']
-<<<<<<< HEAD
 
-class ItemListSerializer(serializers.ModelSerializer):
+class MaterialListSerializer(serializers.ModelSerializer):
     """
     Serializer for the Store Model.
     """
     class Meta:
-        model = Item
+        model = Material
         fields = ['name','measurement','quantity']
-=======
->>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
 
 class WorkerSerializer(serializers.ModelSerializer):
     """
@@ -108,14 +105,6 @@ class VehicleWorkSerializer(serializers.ModelSerializer):
         model = VehicleWork
         fields = ['party','date','five_feet','two_half_feet','remark']
 
-class VehicleWorkVehicleSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Vehicle Work Vehicle Model.
-    """
-    class Meta:
-        model = VehicleWorkVehicles
-        fields = ['vehicle_work','vehicle']
-
 class MixDebitSerializer(serializers.ModelSerializer):
     """
     Serializer for the Mix Debit Model.
@@ -130,7 +119,7 @@ class PurchaseSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Purchase
-        fields = ['party','item','debit_id','rate','net_amount','paid','remaining','remark']
+        fields = ['party','Material','debit_id','rate','net_amount','paid','remaining','remark']
 
 """
 class DailyExpenseSerializer(serializers.ModelSerializer):

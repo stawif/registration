@@ -90,6 +90,11 @@ class MixCredit(models.Model):
     owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
     date = models.DateField(blank=False)
 
+@receiver(post_save, sender= Owner)
+def gen_daily_expense_credit_id(sender, instance, **kwarge):
+    daily_expense_i = MixCredit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"), spend_amount=0)
+    daily_expense_i.save()
+
 """
 Above models are complete
 """
@@ -217,17 +222,7 @@ class DailyWork(models.Model):
 
 
     def __str__(self):
-        return self.party.name    
-     
-class DailyWorkVehicles(models.Model):
-    """
-    All vehicles that are used in DailyWork
-    """
-    daily_work = models.ForeignKey(DailyWork, on_delete=models.CASCADE)
-    Vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.daily_work    
+        return self.party.name      
 
 class Purchase(models.Model):
     """

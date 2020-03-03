@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , ItemSerializer,
+from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , MaterialSerializer,
                             PartySerializer,PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
-                            MachineWorkSerializer , VehicleWorkSerializer,VehicleWorkVehicleSerializer,WorkerSerializer,
-                            DailyWorkSerializer,ItemListSerializer)
+                            MachineWorkSerializer , VehicleWorkSerializer,WorkerSerializer,
+                            DailyWorkSerializer,MaterialListSerializer)
 from rest_framework.views import APIView
-from .models import  (Machine , Owner , Vehicle , Recorder , Party , Item , 
-                        MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,VehicleWorkVehicles,
-                        MixDebit,Worker,Purchase,DailyWork,DailyParty,MachineSupply,VehicleSupply)
+from .models import  (Machine , Owner , Vehicle , Recorder , Party , Material , 
+                        MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,
+                        MixDebit,Worker,Purchase,DailyWork,MachineSupply,VehicleSupply)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse,HttpResponse
 from rest_framework import status
@@ -159,13 +159,13 @@ class AddRecorder(APIView):
                 return Response("{} Recorder created".format(api_username), status=status.HTTP_201_CREATED)
             return Response("Either recorder exists or details are incorrect",status=status.HTTP_400_BAD_REQUEST)
 
-class ItemList(APIView):
+class MaterialList(APIView):
     """
     View to return List of Party.
     """
     def get(self,request):
-        queryset = Item.objects.all()
-        serializer = ItemListSerializer(queryset,many=True)
+        queryset = Material.objects.all()
+        serializer = MaterialListSerializer(queryset,many=True)
         return Response(serializer.data)
 
 class WorkerList(APIView):
@@ -177,17 +177,17 @@ class WorkerList(APIView):
         serializer = WorkerSerializer(queryset,many=True)
         return Response(serializer.data)
 
-class AddItem(APIView):
+class AddMaterial(APIView):
     """
-    View to Add New Item in Store in Database.
+    View to Add New Material in Store in Database.
     api_ is for indication that this data in came from api
     _i is for indication that this data is a model instance
     """
     def post(self,request):
-        item_list = Item.objects.all().values('owner','name')
+        Material_list = Material.objects.all().values('owner','name')
         owner = Owner.objects.get(id=1)
         
-        item_dict = {'owner':owner.id,'name':request.data['name']}
+        Material_dict = {'owner':owner.id,'name':request.data['name']}
         try:
             api_name = request.data['name']
             api_measurement = request.data['measurement']
@@ -195,17 +195,17 @@ class AddItem(APIView):
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT) 
         """
-        Condition to check Whether a Item is already exists or not.
+        Condition to check Whether a Material is already exists or not.
         """
-        if item_dict in item_list:
-            return Response("item already exists")
+        if Material_dict in Material_list:
+            return Response("Material already exists")
         else:
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
-            serializer = ItemSerializer(data=request.data)
+            serializer = MaterialSerializer(data=request.data)
             if serializer.is_valid():
                 print("Reacher here")
                 serializer.save()
-                return Response("{} Store item added".format(api_name), status=status.HTTP_201_CREATED)
+                return Response("{} Store Material added".format(api_name), status=status.HTTP_201_CREATED)
             return Response("Either exists or incorrect details",status=status.HTTP_400_BAD_REQUEST)
 
 class MachinePartyList(APIView):
@@ -437,9 +437,9 @@ class AddPurchase(APIView):
         except Exception:
             return Response("Purchase Party Does not Exists.")
         try:
-            item_instance = Item.objects.get(name=request.data['item'])
+            Material_instance = Material.objects.get(name=request.data['Material'])
         except Exception:
-            return Response("Item Does not Exists.Please Add item.")
+            return Response("Material Does not Exists.Please Add Material.")
         try:
             api_quantity = request.data['quantity']
             api_rate = request.data['rate']
@@ -447,11 +447,11 @@ class AddPurchase(APIView):
             api_remark = request.data['remark']
             api_date = request.data['date']
             
-            purchase_create = Purchase.objects.create(party=purchase_party,item=item_instance,rate=api_rate,
+            purchase_create = Purchase.objects.create(party=purchase_party,Material=Material_instance,rate=api_rate,
             date =api_date,quantity=api_quantity,net_amount=net_amount,remark=api_remark)
             
-            new_quantity = item_instance.quantity+api_quantity
-            Item.objects.filter(name=request.data['item']).update(quantity=new_quantity)          
+            new_quantity = Material_instance.quantity+api_quantity
+            Material.objects.filter(name=request.data['Material']).update(quantity=new_quantity)          
             
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -547,7 +547,7 @@ class AddMachineSupply(APIView):
             # get all data from api
             try:
                 api_party = request.data['party']
-                api_item = request.data['item']
+                api_Material = request.data['Material']
                 api_date = request.data['date']
                 api_quantity = request.data['quantity']
             except Exception as e:
@@ -559,20 +559,20 @@ class AddMachineSupply(APIView):
             except Exception as e:
                 print(e)
                 return Response("please provide a valid party name",status=status.HTTP_204_NO_CONTENT)        
-            # get Item instance from database
+            # get Material instance from database
             try:
-                item_i = Item.objects.get(name=api_item)
+                Material_i = Material.objects.get(name=api_Material)
             except Exception as e:
                 print(e)
-                return Response("please provide a valid item name",status=status.HTTP_204_NO_CONTENT)        
+                return Response("please provide a valid Material name",status=status.HTTP_204_NO_CONTENT)        
             try:
                 machine_supply_create = MachineSupply.objects.create(party=machine_party_i,
-                item=item_i,date=api_date,quantity=api_quantity)
+                Material=Material_i,date=api_date,quantity=api_quantity)
 
-                item_new_quantity = item_i.quantity - api_quantity
-                Item.objects.filter(pk=item_i.pk).update(quantity=item_new_quantity)          
+                Material_new_quantity = Material_i.quantity - api_quantity
+                Material.objects.filter(pk=Material_i.pk).update(quantity=Material_new_quantity)          
 
-                return Response("{} is supplied to {} at {}".format(api_item,api_party,api_date),status=status.HTTP_201_CREATED)
+                return Response("{} is supplied to {} at {}".format(api_Material,api_party,api_date),status=status.HTTP_201_CREATED)
             except Exception as e:
                 print(e)
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)    
@@ -589,7 +589,7 @@ class AddVehicleSupply(APIView):
             # get all data from api
             try:
                 api_party = request.data['party']
-                api_item = request.data['item']
+                api_Material = request.data['Material']
                 api_date = request.data['date']
                 api_quantity = request.data['quantity']
             except Exception as e:
@@ -601,20 +601,20 @@ class AddVehicleSupply(APIView):
             except Exception as e:
                 print(e)
                 return Response("please provide a valid party name",status=status.HTTP_204_NO_CONTENT)        
-            # get Item instance from database
+            # get Material instance from database
             try:
-                item_i = Item.objects.get(name=api_item)
+                Material_i = Material.objects.get(name=api_Material)
             except Exception as e:
                 print(e)
-                return Response("please provide a valid item name",status=status.HTTP_204_NO_CONTENT)        
+                return Response("please provide a valid Material name",status=status.HTTP_204_NO_CONTENT)        
             try:
                 vehicle_supply_create = VehicleSupply.objects.create(party=vehicle_party_i,
-                item=item_i,date=api_date,quantity=api_quantity)
+                Material=Material_i,date=api_date,quantity=api_quantity)
 
-                item_new_quantity = item_i.quantity - api_quantity
-                Item.objects.filter(pk=item_i.pk).update(quantity=item_new_quantity)          
+                Material_new_quantity = Material_i.quantity - api_quantity
+                Material.objects.filter(pk=Material_i.pk).update(quantity=Material_new_quantity)          
 
-                return Response("{} is supplied to {} at {}".format(api_item,api_party,api_date),status=status.HTTP_201_CREATED)
+                return Response("{} is supplied to {} at {}".format(api_Material,api_party,api_date),status=status.HTTP_201_CREATED)
             except Exception as e:
                 print(e)
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)                
