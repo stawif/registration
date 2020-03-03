@@ -13,34 +13,9 @@ export default class VehiclePartyRegistration extends React.Component {
       );
       const jsonPartyList = await responsePartyList.json();
       this.state.partyList = jsonPartyList;
-
-      const responseContactList = await fetch(
-        "http://127.0.0.1:8000/list-of-partycontacts/"
-      );
-      const jsonContactList = await responseContactList.json();
-      this.state.partyContacts = jsonContactList;
     } catch {
       this.toggleLoadStatus();
     }
-  };
-
-  // Take name and village from contact
-  getNameVillage = matchContact => {
-    axios
-      .post("http://127.0.0.1:8000/party-through-contact/", {
-        contact: matchContact
-      })
-      .then(res => {
-        const jsonNameVillage = JSON.parse(res.data);
-
-        this.setState({
-          partyName: jsonNameVillage.name,
-          partyVillage: jsonNameVillage.village
-        });
-      })
-      .catch(error => {
-        //console.log( error.response.request._response )
-      });
   };
 
   checkVillage = () => {
@@ -132,11 +107,9 @@ export default class VehiclePartyRegistration extends React.Component {
       partyList: {},
       partyExistMessage: "",
       responseMessage: "",
-      partyContacts: "",
       buttonStatus: {
         visibility: "visible"
       },
-      disabled: true,
       loadingStatus: {
         visibility: "visible"
       },
@@ -145,7 +118,6 @@ export default class VehiclePartyRegistration extends React.Component {
       }
     };
     this.fetchProduct = this.fetchProduct.bind(this);
-    this.getNameVillage = this.getNameVillage.bind(this);
     this.checkVillage = this.checkVillage.bind(this);
     this.checkParty = this.checkParty.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -167,17 +139,8 @@ export default class VehiclePartyRegistration extends React.Component {
           <InputContactField
             callbackFromParent={dataFromChild => {
               this.state.partyContact = dataFromChild;
-              if (dataFromChild.length === 10) {
-                if (this.state.partyContacts.indexOf(dataFromChild) > -1) {
-                  this.getNameVillage(dataFromChild);
-                } else
-                  this.setState({
-                    disabled: !this.state.disabled,
-                    partyName: "",
-                    partyVillage: ""
-                  });
               }
-            }}
+            }
           />
 
           <input
@@ -194,7 +157,6 @@ export default class VehiclePartyRegistration extends React.Component {
               this.checkParty();
             }}
             required
-            disabled={this.state.disabled ? "disabled" : ""}
           />
 
           <input
@@ -211,7 +173,6 @@ export default class VehiclePartyRegistration extends React.Component {
               this.checkVillage();
             }}
             required
-            disabled={this.state.disabled ? "disabled" : ""}
           />
         </div>
         <p>{this.state.responseMessage}</p>
