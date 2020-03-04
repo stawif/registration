@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import (Machine , Owner , Vehicle , Recorder , Party , Material , MachineParty,PurchaseParty,VehicleParty,
+from .models import (Machine , Owner , Vehicle , Recorder ,  Material , MachineParty,PurchaseParty,VehicleParty,
                     MachineWork,VehicleWork,MixDebit,Worker,Purchase,DailyWork)
 
 class MachineSerializer(serializers.ModelSerializer):
@@ -51,21 +51,19 @@ class WorkerSerializer(serializers.ModelSerializer):
         model = Worker
         fields = ['name','contact','village','salary','exit_date','entry_date']
 
-class PartySerializer(serializers.ModelSerializer):
-    """
-    Serializer for the party Model.
-    """
-    class Meta:
-        model = Party
-        fields = ['contact','village']
+# class PartySerializer(serializers.ModelSerializer):
+#     """
+#     Serializer for the party Model.
+#     """
+#     class Meta:
+#         model = Party
+#         fields = ['contact','village']
 
 class MachinePartySerializer(serializers.ModelSerializer):
     """
     Serializer for the Machine Party Model.
     """
     # contact = serializers.RelatedField(source='credit_id', read_only=True)
-    contact = serializers.CharField(source='credit_id.contact')
-    village = serializers.CharField(source='credit_id.village')
     class Meta:
         model = MachineParty
         fields = ['contact','name','village']
@@ -75,8 +73,6 @@ class VehiclePartySerializer(serializers.ModelSerializer):
     """
     Serializer for the Vehicle Party Model.
     """
-    contact = serializers.CharField(source='credit_id.contact')
-    village = serializers.CharField(source='credit_id.village')
     class Meta:
         model = VehicleParty
         fields = ['name','contact','village']

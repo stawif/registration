@@ -17,7 +17,7 @@ class Owner(models.Model):
 
 @receiver(post_save, sender= Owner)
 def gen_daily_expense_debit_id(sender, instance, **kwarge):
-    daily_expense_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"), spend_amount=0)
+    daily_expense_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"))
     daily_expense_i.save()
 
 class Machine(models.Model):
@@ -70,18 +70,18 @@ def check_Material_availability(sender,instance,**kwarge):
         if instance.name.lower() == Material.name.lower():
             raise Exception('Name of Material is already exist')
 
-class Party(models.Model):
-    """
-    Party are the entity which gives work to owner
-    """
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    contact = models.IntegerField(primary_key=True, blank=False)
-    village = models.CharField(max_length=30,blank=False)
-    date = models.DateField(default=datetime.now,blank=False)  #Add aunto now date
-    total_credit = models.IntegerField(default=0)   
+# class Party(models.Model):
+#     """
+#     Party are the entity which gives work to owner
+#     """
+#     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+#     contact = models.IntegerField(primary_key=True, blank=False)
+#     village = models.CharField(max_length=30,blank=False)
+#     date = models.DateField(default=datetime.now,blank=False)  #Add aunto now date
+#     total_credit = models.IntegerField(default=0)   
 
-    def __str__(self):
-        return str(self.pk)    
+#     def __str__(self):
+#         return str(self.pk)    
 
 class MixCredit(models.Model):
     """
@@ -90,9 +90,12 @@ class MixCredit(models.Model):
     owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
     date = models.DateField(blank=False)
 
+    def __str__(self):
+        return str(self.pk)
+
 @receiver(post_save, sender= Owner)
 def gen_daily_expense_credit_id(sender, instance, **kwarge):
-    daily_expense_i = MixCredit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"), spend_amount=0)
+    daily_expense_i = MixCredit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"))
     daily_expense_i.save()
 
 """
@@ -190,12 +193,15 @@ class MachineWork(models.Model):
         template = '{0.party} {0.date}'
         return template.format(self)
 
+    class Meta:
+        unique_together = (("party", "date"),)
+
 class VehicleWork(models.Model):
     """
     This is a type of work owner do for a party 
     """
     party = models.ForeignKey(VehicleParty, on_delete=models.CASCADE)
-    date = models.DateField(primary_key=True)
+    date = models.DateField()
     five_feet = models.FloatField(blank=False)
     two_half_feet = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
@@ -205,6 +211,9 @@ class VehicleWork(models.Model):
     def __str__(self):
         template = '{0.party} {0.date}'
         return template.format(self)       
+
+    class Meta:
+        unique_together = (("party", "date"),)
 
 class DailyWork(models.Model):
     """
@@ -281,7 +290,7 @@ class Credit(models.Model):
     """
     Credit history of owner account
     """
-    work = models.ForeignKey(Party, on_delete=models.CASCADE)
+    work = models.ForeignKey(MixCredit, on_delete=models.CASCADE)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     date = models.DateField(blank=False)
     credit_amount = models.IntegerField(blank=False)

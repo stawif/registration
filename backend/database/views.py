@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , MaterialSerializer,
-                            PartySerializer,PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
+                            PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
                             MachineWorkSerializer , VehicleWorkSerializer,WorkerSerializer,
                             DailyWorkSerializer,MaterialListSerializer)
 from rest_framework.views import APIView
-from .models import  (Machine , Owner , Vehicle , Recorder , Party , Material , 
+from .models import  (Machine , Owner , Vehicle , Recorder , Material , 
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,
-                        MixDebit,Worker,Purchase,DailyWork,MachineSupply,VehicleSupply)
+                        MixDebit,Worker,Purchase,DailyWork,MachineSupply,VehicleSupply,MixCredit)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse,HttpResponse
 from rest_framework import status
@@ -123,7 +123,7 @@ class AddVehicle(APIView):
         Condition to check Whether a Vehicle is already exists or not.
         """
         if request.data in vehicle_name_list:
-            return Response("vehicle already exists")
+            return Response("{}  already exists".format(api_name))
         else:
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
             serializer = VehicleSerializer(data=request.data)
@@ -230,33 +230,23 @@ class AddMachineParty(APIView):
             api_name = request.data['name']
             api_contact = request.data['contact']
             api_village = request.data['village']
+            api_crasher = request.data['crasher']
+            api_date = request.data['date']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
-        try:
-            api_contact_i  = Party.objects.get(contact=api_contact)
-        except Exception as e:
-            print(e)
         machine_name = {"name":api_name}
         if machine_name in machine_party_list:
             return Response('Party Already Exists in Machine Work ')
         else:
-            try:
-                if api_contact_i:
-                    try:
-                        machine_party_i = MachineParty.objects.create(credit_id=api_contact_i,name=api_name)
-                        return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
-                    except Exception:
-                        return Response("party is already exists in machine party with same name and contact ",status=status.HTTP_408_REQUEST_TIMEOUT)
-            except :
                 try:
-                    party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
+                    credit_id_i = MixCredit.objects.create(owner=owner,date=api_date)
                 except Exception:
                     return Response("Data is not sufficient",status=status.HTTP_404_NOT_FOUND)
                 try:
-                    machine_party_i = MachineParty.objects.create(credit_id=party_i,name=api_name)
+                    machine_party_i = MachineParty.objects.create(credit_id=credit_id_i,name=api_name,contact=api_contact,village=api_village,crasher=api_crasher)
                     return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
                 except Exception:
-                    party_i.delete()
+                    credit_id_i.delete()
                     return Response("Party not Created , Network problem ",status=status.HTTP_408_REQUEST_TIMEOUT)
 
         return Response("please provide correct details",status=status.HTTP_400_BAD_REQUEST)
@@ -283,34 +273,22 @@ class AddVehicleParty(APIView):
             api_name = request.data['name']
             api_contact = request.data['contact']
             api_village = request.data['village']
+            api_date = request.data['date']
         except Exception as e:
-            print(e)
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
-        try:
-            api_contact_i  = Party.objects.get(contact=api_contact)
-        except Exception as e:
-            print(e)
         vehicle_party = {"name":api_name}
         if vehicle_party in vehicle_party_list:
             return Response('Party Already Exists in Vehicle Work')
         else:
-            try:
-                if api_contact_i:
-                    try:
-                        vehicle_party_i = VehicleParty.objects.create(credit_id=api_contact_i,name=api_name)
-                        return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
-                    except Exception:
-                        return Response("party is already exists in vehicle party with same name and contact",status=status.HTTP_408_REQUEST_TIMEOUT)
-            except :
                 try:
-                    party_i = Party.objects.create(owner=owner,contact=api_contact,village=api_village)
+                    credit_id_i = MixCredit.objects.create(owner=owner,date=api_date)
                 except Exception:
                     return Response("Data is not correct",status=status.HTTP_400_BAD_REQUEST)
                 try:
-                    vehicle_party_i = VehicleParty.objects.create(credit_id=party_i,name=api_name)
+                    vehicle_party_i = VehicleParty.objects.create(credit_id=credit_id_i,name=api_name,contact=api_contact,village=api_village)
                     return Response("{} party added".format(api_name,status=status.HTTP_201_CREATED))
                 except Exception:
-                    party_i.delete()
+                    credit_id_i.delete()
                     return Response("Party not Created, Network problem")
 
         return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
@@ -339,20 +317,17 @@ class AddPurchaseParty(APIView):
             api_village = request.data['village']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
-        if api_name in purchase_party_list:
-            return Response('Party Already Exists in Purchase Work.')
-        else:
-            try:
-                mix_debit_create = MixDebit.objects.create(owner=owner)
-            except Exception:
-                return Response("Error due to mix_debit_creation")
-            try:
-                purchase_party_instance = PurchaseParty.objects.create(owner=owner,debit_id=mix_debit_create,name=api_name,contact=api_contact,village=api_village)
-                return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
-            except Exception as e:
-                print(e)
-                mix_debit_create.delete()
-                return Response("Party not Created due to Network problem.")
+        try:
+            mix_debit_create = MixDebit.objects.create(owner=owner)
+        except Exception:
+            return Response("Error due to mix_debit_creation")
+        try:
+            purchase_party_instance = PurchaseParty.objects.create(owner=owner,debit_id=mix_debit_create,name=api_name,contact=api_contact,village=api_village)
+            return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e)
+            mix_debit_create.delete()
+            return Response("Party not Created due to Network problem.")
         return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
 
 class AddMachineWork(APIView):
@@ -369,6 +344,8 @@ class AddMachineWork(APIView):
             api_drilling_feet = request.data['drilling_feet']
             api_diesel_amount = request.data['diesel_amount']
             api_remark = request.data['remark']
+            api_holes = request.data['holes']
+            api_payment = request.data['payment']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         try:
@@ -379,10 +356,12 @@ class AddMachineWork(APIView):
         if request.data:
             try:
                 machine_work = MachineWork.objects.create(party=party_id,machine=machine_id,date=api_date,
-                drilling_feet=float(api_drilling_feet),diesel_amount=float(api_diesel_amount),remark=api_remark)
+                drilling_feet=float(api_drilling_feet),diesel_amount=float(api_diesel_amount),remark=api_remark,holes=api_holes,
+                payment=api_payment)
                 return Response("{} Machine work added".format(machine_id.name),status=status.HTTP_201_CREATED)
             except Exception as e:
-                return Response("Details are not correct")
+                print(e)
+                return Response("{} for date {} is already exists".format(api_party_name,api_date))
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class AddVehicleWork(APIView):
@@ -396,33 +375,25 @@ class AddVehicleWork(APIView):
         vehicle_list = Vehicle.objects.all().values('name')
         try:
             api_party_name = request.data['party']
-            api_vehicle_names = request.data['vehicle']
             api_date = request.data['date']
             api_five_feet = request.data['five_feet']
             api_two_half_feet = request.data['two_half_feet']
             api_remark = request.data['remark']
+            api_payment = request.data['payment']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         party_name = {'name':api_party_name}
-        vehicles_name_list = {'name':api_vehicle_names}
-        number_of_vehicle = len(vehicles_name_list['name'])
-        for i in range(number_of_vehicle):
-            name_of_vehicle = {"name":vehicles_name_list['name'][i]}
-            if name_of_vehicle not in vehicle_list:
-                return Response("Vehicle Does not exists.")
         if party_name not in vehicle_party_list:
             return Response('Vehicle Party Does not exists.')
         else:
             party_id_i = VehicleParty.objects.get(name=api_party_name)
-            if request.data:
+            try:
                  vehicle_work_i = VehicleWork.objects.create(party=party_id_i,date=api_date,
-                 five_feet=float(api_five_feet),two_half_feet=float(api_two_half_feet),remark=api_remark)
-                 for i in range(number_of_vehicle):
-                     vehicle_id = Vehicle.objects.get(name=vehicles_name_list['name'][i])
-                     vehicle_i = VehicleWorkVehicles.objects.create(vehicle=vehicle_id,vehicle_work=vehicle_work_i)
-                 return Response("{} Vehicle work for vehicle {} added".format(api_party_name,api_vehicle_names),status = status.HTTP_201_CREATED)
-            else:
-                return Response("please provide all information correct",status=status.HTTP_204_NO_CONTENT)
+                 five_feet=float(api_five_feet),two_half_feet=float(api_two_half_feet),remark=api_remark,payment=api_payment)
+                 return Response("{} Vehicle work added".format(api_party_name),status = status.HTTP_201_CREATED)
+            except Exception as e:
+                print(e)
+                return Response("{} for date {} is already exists".format(api_party_name,api_date),status=status.HTTP_204_NO_CONTENT)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -473,12 +444,11 @@ class AddWorker(APIView):
             api_date = request.data['date']
             api_village = request.data['village']
             api_salary = request.data['salary']
-            api_advance = request.data['advance']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         if request.data:
             try:
-                mix_debit_create_i = MixDebit.objects.create(owner=owner,date=api_date,spend_amount=api_advance)
+                mix_debit_create_i = MixDebit.objects.create(owner=owner,date=api_date)
             except Exception:
                 return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
             try:
@@ -500,7 +470,7 @@ class AddDailyWork(APIView):
     def post(self,request):
         try:
             api_name = request.data['name']
-            api_contact = request.data['contact']
+            api_vehicle = request.data['vehicle']
             api_date = request.data['date']
             api_village = request.data['village']
             api_five_feet = request.data['five_feet']
@@ -509,28 +479,28 @@ class AddDailyWork(APIView):
             api_two_half_feet_rate = request.data['two_half_feet_rate']
             api_diesel_spend = request.data['diesel_spend']
         except Exception as e:
-            return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
+            return Response('please provide all information correctly...',status=status.HTTP_204_NO_CONTENT)
         net_amount = float(api_five_feet)*float(api_five_feet_rate)+float(api_two_half_feet)*float(api_two_half_feet_rate)
         try:
             owner = Owner.objects.get(id=1)
             try:
-                party_i = Party.objects.create(owner=owner,date=api_date,village=api_village,contact=api_contact)
+                credit_id_i = MixCredit.objects.create(owner=owner,date=api_date)
             except Exception as e:
                 return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
             try:
-                daily_party_i = DailyParty.objects.create(credit_id=party_i,name=api_name)
+                vehicle_i = Vehicle.objects.get(name=api_vehicle)
             except Exception as e:
-                party_i.delete()
-                return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
+                print(e)
+                return Response("Vehicle does not exists")
             try:
-                daily_work_i = DailyWork.objects.create(party=daily_party_i,five_feet=float(api_five_feet),five_feet_rate=float(api_five_feet_rate),
+                daily_work_i = DailyWork.objects.create(credit_id=credit_id_i,name=api_name,vehicle=vehicle_i,five_feet=float(api_five_feet),five_feet_rate=float(api_five_feet_rate),
                                             two_half_feet=float(api_two_half_feet),two_half_feet_rate=float(api_two_half_feet_rate),diesel_spend=float(api_diesel_spend),
                                             net_amount=float(net_amount))
                 return Response('daily work for party {} added'.format(api_name),status=status.HTTP_201_CREATED)
             except Exception as e:
-                party_i.delete()
-                daily_party_i.delete()
-                return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
+                print(e)
+                credit_id_i.delete()
+                return Response('please provide all information correctly.',status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
              return Response('please provide all data',status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_400_BAD_REQUEST)
