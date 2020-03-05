@@ -63,6 +63,10 @@ class App extends React.Component{
 		});
 		console.log(this.state.currentPage);
 	}
+	
+
+	
+
 
 	render()
 	{
@@ -137,7 +141,7 @@ class App extends React.Component{
 						<center> <p className="headingDashboard">DASHBOARD</p> </center>
 					</div>
 					<div className="col-sm-9">
-						<nav className="navbar navbar-expand-lg navbar-light bg-light">
+						<nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
 							<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 								<span className="navbar-toggler-icon"></span>
 							</button>
@@ -181,8 +185,8 @@ class App extends React.Component{
 										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineDisplay) }>Machine Display</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleDisplay) }>Vehicle Display</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.workerDisplay) }>Worker Display</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.itemDisplay) }>Item Display</a>
+											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.workerDisplay) }>Worker Display</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machinePartyDisplay) }>Machine Party Display</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyDisplay) }>Vehicle Party Display</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyDisplay) }>Purchase Party Display</a>
