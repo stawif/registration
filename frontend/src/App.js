@@ -140,65 +140,7 @@ class App extends React.Component{
 					<div id="controller" className="col-sm-3">
 						<center> <p className="headingDashboard">DASHBOARD</p> </center>
 					</div>
-<<<<<<< HEAD
-					<div className="col-sm-9">
-						<nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-							<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-								<span className="navbar-toggler-icon"></span>
-							</button>
-              
-							<div className="collapse navbar-collapse" id="navbarSupportedContent">
-								<ul className="navbar-nav mr-auto">
-									<li className="nav-item active">
-										<a className="nav-link" href="">Logout<span className="sr-only">(current)</span></a>
-									</li>
-									<li className="nav-item">
-										<a className="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										Registration
-										</a>
-										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineReg) }>Machine</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleReg) } >Vehicle</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.itemReg) } >Item</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.workerReg) } >Worker</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machinePartyReg) } >Machine Party</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyReg) } >Vehicle Party</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyReg) } >Purchase Party</a>
-										</div>
-									</li>
-									<li className="nav-item dropdown">
-										<a className="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										Entry
-										</a>
-										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineWork) }>Machine Work</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleWork) } >Vehicle Work</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addDailyWork) } >Daily Work</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addPurchaseDetail) } >Purchase Entry</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addMachineSupply) } >Machine Supply</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleSupply) } >Vehicle Supply</a>
-										</div>
-									</li>
-									<li className="nav-item dropdown">
-										<a className="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										Display
-										</a>
-										<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineDisplay) }>Machine Display</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehicleDisplay) }>Vehicle Display</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.itemDisplay) }>Item Display</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.workerDisplay) }>Worker Display</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machinePartyDisplay) }>Machine Party Display</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyDisplay) }>Vehicle Party Display</a>
-											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyDisplay) }>Purchase Party Display</a>
-										</div>
-										</li>
-								</ul>
-								<form className="form-inline my-2 my-lg-0">
-									<input className="form-control mr-sm-2" type="search" placeholder="Party" aria-label="Search"/>
-									<button className="btn btn-outline-dark my-2 my-sm-0" type="submit">Status</button>
-								</form>
-=======
+
 					<div id="display" className="col-sm-9">
 						
 						<div id="navBar">
@@ -206,7 +148,6 @@ class App extends React.Component{
 								<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 									<span className="navbar-toggler-icon"></span>
 								</button>
-				
 								<div className="collapse navbar-collapse" id="navbarSupportedContent">
 									<ul className="navbar-nav mr-auto">
 										<li className="nav-item active">
@@ -265,7 +206,6 @@ class App extends React.Component{
 						<div id="displayPart">	
 							<div id="viewPart" className="d-flex justify-content-center align-items-center scrollingSection">
 								{ currentComponent }
->>>>>>> 118e4d86c8dfb72522cc8a225981bd4c25b5c79e
 							</div>
 						</div>
 
