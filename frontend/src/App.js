@@ -178,7 +178,7 @@ class App extends React.Component{
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.addVehicleSupply) } >Vehicle Supply</a>
 										</div>
 									</li>
-									<li className="nav-item">
+									<li className="nav-item dropdown">
 										<a className="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										Display
 										</a>
@@ -191,7 +191,7 @@ class App extends React.Component{
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyDisplay) }>Vehicle Party Display</a>
 											<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyDisplay) }>Purchase Party Display</a>
 										</div>
-									</li>
+										</li>
 								</ul>
 								<form className="form-inline my-2 my-lg-0">
 									<input className="form-control mr-sm-2" type="search" placeholder="Party" aria-label="Search"/>
