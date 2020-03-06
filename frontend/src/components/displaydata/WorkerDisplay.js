@@ -17,7 +17,7 @@ class WorkerDisplay extends React.Component {
 				<p className="headingViewPart">Workers</p>
 				<div>
 					<table className=" table table-borderd">
-						<thead className="table-dark">
+						<thead className="thead-dark">
 							<tr>
 								<th>Name</th>
 								<th>Contact</th>

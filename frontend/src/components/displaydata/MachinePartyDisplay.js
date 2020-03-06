@@ -13,11 +13,11 @@ class MachinePartyDisplay extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div id="mainComponent">
 				<p className="headingViewPart">Machine Parties</p>
 				<div>
 					<table className="table table-borderd">
-						<thead className="table-dark">
+						<thead className="thead-dark">
 							<tr>
 								<th>Contact</th>
 								<th>Name</th>

@@ -13,11 +13,11 @@ class ItemDisplay extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div id="mainComponent">
 				<p className="headingViewPart">Items</p>
 				<div>
 					<table className="table table-borderd">
-						<thead className="table-dark">
+						<thead className="thead-dark">
 							<tr>
 								<th>Name</th>
 								<th>Measurement</th>

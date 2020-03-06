@@ -13,7 +13,7 @@ class MachineDisplay extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div id="mainComponent">
 				<p className="headingViewPart">Machines</p>
 				<div>
 					<table className=" table table-borderd">

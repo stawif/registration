@@ -13,11 +13,11 @@ class VehicleDisplay extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div id="mainComponent">
 				<p className="headingViewPart">Vehicles</p>
 				<div>
 					<table className="table table-borderd">
-						<thead className="table-dark">
+						<thead className="thead-dark">
 							<tr>
 								<th>Name</th>
 							</tr>
