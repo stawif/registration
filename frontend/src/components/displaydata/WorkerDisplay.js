@@ -13,7 +13,7 @@ class WorkerDisplay extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div id="mainComponent">
 				<p className="headingViewPart">Workers</p>
 				<div>
 					<table className=" table table-borderd">
