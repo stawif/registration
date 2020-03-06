@@ -5,6 +5,117 @@ import InputDateField from "../modular/InputDateField";
 import InputQuantityField from "../modular/InputQuantityField";
 
 export default class VehicleSupplyEntry extends React.Component {
+  //Fetching Products from Database to use them in AutoSugestion and for Checking While Entered Value Exists in Database or Not
+  fetchProduct = async () => {
+    try {
+      const responsePartyList = await fetch(
+        "http://127.0.0.1:8000/list-of-vehicleparty/"
+      );
+      const jsonPartyList = await responsePartyList.json();
+
+      jsonPartyList.map(item => this.state.partyNamesFromApi.push(item.name));
+
+      const responseItemList = await fetch(
+        "http://127.0.0.1:8000/list-of-item/"
+      );
+      const jsonItemList = await responseItemList.json();
+
+      jsonItemList.map(item => this.state.itemNamesFromApi.push(item.name));
+    } catch {
+      this.toggleLoadStatus();
+    }
+  };
+
+  // Check existence of party name
+  checkParty = dataFromChild => {
+    try {
+      this.setState({
+        responseMessage: "",
+        buttonStatus: {
+          visibility: "hidden"
+        }
+      });
+      const showList = (item, index) => {
+        if (dataFromChild.toLowerCase() === item.toLowerCase()) {
+          this.setState({
+            buttonStatus: {
+              visibility: "visible"
+            }
+          });
+        } else {
+        }
+      };
+      this.state.partyNamesFromApi.forEach(showList);
+    } catch (err) {}
+  };
+
+  //Check Existence of item list
+  checkItem = dataFromChild => {
+    try {
+      this.setState({
+        responseMessage: "",
+        buttonStatus: {
+          visibility: "hidden"
+        }
+      });
+      const showList = (item, index) => {
+        if (dataFromChild.toLowerCase() === item.toLowerCase()) {
+          this.setState({
+            buttonStatus: {
+              visibility: "visible"
+            }
+          });
+        } else {
+        }
+      };
+      this.state.itemNamesFromApi.forEach(showList);
+    } catch (err) {}
+  };
+
+  // Form Submit Handling
+  onSubmit = e => {
+    axios
+      .post("http://127.0.0.1:8000/enter-vehicle-supply/", {
+        party: this.state.selectedParty,
+        item: this.state.selectedItem,
+        date: this.state.date,
+        quantity: this.state.quantity
+      })
+      .then(res => {
+        this.setState({
+          responseMessage: res.data
+        });
+      })
+      .catch(error => {
+        alert(error.response.request._response);
+      });
+    e.target.reset();
+    e.preventDefault();
+  };
+
+  // toggle load status
+  toggleLoadStatus = async () => {
+    if (this.state.loadingStatus.visibility === "visible") {
+      await this.setState({
+        loadingStatus: {
+          visibility: "hidden"
+        },
+        loadedStatus: {
+          visibility: "visible"
+        }
+      });
+    } else {
+      await this.setState({
+        loadingStatus: {
+          visibility: "visible"
+        },
+        loadedStatus: {
+          visibility: "hidden"
+        }
+      });
+    }
+  };
+
   constructor(props) {
     super(props);
 
@@ -19,107 +130,32 @@ export default class VehicleSupplyEntry extends React.Component {
       responseMessage: "",
       buttonStatus: {
         visibility: "visible"
+      },
+      loadingStatus: {
+        visibility: "visible"
+      },
+      loadedStatus: {
+        visibility: "hidden"
       }
     };
 
-    //Fetching Products from Database to use them in AutoSugestion and for Checking While Entered Value Exists in Database or Not
-    this.state.fetchProduct = async () => {
-      fetch("http://127.0.0.1:8000/list-of-vehicleparty/")
-        .then(res => res.json())
-        .then(out => {
-          out.map(item => this.state.partyNamesFromApi.push(item.name));
-        })
-        .catch(err => {
-          throw err;
-        });
-
-      fetch("http://127.0.0.1:8000/list-of-item/")
-        .then(res => res.json())
-        .then(out => {
-          out.map(item => this.state.itemNamesFromApi.push(item.name));
-        })
-        .catch(err => {
-          throw err;
-        });
-    };
-
-    this.state.fetchProduct();
-
-    // Check existence of party name
-    this.state.checkparty = dataFromChild => {
-      try {
-        this.setState({
-          responseMessage: "",
-          buttonStatus: {
-            visibility: "hidden"
-          }
-        });
-        const showList = (item, index) => {
-          if (dataFromChild.toLowerCase() === item.toLowerCase()) {
-            this.setState({
-              buttonStatus: {
-                visibility: "visible"
-              }
-            });
-          } else {
-          }
-        };
-        this.state.partyNamesFromApi.forEach(showList);
-      } catch (err) {}
-    };
-
-    //Check Existence of item list
-    this.state.checkitem = dataFromChild => {
-      try {
-        this.setState({
-          responseMessage: "",
-          buttonStatus: {
-            visibility: "hidden"
-          }
-        });
-        const showList = (item, index) => {
-          if (dataFromChild.toLowerCase() === item.toLowerCase()) {
-            this.setState({
-              buttonStatus: {
-                visibility: "visible"
-              }
-            });
-          } else {
-          }
-        };
-        this.state.itemNamesFromApi.forEach(showList);
-      } catch (err) {}
-    };
-
-    // Form Submit Handling
-    this.state.onSubmit = e => {
-      axios
-        .post("http://127.0.0.1:8000/enter-vehicle-supply/", {
-          party: this.state.selectedParty,
-          item: this.state.selectedItem,
-          date: this.state.date,
-          quantity: this.state.quantity
-        })
-        .then(res => {
-          this.setState({
-            responseMessage: res.data
-          });
-        })
-        .catch(error => {
-          alert(error.response.request._response);
-        });
-      e.target.reset();
-      e.preventDefault();
-    };
+    this.fetchProduct = this.fetchProduct.bind(this);
+    this.checkParty = this.checkParty.bind(this);
+    this.checkItem = this.checkItem.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
+    this.fetchProduct();
   }
 
-
+  componentDidMount() {
+    this.toggleLoadStatus();
+  }
 
   render() {
     return (
       <form
         className="form-container form-group"
-        onSubmit={e => this.state.onSubmit(e)}
+        onSubmit={e => this.onSubmit(e)}
       >
         <p className="headingViewPart">Vehicle Supply Entry</p>
         <div className="pt-5">
@@ -128,7 +164,7 @@ export default class VehicleSupplyEntry extends React.Component {
             callbackFromParent={dataFromChild => {
               this.state.selectedParty = dataFromChild;
             }}
-            checkFromParent={this.state.checkparty}
+            checkFromParent={this.checkParty}
             placeholderfrom={"Party name"}
           />
 
@@ -141,7 +177,7 @@ export default class VehicleSupplyEntry extends React.Component {
               this.state.selectedItem = dataFromChild;
             }}
             placeholderfrom={"Item name"}
-            checkFromParent={this.state.checkitem}
+            checkFromParent={this.checkItem}
           />
 
           <br />
@@ -157,7 +193,7 @@ export default class VehicleSupplyEntry extends React.Component {
           <br />
 
           <InputQuantityField
-          placeholder={"Quantity"}
+            placeholder={"Quantity"}
             callbackFromParent={dataFromChild => {
               this.state.quantity = dataFromChild;
             }}
