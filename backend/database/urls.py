@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , ItemList , AddItem,
+from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , MaterialList , AddMaterial,
                     MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
                     AddVehicleParty,AddMachineWork,AddVehicleWork,AddWorker,AddPurchase, WorkerList,AddDailyWork,
-                    AddMachineSupply,AddVehicleSupply,MachinePartyList,VehiclePartyList,WorkerList, PartyContact,
+                    AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,
+                    WorkerList, PartyContact,VehiclePayment,PurchasePayment,
                     PartyThroughContact)
 
 urlpatterns = [
@@ -10,7 +11,7 @@ urlpatterns = [
     path('list-of-partycontacts/',PartyContact),
     path('list-of-machines/',MachineList.as_view()),
     path('list-of-vehicles/',VehicleList.as_view()),
-    path('list-of-item/',ItemList.as_view()),
+    path('list-of-material/',MaterialList.as_view()),
     path('list-of-worker/',WorkerList.as_view()),
     path('list-of-machineparty/',MachinePartyList.as_view()),
     path('list-of-vehicleparty/',VehiclePartyList.as_view()),
@@ -19,7 +20,7 @@ urlpatterns = [
     path('vehicle-registration/',AddVehicle.as_view()),
     path('worker-registration/',AddWorker.as_view()),
     path('recorder-registration/',AddRecorder.as_view()),
-    path('item-registration/',AddItem.as_view()),
+    path('material-registration/',AddMaterial.as_view()),
     path('machine-party-registration/',AddMachineParty.as_view()),
     path('vehicle-party-registration/',AddVehicleParty.as_view()),
     path('purchase-party-registration/',AddPurchaseParty.as_view()),
@@ -29,7 +30,8 @@ urlpatterns = [
     path('enter-daily-work/',AddDailyWork.as_view()),
     path('enter-machine-supply/',AddMachineSupply.as_view()),
     path('enter-vehicle-supply/',AddVehicleSupply.as_view()),
-    path('list-of-machineparty/',MachinePartyList.as_view()),
-    path('list-of-vehicleparty/',MachinePartyList.as_view()),
-    path('list-of-worker/',MachinePartyList.as_view()),
+    path('machine-payment/',MachinePayment.as_view()),
+    path('vehicle-payment/',VehiclePayment.as_view()),
+    path('purchase-payment/',PurchasePayment.as_view()),
+    path('update-avgfeet/',UpdateAvgFeet.as_view()),
 ]
