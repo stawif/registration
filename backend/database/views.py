@@ -203,6 +203,7 @@ class AddItem(APIView):
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
             serializer = ItemSerializer(data=request.data)
             if serializer.is_valid():
+                print("Reacher here")
                 serializer.save()
                 return Response("{} Store item added".format(api_name), status=status.HTTP_201_CREATED)
             return Response("Either exists or incorrect details",status=status.HTTP_400_BAD_REQUEST)
@@ -617,3 +618,36 @@ class AddVehicleSupply(APIView):
             except Exception as e:
                 print(e)
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)                
+
+class MachinePartyList(APIView):
+    """
+    View to return List of Machine Party.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        queryset = MachineParty.objects.all()
+        serializer = MachinePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class VehiclePartyList(APIView):
+    """
+    View to return List of Vehicle Party.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        queryset = VehicleParty.objects.all()
+        serializer = VehiclePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class WorkerList(APIView):
+    """
+    View to return List of Worker.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        queryset = Worker.objects.all()
+        serializer = WorkerSerializer(queryset,many=True)
+        return Response(serializer.data)

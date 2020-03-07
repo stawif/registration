@@ -5,6 +5,7 @@ import InputDateField from "../modular/InputDateField";
 import InputContactField from "../modular/InputContactField";
 import InputPartyVillageField from "../modular/InputPartyVillageField";
 import InputRateField from "../modular/InputRateField";
+import InputQuantityField from "../modular/InputQuantityField";
 
 export default class DailyWorkEntry extends React.Component {
   onChange = () => {
@@ -105,6 +106,7 @@ export default class DailyWorkEntry extends React.Component {
       >
         <p className="headingViewPart">Daily Work Entry</p>
         <div className="pt-5">
+          
           <InputPartyNameField
             callbackFromParent={dataFromChild => {
               this.state.partyName = dataFromChild;
@@ -144,47 +146,40 @@ export default class DailyWorkEntry extends React.Component {
           <br />
           <br />
 
-          <input
-            type="number"
-            className="mb-2"
-            name="fiveFeet"
+          <InputQuantityField 
             placeholder="5 Feet"
-            autoComplete="off"
-            onChange={e => {
-              this.state.fiveFeet = e.target.value;
-              this.onChange();
-            }}
-            required
-          />
+            callbackFromParent= {
+              dataFromChild => {
+                this.state.fiveFeet = dataFromChild;
+                this.state.onChange();
+              }
+            }
+          />  
 
           <br />
           <br />
 
           <InputRateField
+            placeholderParent={"5 Feet Rate"}
             callbackFromParent={dataFromChild => {
               this.state.fiveFeetRate = dataFromChild;
             }}
-            placeholderParent={"5 Feet Rate"}
           />
 
           <br />
           <br />
 
-          <input
-            type="number"
-            className="mb-2"
-            name="twoHalfFeet"
+          <InputQuantityField 
             placeholder="2.5 Feet"
-            autoComplete="off"
-            onChange={e => {
-              this.state.twoHalfFeet = e.target.value;
-              this.onChange();
+            callbackFromParent={dataFromChild => {
+              this.state.twoHalfFeet = dataFromChild;
+              this.state.onChange();
             }}
-            required
           />
 
           <br />
           <br />
+
           <InputRateField
             callbackFromParent={dataFromChild => {
               this.state.twoHalfFeetRate = dataFromChild;
@@ -195,18 +190,14 @@ export default class DailyWorkEntry extends React.Component {
           <br />
           <br />
 
-          <input
-            type="number"
-            className="mb-2"
-            name="dieselSpend"
+          <InputQuantityField 
             placeholder="Diesel Spend"
-            autoComplete="off"
-            onChange={e => {
-              this.state.dieselSpend = e.target.value;
-              this.onChange();
+            callbackFromParent={dataFromChild => {
+              this.state.dieselSpend = dataFromChild;
+              this.state.onChange();
             }}
-            required
           />
+
         </div>
         <p>{this.state.responseMessage}</p>
         <button
