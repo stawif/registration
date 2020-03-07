@@ -67,7 +67,7 @@ export default class MachinePartyRegistration extends React.Component {
         });
       })
       .catch(error => {
-        console.log(error.response.request._response);
+        //console.log(error.response.request._response);
       });
     console.log("Name : "+this.state.partyName);
     console.log("Contact : "+this.state.partyContact);
