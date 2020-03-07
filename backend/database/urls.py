@@ -2,8 +2,8 @@ from django.urls import path
 from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , MaterialList , AddMaterial,
                     MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
                     AddVehicleParty,AddMachineWork,AddVehicleWork,AddWorker,AddPurchase, WorkerList,AddDailyWork,
-                    AddMachineSupply,AddVehicleSupply,MachinePayment,
-                    WorkerList, PartyContact,
+                    AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,
+                    WorkerList, PartyContact,VehiclePayment,PurchasePayment,
                     PartyThroughContact)
 
 urlpatterns = [
@@ -31,4 +31,7 @@ urlpatterns = [
     path('enter-machine-supply/',AddMachineSupply.as_view()),
     path('enter-vehicle-supply/',AddVehicleSupply.as_view()),
     path('machine-payment/',MachinePayment.as_view()),
+    path('vehicle-payment/',VehiclePayment.as_view()),
+    path('purchase-payment/',PurchasePayment.as_view()),
+    path('update-avgfeet/',UpdateAvgFeet.as_view()),
 ]

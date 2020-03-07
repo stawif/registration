@@ -631,19 +631,15 @@ class MachinePayment(APIView):
         except Exception as e:
             return Response('please provide all information')
         try:
-            party_i = Party.objects.get(contact=api_contact)
+            party_i = MachineParty.objects.get(contact=api_contact)
         except:
-            return Response("contact not found ",status=status.HTTP_404_NOT_FOUND)
+            return Response("contact not found for any machine party",status=status.HTTP_404_NOT_FOUND)
         try:
-            machine_party_i = MachineParty.objects.get(credit_id=party_i)
-        except:
-            return Response('machine party does not exists for this contact',status=status.HTTP_404_NOT_FOUND)
-        try:
-            machine_work_i = MachineWork.objects.filter(party=machine_party_i,date__range=[api_start_date,api_end_date])
+            machine_work_i = MachineWork.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
             if machine_work_i:
                 for i in machine_work_i:
                     MachineWork.objects.filter(party=i.party,date=i.date).update(paid=True)
-                return Response('Machine Work for party {} from {} to {} is paid'.format(machine_party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
+                return Response('Machine Work for party {} from {} to {} is paid'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
             else:
                  return Response('No machine work exists for this machine party')
         except:
@@ -652,4 +648,73 @@ class MachinePayment(APIView):
 
 class VehiclePayment(APIView):
     def post(self,request):
+        try:
+            api_contact = request.data['contact']
+            api_start_date = request.data['start_date']
+            api_end_date = request.data['end_date']
+        except Exception as e:
+            return Response('please provide all information')
+        try:
+            party_i = VehicleParty.objects.get(contact=api_contact)
+        except:
+            return Response("contact not found Vehicle party",status=status.HTTP_404_NOT_FOUND)
+        try:
+            vehicle_work_i = VehicleWork.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
+            if vehicle_work_i:
+                for i in vehicle_work_i:
+                    VehicleWork.objects.filter(party=i.party,date=i.date).update(paid=True)
+                return Response('Vehicle Work Work for party {} from {} to {} is paid'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
+            else:
+                 return Response('No Vehicle work exists for this vehicle party')
+        except:
+            return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no work for this vehicle party exists.',status=status.HTTP_200_OK)
+
+class PurchasePayment(APIView):
+    def post(self,request):
+        try:
+            api_contact = request.data['contact']
+            api_start_date = request.data['start_date']
+            api_end_date = request.data['end_date']
+        except Exception as e:
+            return Response('please provide all information')
+        try:
+            party_i = PurchaseParty.objects.filter(contact=api_contact)
+        except Exception as e:
+            return Response("contact not found Purchase party",status=status.HTTP_404_NOT_FOUND)
+        try:
+            purchase_i = Purchase.objects.filter(party=party_i[1],date__range=[api_start_date,api_end_date])
+            if purchase_i:
+                for i in purchase_i:
+                    Purchase.objects.filter(party=i.party,date=i.date).update(paid=True)
+                return Response('Purchase for party {} from {} to {} is paid'.format(party_i[1],api_start_date,api_end_date),status=status.HTTP_200_OK)
+            else:
+                 return Response('No Purchase exists for this purchase party')
+        except:
+            return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
+        return Response('no purchase for this purchase party exists.',status=status.HTTP_200_OK)
+
+class UpdateAvgFeet(APIView):
+    def post(self,request):
+        try:
+            api_contact = request.data['contact']
+            api_avg_feet = request.data['avg_feet']
+            api_start_date = request.data['start_date']
+            api_end_date = request.data['end_date']
+        except Exception as e:
+            return Response('please provide all information')
+        try:
+            party_i = MachineParty.objects.get(contact=api_contact)
+        except:
+            return Response("contact not found for any machine party",status=status.HTTP_404_NOT_FOUND)
+        try:
+            machine_work_i = MachineWork.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
+            if machine_work_i:
+                for i in machine_work_i:
+                    MachineWork.objects.filter(party=i.party,date=i.date).update(average_feet=api_avg_feet)
+                return Response('Average feet  for party {} from {} to {} is Updated'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
+            else:
+                 return Response('No machine work exists for this machine party during given date period')
+        except:
+            return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
+        return Response('no work for this machine party exists.',status=status.HTTP_200_OK)
