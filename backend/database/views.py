@@ -441,8 +441,8 @@ class AddPurchase(APIView):
         except Exception:
             return Response("Item Does not Exists.Please Add item.")
         try:
-            api_quantity = request.data['quantity']
-            api_rate = request.data['rate']
+            api_quantity = float(request.data['quantity'])
+            api_rate = float(request.data['rate'])
             net_amount = api_quantity*api_rate
             api_remark = request.data['remark']
             api_date = request.data['date']

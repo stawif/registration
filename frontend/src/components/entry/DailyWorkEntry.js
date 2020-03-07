@@ -8,12 +8,6 @@ import InputRateField from "../modular/InputRateField";
 import InputQuantityField from "../modular/InputQuantityField";
 
 export default class DailyWorkEntry extends React.Component {
-  onChange = () => {
-    this.setState({
-      workerExistMessage: "",
-      responseMessage: ""
-    });
-  };
 
   //Form Handler
   onSubmit = e => {
@@ -90,7 +84,6 @@ export default class DailyWorkEntry extends React.Component {
       }
     };
 
-    this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
   }
@@ -110,9 +103,6 @@ export default class DailyWorkEntry extends React.Component {
           <InputPartyNameField
             callbackFromParent={dataFromChild => {
               this.state.partyName = dataFromChild;
-            }}
-            checkFromParent={e => {
-              this.onChange();
             }}
           />
 
@@ -151,7 +141,6 @@ export default class DailyWorkEntry extends React.Component {
             callbackFromParent= {
               dataFromChild => {
                 this.state.fiveFeet = dataFromChild;
-                this.state.onChange();
               }
             }
           />  
@@ -173,7 +162,6 @@ export default class DailyWorkEntry extends React.Component {
             placeholder="2.5 Feet"
             callbackFromParent={dataFromChild => {
               this.state.twoHalfFeet = dataFromChild;
-              this.state.onChange();
             }}
           />
 
@@ -194,7 +182,6 @@ export default class DailyWorkEntry extends React.Component {
             placeholder="Diesel Spend"
             callbackFromParent={dataFromChild => {
               this.state.dieselSpend = dataFromChild;
-              this.state.onChange();
             }}
           />
 
