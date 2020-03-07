@@ -12,8 +12,6 @@ export default class InputDateField extends React.Component {
       date: date
     };
 
-    console.log("thisdate", this.state.date);
-
     //this.props.callbackFromParent(this.state.date);
     this.storePassword = this.storePassword.bind(this);
   }

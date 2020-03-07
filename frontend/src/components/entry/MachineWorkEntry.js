@@ -5,6 +5,121 @@ import InputDateField from "../modular/InputDateField";
 import InputRemarkField from "../modular/InputRemarkField";
 import InputQuantityField from "../modular/InputQuantityField";
 export default class MachineWorkEntry extends React.Component {
+  //Fetching Machines And Machine Parties from DataBase
+  fetchProduct = async () => {
+    try {
+      const responsePartyList = await fetch(
+        "http://127.0.0.1:8000/list-of-machineparty/"
+      );
+      const jsonPartyList = await responsePartyList.json();
+
+      jsonPartyList.map(item => this.state.partyNamesFromApi.push(item.name));
+
+      const responseMachineList = await fetch(
+        "http://127.0.0.1:8000/list-of-machines/"
+      );
+      const jsonMachineList = await responseMachineList.json();
+
+      jsonMachineList.map(item =>
+        this.state.machineNamesFromApi.push(item.name)
+      );
+    } catch {
+      this.toggleLoadStatus();
+    }
+  };
+
+  // Check existence of party name
+  checkParty = dataFromChild => {
+    try {
+      this.setState({
+        responseMessage: "",
+        buttonStatus: {
+          visibility: "hidden"
+        }
+      });
+      const showList = item => {
+        if (dataFromChild.toLowerCase() === item.toLowerCase()) {
+          this.setState({
+            buttonStatus: {
+              visibility: "visible"
+            }
+          });
+        } else {
+        }
+      };
+      this.state.partyNamesFromApi.forEach(showList);
+    } catch (err) {}
+  };
+
+  //Check Existance for MAchine name
+  checkMachine = dataFromChild => {
+    try {
+      this.setState({
+        responseMessage: "",
+        buttonStatus: {
+          visibility: "hidden"
+        }
+      });
+      const showList = item => {
+        if (dataFromChild.toLowerCase() === item.toLowerCase()) {
+          this.setState({
+            buttonStatus: {
+              visibility: "visible"
+            }
+          });
+        } else {
+        }
+      };
+      this.state.machineNamesFromApi.forEach(showList);
+    } catch (err) {}
+  };
+
+  //form Handler Submitting
+  onSubmit = e => {
+    axios
+      .post("http://127.0.0.1:8000/enter-machineparty-work/", {
+        party: this.state.selectedParty,
+        machine: this.state.selectedMachine,
+        date: this.state.date,
+        drilling_feet: this.state.drillingFeet,
+        diesel_amount: this.state.dieselAmount,
+        remark: this.state.remark
+      })
+      .then(res => {
+        this.setState({
+          responseMessage: res.data
+        });
+      })
+      .catch(error => {
+        alert(error.response.request._response);
+      });
+
+    e.target.reset();
+    e.preventDefault();
+  };
+
+  // toggle load status
+  toggleLoadStatus = async () => {
+    if (this.state.loadingStatus.visibility === "visible") {
+      await this.setState({
+        loadingStatus: {
+          visibility: "hidden"
+        },
+        loadedStatus: {
+          visibility: "visible"
+        }
+      });
+    } else {
+      await this.setState({
+        loadingStatus: {
+          visibility: "visible"
+        },
+        loadedStatus: {
+          visibility: "hidden"
+        }
+      });
+    }
+  };
   constructor(props) {
     super(props);
 
@@ -21,119 +136,37 @@ export default class MachineWorkEntry extends React.Component {
       responseMessage: "",
       buttonStatus: {
         visibility: "visible"
+      }
+      // ,
+      // radioButtonStyle: {
+      //   float: "left"
+      // }
+      ,
+      loadingStatus: {
+        visibility: "visible"
       },
-      radioButtonStyle: {
-        float: "left"
+      loadedStatus: {
+        visibility: "hidden"
       }
     };
 
-    //Fetching Machines And Machine Parties from DataBase
-    this.state.fetchProduct = async () => {
-      fetch("http://127.0.0.1:8000/list-of-machineparty/")
-        .then(res => res.json())
-        .then(out => {
-          out.map(item => this.state.partyNamesFromApi.push(item.name));
-        })
-        .catch(err => {
-          throw err;
-        });
+    this.fetchProduct = this.fetchProduct.bind(this);
+    this.checkParty = this.checkParty.bind(this);
+    this.checkMachine = this.checkMachine.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
+    this.fetchProduct();
+  }
 
-      fetch("http://127.0.0.1:8000/list-of-machines/")
-        .then(res => res.json())
-        .then(out => {
-          out.map(item => this.state.machineNamesFromApi.push(item.name));
-        })
-        .catch(err => {
-          throw err;
-        });
-    };
-
-    this.state.fetchProduct();
-
-    // Check existence of party name
-    this.state.checkparty = dataFromChild => {
-      try {
-        this.setState({
-          responseMessage: "",
-          buttonStatus: {
-            visibility: "hidden"
-          }
-        });
-        const showList = item => {
-          if (dataFromChild.toLowerCase() === item.toLowerCase()) {
-            this.setState({
-              buttonStatus: {
-                visibility: "visible"
-              }
-            });
-          } else {
-          }
-        };
-        this.state.partyNamesFromApi.forEach(showList);
-      } catch (err) {}
-    };
-
-    //Check Existance for MAchine name
-    this.state.checkmachine = dataFromChild => {
-      try {
-        this.setState({
-          responseMessage: "",
-          buttonStatus: {
-            visibility: "hidden"
-          }
-        });
-        const showList = item => {
-          if (dataFromChild.toLowerCase() === item.toLowerCase()) {
-            this.setState({
-              buttonStatus: {
-                visibility: "visible"
-              }
-            });
-          } else {
-          }
-        };
-        this.state.machineNamesFromApi.forEach(showList);
-      } catch (err) {}
-    };
-
-    //form Handler Submitting
-    this.state.onSubmit = e => {
-      axios
-        .post("http://127.0.0.1:8000/enter-machineparty-work/", {
-          party: this.state.selectedParty,
-          machine: this.state.selectedMachine,
-          date: this.state.date,
-          drilling_feet: this.state.drillingFeet,
-          diesel_amount: this.state.dieselAmount,
-          remark: this.state.remark
-        })
-        .then(res => {
-          this.setState({
-            responseMessage: res.data
-          });
-        })
-        .catch(error => {
-          alert(error.response.request._response);
-        });
-
-        console.log(this.state.selectedParty,
-          this.state.selectedMachine,
-          this.state.date,
-           this.state.drillingFeet,
-           this.state.dieselAmount,
-           this.state.remark);
-        
-
-      e.target.reset();
-      e.preventDefault();
-    };
+  componentDidMount() {
+    this.toggleLoadStatus();
   }
 
   render() {
     return (
       <form
         className="form-container form-group"
-        onSubmit={e => this.state.onSubmit(e)}
+        onSubmit={e => this.onSubmit(e)}
       >
         <p className="headingViewPart">Machine Work Entry</p>
         <div className="pt-5">
@@ -142,7 +175,7 @@ export default class MachineWorkEntry extends React.Component {
             callbackFromParent={dataFromChild => {
               this.state.selectedParty = dataFromChild;
             }}
-            checkFromParent={this.state.checkparty}
+            checkFromParent={this.checkParty}
             placeholderfrom={"Party name"}
           />
 
@@ -155,7 +188,7 @@ export default class MachineWorkEntry extends React.Component {
               this.state.selectedMachine = dataFromChild;
             }}
             placeholderfrom={"Machine name"}
-            checkFromParent={this.state.checkmachine}
+            checkFromParent={this.checkMachine}
           />
 
           <br />

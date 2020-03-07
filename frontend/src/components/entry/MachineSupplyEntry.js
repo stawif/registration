@@ -36,6 +36,117 @@ import InputDateField from "../modular/InputDateField";
 import InputQuantityField from "../modular/InputQuantityField";
 >>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
 export default class MachineSupplyEntry extends React.Component {
+  //Fetching Products from database
+  fetchProduct = async () => {
+    try {
+      const responseMachineList = await fetch(
+        "http://127.0.0.1:8000/list-of-machineparty/"
+      );
+      const jsonMachineList = await responseMachineList.json();
+      jsonMachineList.map(item => this.state.partyNamesFromApi.push(item.name));
+
+      const responseItemList = await fetch(
+        "http://127.0.0.1:8000/list-of-item/"
+      );
+
+      const jsonItemList = await responseItemList.json();
+      jsonItemList.map(item => this.state.itemNamesFromApi.push(item.name));
+    } catch {
+      this.toggleLoadStatus();
+    }
+  };
+
+  // Check existence of party name
+  checkParty = dataFromChild => {
+    try {
+      this.setState({
+        responseMessage: "",
+        buttonStatus: {
+          visibility: "hidden"
+        }
+      });
+      const showList = (item, index) => {
+        if (dataFromChild.toLowerCase() === item.toLowerCase()) {
+          this.setState({
+            buttonStatus: {
+              visibility: "visible"
+            }
+          });
+        } else {
+        }
+      };
+      this.state.partyNamesFromApi.forEach(showList);
+    } catch (err) {}
+  };
+
+  //Check Existance of Item Names
+  checkItem = dataFromChild => {
+    try {
+      this.setState({
+        responseMessage: "",
+        buttonStatus: {
+          visibility: "hidden"
+        }
+      });
+      const showList = (item, index) => {
+        if (dataFromChild.toLowerCase() === item.toLowerCase()) {
+          this.setState({
+            buttonStatus: {
+              visibility: "visible"
+            }
+          });
+        } else {
+        }
+      };
+      this.state.itemNamesFromApi.forEach(showList);
+    } catch (err) {}
+  };
+
+  //Form Handler
+  onSubmit = e => {
+    axios
+      .post("http://127.0.0.1:8000/enter-machine-supply/", {
+        party: this.state.selectedParty,
+        item: this.state.selectedItem,
+        date: this.state.date,
+        quantity: this.state.quantity
+      })
+      .then(res => {
+        this.setState({
+          responseMessage: res.data
+        });
+      })
+      .catch(error => {
+        alert(error.response.request._response);
+      });
+
+    e.target.reset();
+    e.preventDefault();
+  };
+
+  // toggle load status
+  toggleLoadStatus = async () => {
+    if (this.state.loadingStatus.visibility === "visible") {
+      await this.setState({
+        loadingStatus: {
+          visibility: "hidden"
+        },
+        loadedStatus: {
+          visibility: "visible"
+        }
+      });
+    } else {
+      await this.setState({
+        loadingStatus: {
+          visibility: "visible"
+        },
+        loadedStatus: {
+          visibility: "hidden"
+        }
+      });
+    }
+  };
+
   constructor(props) {
     super(props);
 
@@ -52,9 +163,16 @@ export default class MachineSupplyEntry extends React.Component {
       responseMessage: "",
       buttonStatus: {
         visibility: "visible"
+      },
+      loadingStatus: {
+        visibility: "visible"
+      },
+      loadedStatus: {
+        visibility: "hidden"
       }
     };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     //Fetching Products from database
@@ -207,14 +325,18 @@ export default class MachineSupplyEntry extends React.Component {
         .catch(error => {
           alert(error.response.request._response);
         });
+=======
+    this.fetchProduct = this.fetchProduct.bind(this);
+    this.checkParty = this.checkParty.bind(this);
+    this.checkItem = this.checkItem.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
+    this.fetchProduct();
+  }
+>>>>>>> 6b960ada3a0d675a2c7544f7cf6e2cee71f69237
 
-      e.target.reset();
-      e.preventDefault();
-      this.setState({
-        selectedParty: "",
-        selectedItem: ""
-      });
-    };
+  componentDidMount() {
+    this.toggleLoadStatus();
   }
 
 >>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
@@ -222,7 +344,7 @@ export default class MachineSupplyEntry extends React.Component {
     return (
       <form
         className="form-container form-group"
-        onSubmit={e => this.state.onSubmit(e)}
+        onSubmit={e => this.onSubmit(e)}
       >
         <p className="headingViewPart">Machine Supply Entry</p>
         <div className="pt-5">
@@ -235,8 +357,12 @@ export default class MachineSupplyEntry extends React.Component {
             callbackFromParent={dataFromChild => {
               this.state.selectedParty = dataFromChild;
             }}
+<<<<<<< HEAD
 >>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
             checkFromParent={this.state.checkparty}
+=======
+            checkFromParent={this.checkParty}
+>>>>>>> 6b960ada3a0d675a2c7544f7cf6e2cee71f69237
             placeholderfrom={"Party name"}
           />
 
@@ -257,7 +383,7 @@ export default class MachineSupplyEntry extends React.Component {
             }}
 >>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
             placeholderfrom={"Item name"}
-            checkFromParent={this.state.checkitem}
+            checkFromParent={this.checkItem}
           />
 
 <<<<<<< HEAD

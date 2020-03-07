@@ -6,7 +6,6 @@ export default class InputPartyNameField extends Component {
 
   onChange = e => {
     this.props.callbackFromParent(e.target.value);
-    this.props.checkFromParent(e.target.value);
   };
 
   render() {

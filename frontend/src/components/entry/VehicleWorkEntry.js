@@ -6,6 +6,99 @@ import InputRemarkField from "../modular/InputRemarkField";
 import InputRateField from "../modular/InputRateField.js";
 
 export default class VehicleWorkEntry extends React.Component {
+  //fetching VehicleParty and Vehicles from database
+  fetchProduct = async () => {
+    try {
+      const responsePartyList = await fetch(
+        "http://127.0.0.1:8000/list-of-vehicleparty/"
+      );
+      const jsonPartyList = await responsePartyList.json();
+
+      jsonPartyList.map(item => this.state.partyNamesFromApi.push(item.name));
+
+      const responseVehicleList = await fetch(
+        "http://127.0.0.1:8000/list-of-vehicles/"
+      );
+      const jsonVehicleList = await responseVehicleList.json();
+
+      jsonVehicleList.map(item =>
+        this.state.vehicleNamesFromApi.push(item.name)
+      );
+    } catch {
+      this.toggleLoadStatus();
+    }
+  };
+
+  // Check existence of party name
+  checkParty = dataFromChild => {
+    try {
+      this.setState({
+        responseMessage: "",
+        buttonStatus: {
+          visibility: "hidden"
+        }
+      });
+      const showList = (item, index) => {
+        if (dataFromChild.toLowerCase() === item.toLowerCase()) {
+          this.setState({
+            buttonStatus: {
+              visibility: "visible"
+            }
+          });
+        } else {
+        }
+      };
+      this.state.partyNamesFromApi.forEach(showList);
+    } catch (err) {}
+  };
+
+  //Form Handler Function
+  onSubmit = e => {
+    axios
+      .post("http://127.0.0.1:8000/enter-vehicleparty-work/", {
+        party: this.state.selectedParty,
+        vehicle: this.state.selectedVehicle,
+        date: this.state.date,
+        five_feet: this.state.fiveFeet,
+        two_half_feet: this.state.twoHalfFeet,
+        remark: this.state.remark
+      })
+      .then(res => {
+        this.setState({
+          responseMessage: res.data
+        });
+      })
+      .catch(error => {
+        alert(error.response.request._response);
+      });
+
+    e.target.reset();
+    e.preventDefault();
+  };
+
+  // toggle load status
+  toggleLoadStatus = async () => {
+    if (this.state.loadingStatus.visibility === "visible") {
+      await this.setState({
+        loadingStatus: {
+          visibility: "hidden"
+        },
+        loadedStatus: {
+          visibility: "visible"
+        }
+      });
+    } else {
+      await this.setState({
+        loadingStatus: {
+          visibility: "visible"
+        },
+        loadedStatus: {
+          visibility: "hidden"
+        }
+      });
+    }
+  };
+
   constructor(props) {
     super(props);
 
@@ -24,104 +117,21 @@ export default class VehicleWorkEntry extends React.Component {
       },
       radioButtonStyle: {
         float: "left"
+      },
+      loadingStatus: {
+        visibility: "visible"
+      },
+      loadedStatus: {
+        visibility: "hidden"
       }
     };
 
-    //fetching VehicleParty and Vehicles from database
-    this.state.fetchProduct = async () => {
-      fetch("http://127.0.0.1:8000/list-of-vehicleparty/")
-        .then(res => res.json())
-        .then(out => {
-          out.map(item => this.state.partyNamesFromApi.push(item.name));
-        })
-        .catch(err => {
-          throw err;
-        });
+    this.fetchProduct = this.fetchProduct.bind(this);
+    this.checkParty = this.checkParty.bind(this);
 
-      fetch("http://127.0.0.1:8000/list-of-vehicles/")
-        .then(res => res.json())
-        .then(out => {
-          out.map(item => this.state.vehicleNamesFromApi.push(item.name));
-        })
-        .catch(err => {
-          throw err;
-        });
-    };
-
-    //default call for fetching data
-    this.state.fetchProduct();
-
-    // Check existence of party name
-    this.state.checkparty = dataFromChild => {
-      try {
-        this.setState({
-          responseMessage: "",
-          buttonStatus: {
-            visibility: "hidden"
-          }
-        });
-        const showList = (item, index) => {
-          if (dataFromChild.toLowerCase() === item.toLowerCase()) {
-            this.setState({
-              buttonStatus: {
-                visibility: "visible"
-              }
-            });
-          } else {
-          }
-        };
-        this.state.partyNamesFromApi.forEach(showList);
-      } catch (err) {}
-    };
-
-    //Check Existance of vehicle
-    this.state.checkvehicle = dataFromChild => {
-      try {
-        this.setState({
-          responseMessage: "",
-          buttonStatus: {
-            visibility: "hidden"
-          }
-        });
-        const showList = (item, index) => {
-          if (dataFromChild.toLowerCase() === item.toLowerCase()) {
-            this.setState({
-              buttonStatus: {
-                visibility: "visible"
-              }
-            });
-          } else {
-          }
-        };
-        this.state.vehicleNamesFromApi.forEach(showList);
-      } catch (err) {}
-    };
-
-    //Form Handler Function
-    this.state.onSubmit = e => {
-      axios
-        .post("http://127.0.0.1:8000/enter-vehicleparty-work/", {
-          party: this.state.selectedParty,
-          vehicle: this.state.selectedVehicle,
-          date: this.state.date,
-          five_feet: this.state.fiveFeet,
-          two_half_feet: this.state.twoHalfFeet,
-          remark: this.state.remark
-        })
-        .then(res => {
-          this.setState({
-            responseMessage: res.data
-          });
-        })
-        .catch(error => {
-          alert(error.response.request._response);
-        });
-
-      e.target.reset();
-      e.preventDefault();
-    };
-
-    //This is a Function call to check multiple selected vehicles
+    this.onSubmit = this.onSubmit.bind(this);
+    this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
+    this.fetchProduct();
     this.handleMultipleVehicle = this.handleMultipleVehicle.bind(this);
   }
 
@@ -131,29 +141,23 @@ export default class VehicleWorkEntry extends React.Component {
       selectedVehicle: Array.from(e.target.selectedOptions, item => item.value)
     });
   };
-
-  //This Function is called to set Selected Party which is coming from AutoSuggestion
-  myCallbackForSelectedParty = dataFromChild => {
-    this.state.selectedParty = dataFromChild;
-  };
-
-  //This Function is called to set Selected Vehicle which is coming from AutoSuggestion
-  myCallbackForSelectedVehicle = dataFromChild => {
-    this.state.selectedVehicle = dataFromChild;
-  };
-
+  componentDidMount() {
+    this.toggleLoadStatus();
+  }
   render() {
     return (
       <form
         className="form-container form-group"
-        onSubmit={e => this.state.onSubmit(e)}
+        onSubmit={e => this.onSubmit(e)}
       >
         <p className="headingViewPart">Vehicle Work Entry</p>
         <div className="pt-5">
           <Autocomplete
             suggestions={this.state.partyNamesFromApi}
-            callbackFromParent={this.myCallbackForSelectedParty}
-            checkFromParent={this.state.checkparty}
+            callbackFromParent={dataFromChild => {
+              this.state.selectedParty = dataFromChild;
+            }}
+            checkFromParent={this.checkParty}
             placeholderfrom={"Party name"}
           />
           <p>{this.state.partyExistMessage}</p>
