@@ -1,11 +1,11 @@
 import React from 'react';
 
-class VehicleDisplay extends React.Component {
+class VehiclePartyDisplay extends React.Component {
 	state = {
 		todos: []
 	}
 	componentDidMount() {
-		fetch('http://127.0.0.1:8000/list-of-vehicles/')
+		fetch('http://127.0.0.1:8000/list-of-vehicleparty/')
 		.then(res => res.json())
 		.then((data) => {
 		this.setState({ todos: data })
@@ -14,18 +14,22 @@ class VehicleDisplay extends React.Component {
 	render() {
 		return (
 			<div id="mainComponent">
-				<p className="headingViewPart">Vehicles</p>
+				<p className="headingViewPart">Vehicle Parties</p>
 				<div>
 					<table className="table table-borderd">
 						<thead className="thead-dark">
 							<tr>
 								<th>Name</th>
+								<th>Contact</th>
+								<th>Village</th>
 							</tr>
 						</thead>
 						<tbody>
 							{this.state.todos.map((todo) => (
 								<tr>
 									<td>{todo.name}</td>
+									<td>{todo.contact}</td>
+									<td>{todo.village}</td>
 								</tr>
 							))}
 						</tbody>
@@ -35,5 +39,4 @@ class VehicleDisplay extends React.Component {
 		);
 	}
 }
-export default VehicleDisplay;
-
+export default VehiclePartyDisplay;

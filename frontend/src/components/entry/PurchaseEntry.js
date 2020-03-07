@@ -93,7 +93,11 @@ export default class PurchaseEntry extends React.Component {
       .catch(error => {
         alert(error.response.request._response);
       });
+    console.log("quantity : "+this.state.quantity);  
+    console.log("rate : "+this.state.rate);  
 
+    console.log("quantity : "+typeof this.state.quantity);  
+    console.log("rate : "+typeof this.state.rate);  
     e.target.reset();
     e.preventDefault();
   };
