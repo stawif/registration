@@ -231,7 +231,6 @@ class AddMachineParty(APIView):
             api_contact = request.data['contact']
             api_village = request.data['village']
             api_crasher = request.data['crasher']
-            api_date = request.data['date']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         machine_name = {"name":api_name}
@@ -239,7 +238,7 @@ class AddMachineParty(APIView):
             return Response('Party Already Exists in Machine Work ')
         else:
                 try:
-                    credit_id_i = MixCredit.objects.create(owner=owner,date=api_date)
+                    credit_id_i = MixCredit.objects.create(owner=owner)
                 except Exception:
                     return Response("Data is not sufficient",status=status.HTTP_404_NOT_FOUND)
                 try:
@@ -273,7 +272,6 @@ class AddVehicleParty(APIView):
             api_name = request.data['name']
             api_contact = request.data['contact']
             api_village = request.data['village']
-            api_date = request.data['date']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         vehicle_party = {"name":api_name}
@@ -281,7 +279,7 @@ class AddVehicleParty(APIView):
             return Response('Party Already Exists in Vehicle Work')
         else:
                 try:
-                    credit_id_i = MixCredit.objects.create(owner=owner,date=api_date)
+                    credit_id_i = MixCredit.objects.create(owner=owner)
                 except Exception:
                     return Response("Data is not correct",status=status.HTTP_400_BAD_REQUEST)
                 try:
@@ -478,6 +476,7 @@ class AddDailyWork(APIView):
             api_two_half_feet = request.data['two_half_feet']
             api_two_half_feet_rate = request.data['two_half_feet_rate']
             api_diesel_spend = request.data['diesel_spend']
+            api_date = request.data['date']
         except Exception as e:
             return Response('please provide all information correctly...',status=status.HTTP_204_NO_CONTENT)
         net_amount = float(api_five_feet)*float(api_five_feet_rate)+float(api_two_half_feet)*float(api_two_half_feet_rate)
@@ -495,7 +494,7 @@ class AddDailyWork(APIView):
             try:
                 daily_work_i = DailyWork.objects.create(credit_id=credit_id_i,name=api_name,vehicle=vehicle_i,five_feet=float(api_five_feet),five_feet_rate=float(api_five_feet_rate),
                                             two_half_feet=float(api_two_half_feet),two_half_feet_rate=float(api_two_half_feet_rate),diesel_spend=float(api_diesel_spend),
-                                            net_amount=float(net_amount))
+                                            net_amount=float(net_amount),date=api_date)
                 return Response('daily work for party {} added'.format(api_name),status=status.HTTP_201_CREATED)
             except Exception as e:
                 print(e)

@@ -88,7 +88,7 @@ class MixCredit(models.Model):
     A class to generalize credit type
     """
     owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
-    date = models.DateField(blank=False)
+    date = models.DateField(blank=False,auto_now_add=True)
 
     def __str__(self):
         return str(self.pk)
@@ -228,6 +228,7 @@ class DailyWork(models.Model):
     two_half_feet_rate = models.FloatField(blank=False)
     diesel_spend = models.FloatField(blank=False)
     net_amount = models.FloatField(blank=False)
+    date = models.DateField(blank=False)
 
 
     def __str__(self):
