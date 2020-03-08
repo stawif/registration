@@ -3,25 +3,25 @@ import axios from "axios";
 import InputQuantityField from "../modular/InputQuantityField";
 import InputCommonName from "../modular/InputCommonName";
 
-export default class ItemRegistration extends React.Component {
-  // Fetch item list from server
+export default class MaterialRegistration extends React.Component {
+  // Fetch material list from server
   fetchProduct = async () => {
     try {
       const responseItemList = await fetch(
-        "http://127.0.0.1:8000/list-of-item/"
+        "http://127.0.0.1:8000/list-of-material/"
       );
       const jsonItemList = await responseItemList.json();
-      this.state.itemList = jsonItemList;
+      this.state.materialList = jsonItemList;
     } catch {
       this.toggleLoadStatus();
     }
   };
 
-  // Check existence of item name
-  checkItem = () => {
+  // Check existence of material name
+  checkMaterial = () => {
     try {
       this.setState({
-        itemExistMessage: "",
+        materialExistMessage: "",
         responseMessage: "",
         buttonStatus: {
           visibility: "visible"
@@ -30,7 +30,7 @@ export default class ItemRegistration extends React.Component {
       const showList = (item, index) => {
         if (this.state.itemName.toLowerCase() === item.name.toLowerCase()) {
           this.setState({
-            itemExistMessage: "* This item name is already exist!!!",
+            materialExistMessage: "* This material name is already exist!!!",
             buttonStatus: {
               visibility: "hidden"
             }
@@ -38,17 +38,17 @@ export default class ItemRegistration extends React.Component {
         } else {
         }
       };
-      this.state.itemList.forEach(showList);
+      this.state.materialList.forEach(showList);
     } catch (err) {}
   };
 
   //Form Handler
   onSubmit = e => {
     axios
-      .post("http://127.0.0.1:8000/item-registration/", {
-        name: this.state.itemName,
-        measurement: this.state.itemMeasurement,
-        quantity: this.state.itemQuantity
+      .post("http://127.0.0.1:8000/material-registration/", {
+        name: this.state.materialName,
+        measurement: this.state.materialMeasurement,
+        quantity: this.state.materialQuantity
       })
       .then(res => {
         this.state.fetchProduct();
@@ -90,11 +90,11 @@ export default class ItemRegistration extends React.Component {
     super(props);
 
     this.state = {
-      itemName: "",
-      itemMeasurement: "",
-      itemQuantity: 0,
-      itemList: {},
-      itemExistMessage: "",
+      materialName: "",
+      materialMeasurement: "",
+      materialQuantity: 0,
+      materialList: {},
+      materialExistMessage: "",
       responseMessage: "",
       buttonStatus: {
         visibility: "visible"
@@ -108,7 +108,7 @@ export default class ItemRegistration extends React.Component {
     };
 
     this.fetchProduct = this.fetchProduct.bind(this);
-    this.checkItem = this.checkItem.bind(this);
+    this.checkMaterial = this.checkMaterial.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
     this.fetchProduct();
@@ -123,31 +123,30 @@ export default class ItemRegistration extends React.Component {
         className="form-container form-group"
         onSubmit={e => this.onSubmit(e)}
       >
-        <p className="headingViewPart">Item Registration</p>
+        <p className="headingViewPart">Material Registration</p>
         <div className="pt-5">
           <InputCommonName
             minLength={"2"}
-            placeholderParent={"Item Name"}
+            placeholderParent={"Material Name"}
             callbackFromParent={dataFromChild => {
-              this.state.itemName = dataFromChild;
-              this.checkItem()
+              this.state.materialName = dataFromChild;
+              this.checkMaterial();
             }}
-            
           />
 
-          <p>{this.state.itemExistMessage}</p>
+          <p>{this.state.materialExistMessage}</p>
           <br />
 
           <input
             type="text"
             className="mb-2"
-            name="itemMeasurement"
-            placeholder="Item Measurement"
+            name="materialMeasurement"
+            placeholder="Material Measurement"
             autoComplete="off"
             maxLength="30"
             minLength="1"
             onChange={e => {
-              this.state.itemMeasurement = e.target.value;
+              this.state.materialMeasurement = e.target.value;
             }}
             required
           />
@@ -158,7 +157,7 @@ export default class ItemRegistration extends React.Component {
           <InputQuantityField
             placeholder={"Quantity"}
             callbackFromParent={dataFromChild => {
-              this.state.itemQuantity = dataFromChild;
+              this.state.materialQuantity = dataFromChild;
             }}
           />
 

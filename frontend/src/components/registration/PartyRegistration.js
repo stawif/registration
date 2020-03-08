@@ -115,65 +115,6 @@ export default class PartyRegistration extends React.Component {
 
           <hr />
 
-<<<<<<< HEAD
-        <div style={this.state.radioButtonStyle}>    
-            <span class="radio">
-                <label>
-                    <input 
-                        type="radio" 
-                        name="optradio" 
-                        value="Machine_work"
-                        onChange={  
-                            e => {
-                                this.state.partyType = e.target.value;
-                            }
-                        } 
-                        required/>
-                        Machine Party
-                </label>
-            </span>
-            <span class="radio">
-                <label>
-                    <input type="radio" name="optradio" value="Vehicle_work"
-                        onChange={  
-                            e => {
-                                this.state.partyType = e.target.value;
-                            }
-                        } />
-                        Vehicle Party
-                </label>
-            </span>
-            <span class="radio">
-                <label>
-                    <input type="radio" name="optradio" value="Daily_work"
-                        onChange={  
-                            e => {
-                                this.state.partyType = e.target.value;
-                            }
-                        } />
-                        Daily Party
-                </label>
-            </span>        
-            <span class="radio">
-                <label>
-                    <input type="radio" name="optradio" value="Purchase_party"
-                        onChange={  
-                            e => {
-                                this.state.partyType = e.target.value;
-                            }
-                        } />
-                    Purchase Party
-                </label>
-            </span>        
-        </div>    
-
-    
-
-    </div>    
-    <p>{this.state.responseMessage}</p>
-    <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
-    </form>  
-=======
           <div style={this.state.radioButtonStyle}>
             <div className="radio">
               <label>
@@ -239,7 +180,6 @@ export default class PartyRegistration extends React.Component {
           Save
         </button>
       </form>
->>>>>>> 595977d8096aebbc2c96bb3cf251037659f4c3fb
     );
   }
 }

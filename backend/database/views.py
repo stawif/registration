@@ -231,7 +231,6 @@ class AddMachineParty(APIView):
             api_contact = request.data['contact']
             api_village = request.data['village']
             api_crasher = request.data['crasher']
-            api_date = request.data['date']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         machine_name = {"name":api_name}
@@ -239,7 +238,7 @@ class AddMachineParty(APIView):
             return Response('Party Already Exists in Machine Work ')
         else:
                 try:
-                    credit_id_i = MixCredit.objects.create(owner=owner,date=api_date)
+                    credit_id_i = MixCredit.objects.create(owner=owner)
                 except Exception:
                     return Response("Data is not sufficient",status=status.HTTP_404_NOT_FOUND)
                 try:
@@ -273,7 +272,6 @@ class AddVehicleParty(APIView):
             api_name = request.data['name']
             api_contact = request.data['contact']
             api_village = request.data['village']
-            api_date = request.data['date']
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         vehicle_party = {"name":api_name}
@@ -281,7 +279,7 @@ class AddVehicleParty(APIView):
             return Response('Party Already Exists in Vehicle Work')
         else:
                 try:
-                    credit_id_i = MixCredit.objects.create(owner=owner,date=api_date)
+                    credit_id_i = MixCredit.objects.create(owner=owner)
                 except Exception:
                     return Response("Data is not correct",status=status.HTTP_400_BAD_REQUEST)
                 try:
@@ -478,6 +476,7 @@ class AddDailyWork(APIView):
             api_two_half_feet = request.data['two_half_feet']
             api_two_half_feet_rate = request.data['two_half_feet_rate']
             api_diesel_spend = request.data['diesel_spend']
+            api_date = request.data['date']
         except Exception as e:
             return Response('please provide all information correctly...',status=status.HTTP_204_NO_CONTENT)
         net_amount = float(api_five_feet)*float(api_five_feet_rate)+float(api_two_half_feet)*float(api_two_half_feet_rate)
@@ -493,9 +492,9 @@ class AddDailyWork(APIView):
                 print(e)
                 return Response("Vehicle does not exists")
             try:
-                daily_work_i = DailyWork.objects.create(credit_id=credit_id_i,name=api_name,vehicle=vehicle_i,five_feet=float(api_five_feet),five_feet_rate=float(api_five_feet_rate),
+                daily_work_i = DailyWork.objects.create(credit_id=credit_id_i,name=api_name,village=api_village,vehicle=vehicle_i,five_feet=float(api_five_feet),five_feet_rate=float(api_five_feet_rate),
                                             two_half_feet=float(api_two_half_feet),two_half_feet_rate=float(api_two_half_feet_rate),diesel_spend=float(api_diesel_spend),
-                                            net_amount=float(net_amount))
+                                            net_amount=float(net_amount),date=api_date)
                 return Response('daily work for party {} added'.format(api_name),status=status.HTTP_201_CREATED)
             except Exception as e:
                 print(e)
@@ -517,9 +516,10 @@ class AddMachineSupply(APIView):
             # get all data from api
             try:
                 api_party = request.data['party']
-                api_Material = request.data['Material']
+                api_Material = request.data['material']
                 api_date = request.data['date']
                 api_quantity = request.data['quantity']
+                api_drilling_feet = request.data['drilling_feet']
             except Exception as e:
                 print(e) 
                 return Response("please provide all information correctly",status=status.HTTP_204_NO_CONTENT)   
@@ -537,14 +537,15 @@ class AddMachineSupply(APIView):
                 return Response("please provide a valid Material name",status=status.HTTP_204_NO_CONTENT)        
             try:
                 machine_supply_create = MachineSupply.objects.create(party=machine_party_i,
-                Material=Material_i,date=api_date,quantity=api_quantity)
-
+                Material=Material_i,date=api_date,quantity=api_quantity,drilling_feet=api_drilling_feet)
+                print("is drilling feet")
                 Material_new_quantity = Material_i.quantity - api_quantity
                 Material.objects.filter(pk=Material_i.pk).update(quantity=Material_new_quantity)          
 
                 return Response("{} is supplied to {} at {}".format(api_Material,api_party,api_date),status=status.HTTP_201_CREATED)
             except Exception as e:
                 print(e)
+                print("Error")
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)    
 
 class AddVehicleSupply(APIView):
@@ -558,19 +559,12 @@ class AddVehicleSupply(APIView):
         if request.data:
             # get all data from api
             try:
-                api_party = request.data['party']
-                api_Material = request.data['Material']
+                api_Material = request.data['material']
                 api_date = request.data['date']
                 api_quantity = request.data['quantity']
             except Exception as e:
                 print(e) 
                 return Response("please provide all information correctly",status=status.HTTP_204_NO_CONTENT)   
-            # get MachineParty instance from databse
-            try:
-                vehicle_party_i = VehicleParty.objects.get(name=api_party)
-            except Exception as e:
-                print(e)
-                return Response("please provide a valid party name",status=status.HTTP_204_NO_CONTENT)        
             # get Material instance from database
             try:
                 Material_i = Material.objects.get(name=api_Material)
@@ -578,13 +572,12 @@ class AddVehicleSupply(APIView):
                 print(e)
                 return Response("please provide a valid Material name",status=status.HTTP_204_NO_CONTENT)        
             try:
-                vehicle_supply_create = VehicleSupply.objects.create(party=vehicle_party_i,
-                Material=Material_i,date=api_date,quantity=api_quantity)
+                vehicle_supply_create = VehicleSupply.objects.create(Material=Material_i,date=api_date,quantity=api_quantity)
 
                 Material_new_quantity = Material_i.quantity - api_quantity
                 Material.objects.filter(pk=Material_i.pk).update(quantity=Material_new_quantity)          
 
-                return Response("{} is supplied to {} at {}".format(api_Material,api_party,api_date),status=status.HTTP_201_CREATED)
+                return Response("{} is supplied to {}".format(api_Material,api_date),status=status.HTTP_201_CREATED)
             except Exception as e:
                 print(e)
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)                

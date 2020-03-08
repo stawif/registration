@@ -61,10 +61,6 @@ export default class MachinePartyRegistration extends React.Component {
       .catch(error => {
         //console.log(error.response.request._response);
       });
-console.log(this.state.partyName);
-console.log(this.state.partyContact);
-console.log(this.state.partyVillage);
-console.log(this.state.crasher);
 
     e.target.reset();
     e.preventDefault();
@@ -116,7 +112,7 @@ console.log(this.state.crasher);
     };
     this.fetchProduct = this.fetchProduct.bind(this);
     this.checkParty = this.checkParty.bind(this);
-   // this.checkVillage = this.checkVillage.bind(this);
+
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
     this.fetchProduct();
@@ -158,17 +154,13 @@ console.log(this.state.crasher);
               this.state.partyVillage = dataFromChild;
             }}
           />
-          
+
           <InputCommonName
             minLength={5}
             placeholderParent={"Crasher"}
-            callbackFromParent={dataFromChild => 
-              {
-                this.state.crasher = dataFromChild;
-              }
-            }
-            
-            
+            callbackFromParent={dataFromChild => {
+              this.state.crasher = dataFromChild;
+            }}
           />
         </div>
 

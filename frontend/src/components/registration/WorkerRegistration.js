@@ -130,7 +130,7 @@ export default class WorkerRegistration extends React.Component {
         className="form-container form-group"
         onSubmit={e => this.onSubmit(e)}
       >
-        <p className="headingViewPart">Machine Worker Registration</p>
+        <p className="headingViewPart">Worker Registration</p>
         <div className="pt-5">
           <InputCommonName
             minLengthh={3}

@@ -38,6 +38,28 @@ body{
 	font-size: 40px;
 	font-family: 'Squada One', cursive;
 }
+/*
+<-
+tableDisplay
+*/
+.upperTable{
+	height: 15%;
+	width: 100%;
+}
+#midTable{
+	height: 70%;
+	width: 100%;
+}
+#lowerTable{
+	height: 15%;
+	width: 100%;
+}
+
+/*
+tableDislay
+->
+*/
+
 input{
 	border:0;
 	outline:0;
@@ -45,6 +67,7 @@ input{
 	border-bottom: 1px solid black;
 	width:100%;
 }
+
 
 @media only screen and (min-width: 1000px){
 	#viewPart{
@@ -86,3 +109,5 @@ input{
 		width: 80%;
 	}
 }
+
+
