@@ -20,6 +20,7 @@ import ItemDisplay from './components/displaydata/ItemDisplay';
 import MachinePartyDisplay from './components/displaydata/MachinePartyDisplay';
 import VehiclePartyDisplay from './components/displaydata/VehiclePartyDisplay';
 import PurchasePartyDisplay from './components/displaydata/PurchasePartyDisplay';
+import MachineWorkTable from './components/tableDisplay/MachineWorkTable';
 
 
 
@@ -47,9 +48,11 @@ class App extends React.Component{
 				itemDisplay: "itemDisplay",
 				machinePartyDisplay: "machinePartyDisplay",
 				vehiclePartyDisplay: "vehiclePartyDisplay",
-				purchasePartyDisplay: "purchasePartyDisplay"
+				purchasePartyDisplay: "purchasePartyDisplay",
+				machineWorkTable: "machineWorkTable"
 			},
-			currentPage: "machineRegistration"
+			//currentPage: "machineRegistration"
+			currentPage: "machineWorkTable"
 		}
 
 		this.updateCurrentPage = this.updateCurrentPage.bind(this);
@@ -128,6 +131,9 @@ class App extends React.Component{
 		else if(this.state.currentPage === this.state.allPages.purchasePartyDisplay){
 			currentComponent = <PurchasePartyDisplay/>
 		}
+		else if(this.state.currentPage === this.state.allPages.machineWorkTable){
+			currentComponent = <MachineWorkTable/>
+		}
 		else{
 			currentComponent = <MachineRegistration />
 		} 
@@ -188,6 +194,7 @@ class App extends React.Component{
 												<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machinePartyDisplay) }>Machine Party Display</a>
 												<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.vehiclePartyDisplay) }>Vehicle Party Display</a>
 												<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.purchasePartyDisplay) }>Purchase Party Display</a>
+												<a className="dropdown-item" onClick={ () => this.updateCurrentPage(this.state.allPages.machineWorkTable) }>Machine Work Display</a>
 											</div>
 										</li>
 									</ul>
