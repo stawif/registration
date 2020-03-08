@@ -1,146 +1,186 @@
 import React from "react";
 import axios from "axios";
+import InputPartyNameField from "../modular/InputPartyNameField";
+import InputContactField from "../modular/InputContactField";
+import InputPartyVillageField from "../modular/InputPartyVillageField";
+import InputCommonName from "../modular/InputCommonName";
 
-export default class MachinePartyRegistration extends React.Component{
-  constructor(props){
+export default class MachinePartyRegistration extends React.Component {
+  fetchProduct = async () => {
+    try {
+      const responseMachineList = await fetch(
+        "http://127.0.0.1:8000/list-of-machineparty/"
+      );
+      const jsonMachineList = await responseMachineList.json();
+      this.state.partyList = jsonMachineList;
+    } catch {
+      this.toggleLoadStatus();
+    }
+  };
+  // Check existence of party name
+  checkParty = () => {
+    try {
+      this.setState({
+        partyExistMessage: "",
+        responseMessage: "",
+        buttonStatus: {
+          visibility: "visible"
+        }
+      });
+      const showList = (item, index) => {
+        if (this.state.partyName.toLowerCase() === item.name.toLowerCase()) {
+          this.setState({
+            partyExistMessage: "* This party name is already exist!!!",
+            buttonStatus: {
+              visibility: "hidden"
+            }
+          });
+        } else {
+        }
+      };
+
+      this.state.partyList.forEach(showList);
+    } catch (err) {}
+  };
+
+  //Form Handler
+  onSubmit = e => {
+    axios
+      .post("http://127.0.0.1:8000/machine-party-registration/", {
+        name: this.state.partyName,
+        contact: this.state.partyContact,
+        village: this.state.partyVillage,
+        crasher: this.state.crasher
+      })
+      .then(res => {
+        this.state.fetchProduct();
+        this.setState({
+          responseMessage: res.data
+        });
+      })
+      .catch(error => {
+        //console.log(error.response.request._response);
+      });
+console.log(this.state.partyName);
+console.log(this.state.partyContact);
+console.log(this.state.partyVillage);
+console.log(this.state.crasher);
+
+    e.target.reset();
+    e.preventDefault();
+  };
+
+  // toggle load status
+  toggleLoadStatus = async () => {
+    if (this.state.loadingStatus.visibility === "visible") {
+      await this.setState({
+        loadingStatus: {
+          visibility: "hidden"
+        },
+        loadedStatus: {
+          visibility: "visible"
+        }
+      });
+    } else {
+      await this.setState({
+        loadingStatus: {
+          visibility: "visible"
+        },
+        loadedStatus: {
+          visibility: "hidden"
+        }
+      });
+    }
+  };
+
+  constructor(props) {
     super(props);
 
-    this.state={
+    this.state = {
       partyName: "",
       partyContact: "",
       partyVillage: "",
       partyList: {},
       partyExistMessage: "",
       responseMessage: "",
+      crasher: "",
       buttonStatus: {
-          visibility: 'visible'
+        visibility: "visible"
+      },
+      loadingStatus: {
+        visibility: "visible"
+      },
+      loadedStatus: {
+        visibility: "hidden"
       }
-    }
-
-    // Fetch party list from server
-    this.state.fetchProduct = async () =>{
-      const responsePartyList = await fetch("http://127.0.0.1:8000/list-of-machineparty/");
-      const jsonPartyList = await responsePartyList.json();
-      this.state.partyList = jsonPartyList;
-    }
-    
-    
-    this.state.fetchProduct(); 
-
-
-
-    // Check existence of party name 
-    this.state.checkparty = () => {
-      try {
-        this.setState({
-             partyExistMessage :"",
-             buttonStatus: {
-                 visibility: 'visible'           
-             }
-            });
-        const showList = (item, index) => {
-            if (this.state.partyName.toLowerCase() === item.name.toLowerCase()){
-              this.setState({
-                 partyExistMessage :"* This party name is already exist!!!",
-                    buttonStatus: {
-                  visibility: 'hidden'                 
-                 }
-              });
-            }
-            else{}
-        };
-        this.state.partyList.forEach(showList);
-      } 
-      catch (err) {}
-    }
-
-    this.state.onSubmit =(e) => {
-        axios.post('http://127.0.0.1:8000/machine-party-registration/', 
-        {
-          name: this.state.partyName,
-          contact: this.state.partyContact,
-          village: this.state.partyVillage
-        }
-        ).then(res => {
-          this.state.fetchProduct();
-          this.setState({
-            responseMessage: res.data
-          });         
-        }
-        ).catch(error => {
-          alert( error.response.request._response )
-        });
-      e.target.reset();
-      e.preventDefault();
     };
-  
+    this.fetchProduct = this.fetchProduct.bind(this);
+    this.checkParty = this.checkParty.bind(this);
+   // this.checkVillage = this.checkVillage.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
+    this.fetchProduct();
   }
- 
-  render(){
+
+  componentDidMount() {
+    this.toggleLoadStatus();
+  }
+
+  render() {
     return (
-		<form className="form-container form-group" onSubmit={ e => this.state.onSubmit(e) }>
-         <p className="headingViewPart">Machine Party Registration</p>
-		<div className="pt-5">
+      <form
+        className="form-container form-group"
+        onSubmit={e => this.onSubmit(e)}
+      >
+        <p className="headingViewPart">Machine Party Registration</p>
+        <div className="pt-5">
+          <InputPartyNameField
+            callbackFromParent={dataFromChild => {
+              this.state.partyName = dataFromChild;
+              this.checkParty();
+            }}
+          />
+          <p>{this.state.partyExistMessage}</p>
 
-        <input 
-            type="text" 
-            className="mb-2" 
-            name="partyName" 
-            placeholder="Party Name" 
-            autoComplete="off"
-            maxLength = "30"
-            minLength = "5"
-            onChange={
-                e => {
-                    this.state.partyName = e.target.value;
-                    this.state.checkparty();
-                }
-            } 
-            required
-        />
-        
-        <p>{this.state.partyExistMessage}</p>
-        <br/>  
+          <br />
 
-        <input 
-            type="number" 
-            className="mb-2" 
-            name="partyContact" 
-            placeholder="Party Contact" 
-            autoComplete="off"
-            maxLength = "10"
-            minLength = "10"
-            onChange={
-                e => {
-                    this.state.partyContact = e.target.value;
-                }
-            } 
-            required
-        />
+          <InputContactField
+            callbackFromParent={dataFromChild => {
+              this.state.partyContact = dataFromChild;
+            }}
+          />
 
-        <br/>
-        <br/>
+          <br />
+          <br />
 
-        <input 
-            type="text" 
-            className="mb-2" 
-            name="partyVillage" 
-            placeholder="Party Village" 
-            autoComplete="off"
-            maxLength = "30"
-            minLength = "5"
-            onChange={
-                e => {
-                    this.state.partyVillage = e.target.value;
-                }
-            } 
-            required
-        />
+          <InputPartyVillageField
+            callbackFromParent={dataFromChild => {
+              this.state.partyVillage = dataFromChild;
+            }}
+          />
+          
+          <InputCommonName
+            minLength={5}
+            placeholderParent={"Crasher"}
+            callbackFromParent={dataFromChild => 
+              {
+                this.state.crasher = dataFromChild;
+              }
+            }
+            
+            
+          />
+        </div>
 
-    </div>    
-    <p>{this.state.responseMessage}</p>
-    <button type="submit" className="btn btn-outline-dark" style={this.state.buttonStatus} >Save</button>
-    </form>  
+        <p>{this.state.responseMessage}</p>
+        <button
+          type="submit"
+          className="btn btn-outline-dark"
+          style={this.state.buttonStatus}
+        >
+          Save
+        </button>
+      </form>
     );
   }
 }

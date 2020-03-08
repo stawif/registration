@@ -1,6 +1,6 @@
 from django.db import models
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save,post_save
 from datetime import datetime  
 
 class Owner(models.Model):
@@ -15,12 +15,17 @@ class Owner(models.Model):
     def __str__(self):
         return self.name    
 
+@receiver(post_save, sender= Owner)
+def gen_daily_expense_debit_id(sender, instance, **kwarge):
+    daily_expense_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"))
+    daily_expense_i.save()
+
 class Machine(models.Model):
     """
     Machines are assets of owner which are used in Work
     """
     owner = models.ForeignKey(Owner,on_delete=models.CASCADE)    
-    name = models.CharField(max_length=30,blank=False,unique=True)
+    name = models.CharField(primary_key=True,max_length=30,blank=False,unique=True)
   
     def __str__(self):
         return self.name    
@@ -46,9 +51,9 @@ class Recorder(models.Model):
     def __str__(self):
         return self.username    
 
-class Item(models.Model):
+class Material(models.Model):
     """
-    Item is for keeping records of things used by owner in works for party
+    Material is for keeping records of things used by owner in works for party
     """
     owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
     name = models.CharField(max_length=30, blank=False)
@@ -58,26 +63,40 @@ class Item(models.Model):
     def __str__(self):
         return self.name    
 
-@receiver(pre_save, sender=Item)
-def check_item_availability(sender,instance,**kwarge):
-    all_items = sender.objects.filter(owner=instance.owner)
-    for item in all_items:
-        if instance.name.lower() == item.name.lower():
-            raise Exception('Name of item is already exist')
+@receiver(pre_save, sender=Material)
+def check_Material_availability(sender,instance,**kwarge):
+    all_Materials = sender.objects.filter(owner=instance.owner)
+    for Material in all_Materials:
+        if instance.name.lower() == Material.name.lower():
+            raise Exception('Name of Material is already exist')
 
-class Party(models.Model):
+# class Party(models.Model):
+#     """
+#     Party are the entity which gives work to owner
+#     """
+#     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+#     contact = models.IntegerField(primary_key=True, blank=False)
+#     village = models.CharField(max_length=30,blank=False)
+#     date = models.DateField(default=datetime.now,blank=False)  #Add aunto now date
+#     total_credit = models.IntegerField(default=0)   
+
+#     def __str__(self):
+#         return str(self.pk)    
+
+class MixCredit(models.Model):
     """
-    Party are the entity which gives work to owner
+    A class to generalize credit type
     """
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    contact = models.IntegerField(blank=False)
-    village = models.CharField(max_length=30,blank=False)
-    date = models.DateField(default=datetime.now,blank=False)  #Add aunto now date
-    total_credit = models.IntegerField(default=0)   
+    owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
+    date = models.DateField(blank=False)
 
     def __str__(self):
-        return str(self.pk)    
+        return str(self.pk)
 
+@receiver(post_save, sender= Owner)
+def gen_daily_expense_credit_id(sender, instance, **kwarge):
+    daily_expense_i = MixCredit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"))
+    daily_expense_i.save()
 
 """
 Above models are complete
@@ -89,7 +108,6 @@ class MixDebit(models.Model):
     """
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.now, blank=False)
-    spend_amount = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.pk)
@@ -99,9 +117,11 @@ class PurchaseParty(models.Model):
     """
     Parties that gives work related to purchase
     """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     debit_id = models.OneToOneField(MixDebit, on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
+    contact = models.IntegerField(blank=False)
+    village = models.CharField(max_length=50, blank=False)
 
     def __str__(self):
         return self.name
@@ -126,8 +146,11 @@ class MachineParty(models.Model):
     """
     Parties that gives work related to machine
     """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
+    credit_id = models.ForeignKey(MixCredit,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
+    contact = models.IntegerField(blank=False)
+    village = models.CharField(max_length=50,blank=False)
+    crasher = models.CharField(max_length=50,blank=False)
 
     def __str__(self):  
         return self.name
@@ -137,22 +160,16 @@ class VehicleParty(models.Model):
     """
     Parties that gives work related to vehicle
     """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
+    credit_id = models.ForeignKey(MixCredit,on_delete=models.CASCADE)
     name = models.CharField(max_length=30,blank=False)
+    contact = models.IntegerField(blank=False)
+    village = models.CharField(max_length=50,blank=False)
 
     def __str__(self):
         return self.name
 
     
-class DailyParty(models.Model):
-    """
-    Parties that gives work for one day
-    """
-    credit_id = models.OneToOneField(Party,on_delete=models.CASCADE)
-    name = models.CharField(max_length=30,blank=False)
 
-    def __str__(self):
-        return self.name
 
 class MachineWork(models.Model):
     """
@@ -160,10 +177,14 @@ class MachineWork(models.Model):
     """
     party = models.ForeignKey(MachineParty, on_delete=models.CASCADE)
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)    
-    date = models.DateField()
+    date = models.DateField(primary_key=True)
     drilling_feet = models.FloatField(blank=False)
     diesel_amount = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
+    average_feet = models.FloatField(default=0)
+    paid = models.BooleanField(default=False)
+    holes = models.IntegerField(default=0)
+    payment = models.FloatField(default=0)
 
     # def __str__(self):
     #     return self.party," ",str(self.date)    
@@ -171,6 +192,9 @@ class MachineWork(models.Model):
     def __str__(self):
         template = '{0.party} {0.date}'
         return template.format(self)
+
+    class Meta:
+        unique_together = (("party", "date"),)
 
 class VehicleWork(models.Model):
     """
@@ -181,27 +205,23 @@ class VehicleWork(models.Model):
     five_feet = models.FloatField(blank=False)
     two_half_feet = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
+    paid = models.BooleanField(default=False)
+    payment = models.FloatField(default=0)
 
     def __str__(self):
         template = '{0.party} {0.date}'
-        return template.format(self)    
+        return template.format(self)       
 
-class VehicleWorkVehicles(models.Model):
-    """
-    All vehicles that are used in VehicleWork
-    """
-    vehicle_work = models.ForeignKey(VehicleWork, on_delete=models.CASCADE)
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-
-    def __str__(self):
-        template = '{0.vehicle_work} {0.vehicle}'
-        return template.format(self)    
+    class Meta:
+        unique_together = (("party", "date"),)
 
 class DailyWork(models.Model):
     """
     This is a type of  work owner do for a party
     """
-    party = models.ForeignKey(DailyParty, on_delete=models.CASCADE)
+    credit_id = models.OneToOneField(MixCredit,on_delete=models.CASCADE)
+    name = models.CharField(max_length=50,blank=False)
+    vehicle = models.ForeignKey(Vehicle,on_delete=models.CASCADE)
     five_feet = models.FloatField(blank=False)
     five_feet_rate = models.FloatField(blank=False)
     two_half_feet = models.FloatField(blank=False)
@@ -209,40 +229,31 @@ class DailyWork(models.Model):
     diesel_spend = models.FloatField(blank=False)
     net_amount = models.FloatField(blank=False)
 
-    def __str__(self):
-        return self.party.name    
-     
-class DailyWorkVehicles(models.Model):
-    """
-    All vehicles that are used in DailyWork
-    """
-    daily_work = models.ForeignKey(DailyWork, on_delete=models.CASCADE)
-    Vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.daily_work    
+        return self.party.name      
 
 class Purchase(models.Model):
     """
     Purchase records of owner from any party
     """
     party = models.ForeignKey(PurchaseParty, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    Material = models.ForeignKey(Material, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.now, blank=False)    
     quantity = models.IntegerField(blank=False)
     rate = models.FloatField(blank=False)
     net_amount = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.party)    
 
 class VehicleSupply(models.Model):
     """
-    Records of items supplied to any work
+    Records of Materials supplied to any work
     """    
-    party = models.ForeignKey(VehicleParty, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    Material = models.ForeignKey(Material, on_delete=models.CASCADE)
     date = models.DateField()
     quantity = models.IntegerField(blank=False)
 
@@ -251,12 +262,13 @@ class VehicleSupply(models.Model):
 
 class MachineSupply(models.Model):
     """
-    Records of items supplied to any work
+    Records of Materials supplied to any work
     """    
     party = models.ForeignKey(MachineParty, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    Material = models.ForeignKey(Material, on_delete=models.CASCADE)
     date = models.DateField()
     quantity = models.IntegerField(blank=False)
+    drilling_feet = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.pk)    
@@ -278,7 +290,7 @@ class Credit(models.Model):
     """
     Credit history of owner account
     """
-    work = models.ForeignKey(Party, on_delete=models.CASCADE)
+    work = models.ForeignKey(MixCredit, on_delete=models.CASCADE)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     date = models.DateField(blank=False)
     credit_amount = models.IntegerField(blank=False)

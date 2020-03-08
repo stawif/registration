@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import (Machine , Owner , Vehicle , Recorder , Party , Item , MachineParty,PurchaseParty,VehicleParty,
-                    MachineWork,VehicleWork,VehicleWorkVehicles,MixDebit,Worker,Purchase,DailyWork)
+from .models import (Machine , Owner , Vehicle , Recorder ,  Material , MachineParty,PurchaseParty,VehicleParty,
+                    MachineWork,VehicleWork,MixDebit,Worker,Purchase,DailyWork)
 
 class MachineSerializer(serializers.ModelSerializer):
     """
@@ -26,37 +26,48 @@ class RecorderSerializer(serializers.ModelSerializer):
         model = Recorder
         fields = ['owner','username','password']
 
-class ItemSerializer(serializers.ModelSerializer):
+class MaterialSerializer(serializers.ModelSerializer):
     """
     Serializer for the Store Model.
     """
     class Meta:
-        model = Item
+        model = Material
         fields = ['owner','name','measurement','quantity']
+
+class MaterialListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Store Model.
+    """
+    class Meta:
+        model = Material
+        fields = ['name','measurement','quantity']
 
 class WorkerSerializer(serializers.ModelSerializer):
     """
     Serializer for worker model
     """
+    entry_date = serializers.CharField(source='debit_id.date')
     class Meta:
         model = Worker
-        fields = ['owner','name','contact','village','salary']
+        fields = ['name','contact','village','salary','exit_date','entry_date']
 
-class PartySerializer(serializers.ModelSerializer):
-    """
-    Serializer for the party Model.
-    """
-    class Meta:
-        model = Party
-        fields = ['owner','contact','village']
+# class PartySerializer(serializers.ModelSerializer):
+#     """
+#     Serializer for the party Model.
+#     """
+#     class Meta:
+#         model = Party
+#         fields = ['contact','village']
 
 class MachinePartySerializer(serializers.ModelSerializer):
     """
     Serializer for the Machine Party Model.
     """
+    # contact = serializers.RelatedField(source='credit_id', read_only=True)
     class Meta:
         model = MachineParty
-        fields = ['credit_id','name']
+        fields = ['contact','name','village']
+
 
 class VehiclePartySerializer(serializers.ModelSerializer):
     """
@@ -64,15 +75,15 @@ class VehiclePartySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = VehicleParty
-        fields = ['name']
+        fields = ['name','contact','village']
 
 class PurchasePartySerializer(serializers.ModelSerializer):
     """
     Serializer for the Vehicle Party Model.
     """
     class Meta:
-        model = VehicleParty
-        fields = ['name']
+        model = PurchaseParty
+        fields = ['name','contact','village']
 
 class MachineWorkSerializer(serializers.ModelSerializer):
     """
@@ -90,14 +101,6 @@ class VehicleWorkSerializer(serializers.ModelSerializer):
         model = VehicleWork
         fields = ['party','date','five_feet','two_half_feet','remark']
 
-class VehicleWorkVehicleSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Vehicle Work Vehicle Model.
-    """
-    class Meta:
-        model = VehicleWorkVehicles
-        fields = ['vehicle_work','vehicle']
-
 class MixDebitSerializer(serializers.ModelSerializer):
     """
     Serializer for the Mix Debit Model.
@@ -112,7 +115,7 @@ class PurchaseSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Purchase
-        fields = ['party','item','debit_id','rate','net_amount','paid','remaining','remark']
+        fields = ['party','Material','debit_id','rate','net_amount','paid','remaining','remark']
 
 """
 class DailyExpenseSerializer(serializers.ModelSerializer):
