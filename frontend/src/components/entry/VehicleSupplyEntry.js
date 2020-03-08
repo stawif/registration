@@ -1,8 +1,39 @@
 import React from "react";
 import axios from "axios";
 import Autocomplete from "./AutoComplete.jsx";
+<<<<<<< HEAD
+
+const partyNamesFromApi = [];
+const itemNamesFromApi = [];
+
+fetch("http://127.0.0.1:8000/list-of-vehicleparty/")
+  .then(res => res.json())
+  .then(out => {
+    partyListFunction(out);
+  })
+  .catch(err => {
+    throw err;
+  });
+
+fetch("http://127.0.0.1:8000/list-of-item/")
+  .then(res => res.json())
+  .then(out => {
+    itemListFunction(out);
+  })
+  .catch(err => {
+    throw err;
+  });
+//below function is used to store api data in a array
+function partyListFunction(data) {
+  data.map(item => partyNamesFromApi.push(item.name));
+}
+function itemListFunction(data) {
+  data.map(item => itemNamesFromApi.push(item.name));
+}
+=======
 import InputDateField from "../modular/InputDateField";
 import InputQuantityField from "../modular/InputQuantityField";
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
 
 export default class VehicleSupplyEntry extends React.Component {
   //Fetching Products from Database to use them in AutoSugestion and for Checking While Entered Value Exists in Database or Not
@@ -120,9 +151,12 @@ export default class VehicleSupplyEntry extends React.Component {
     super(props);
 
     this.state = {
+<<<<<<< HEAD
+=======
       partyNamesFromApi: [],
       itemNamesFromApi: [],
 
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
       date: null,
       selectedParty: "",
       selectedItem: "",
@@ -139,6 +173,164 @@ export default class VehicleSupplyEntry extends React.Component {
       }
     };
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    //Fetching Products from Database to use them in AutoSugestion and for Checking While Entered Value Exists in Database or Not
+    this.state.fetchProduct = async () => {
+      fetch("http://127.0.0.1:8000/list-of-vehicleparty/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.partyNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+
+      fetch("http://127.0.0.1:8000/list-of-item/")
+        .then(res => res.json())
+        .then(out => {
+          out.map(item => this.state.itemNamesFromApi.push(item.name));
+        })
+        .catch(err => {
+          throw err;
+        });
+    };
+
+    this.state.fetchProduct();
+
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
+    // Check existence of party name
+    this.state.checkparty = dataFromChild => {
+      try {
+        this.setState({
+<<<<<<< HEAD
+=======
+          responseMessage: "",
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
+          buttonStatus: {
+            visibility: "hidden"
+          }
+        });
+        const showList = (item, index) => {
+          if (dataFromChild.toLowerCase() === item.toLowerCase()) {
+            this.setState({
+              buttonStatus: {
+                visibility: "visible"
+              }
+            });
+          } else {
+          }
+        };
+<<<<<<< HEAD
+        partyNamesFromApi.forEach(showList);
+      } 
+      catch (err) {}
+    };
+
+    this.state.checkitem = dataFromChild => {
+      try {
+        this.setState({
+=======
+        this.state.partyNamesFromApi.forEach(showList);
+      } catch (err) {}
+    };
+
+    //Check Existence of item list
+    this.state.checkitem = dataFromChild => {
+      try {
+        this.setState({
+          responseMessage: "",
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
+          buttonStatus: {
+            visibility: "hidden"
+          }
+        });
+        const showList = (item, index) => {
+          if (dataFromChild.toLowerCase() === item.toLowerCase()) {
+            this.setState({
+              buttonStatus: {
+                visibility: "visible"
+              }
+            });
+          } else {
+          }
+        };
+<<<<<<< HEAD
+        itemNamesFromApi.forEach(showList);
+      } catch (err) {}
+    };
+
+    this.state.onSubmit = e => {
+          axios.post("http://127.0.0.1:8000/enter-vehicle-supply/", {
+             party: this.state.selectedParty,
+             item: this.state.selectedItem,
+             date: this.state.date,
+             quantity: this.state.quantity,
+             rate: this.state.rate,
+             remark: this.state.remark          
+            })
+           .then(res => {
+             this.setState({
+               responseMessage: res.data
+             });
+           })
+           .catch(error => {
+             alert(error.response.request._response);
+           });
+      console.log("paid type : "+typeof this.state.paid);     
+      console.log("quantity type : "+typeof this.state.quantity);     
+      console.log("rate type : "+typeof this.state.rate);     
+      e.target.reset();
+      e.preventDefault();
+    };
+
+    this.state.getDate = () => {
+      var curr = new Date();
+      curr.setDate(curr.getDate());
+      var date = curr.toISOString().substr(0, 10);
+      this.state.date = date;
+    };
+
+    this.state.getDate();
+  }
+
+  myCallbackForSelectedParty = dataFromChild => {
+    this.state.selectedParty = dataFromChild;
+  };
+  myCallbackForselectedItem = dataFromChild => {
+    this.state.selectedItem = dataFromChild;
+  };
+=======
+        this.state.itemNamesFromApi.forEach(showList);
+      } catch (err) {}
+    };
+
+    // Form Submit Handling
+    this.state.onSubmit = e => {
+      axios
+        .post("http://127.0.0.1:8000/enter-vehicle-supply/", {
+          party: this.state.selectedParty,
+          item: this.state.selectedItem,
+          date: this.state.date,
+          quantity: this.state.quantity
+        })
+        .then(res => {
+          this.setState({
+            responseMessage: res.data
+          });
+        })
+        .catch(error => {
+          alert(error.response.request._response);
+        });
+      e.target.reset();
+      e.preventDefault();
+    };
+  }
+
+
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
+=======
     this.fetchProduct = this.fetchProduct.bind(this);
     this.checkParty = this.checkParty.bind(this);
     this.checkItem = this.checkItem.bind(this);
@@ -150,6 +342,7 @@ export default class VehicleSupplyEntry extends React.Component {
   componentDidMount() {
     this.toggleLoadStatus();
   }
+>>>>>>> 6b960ada3a0d675a2c7544f7cf6e2cee71f69237
 
   render() {
     return (
@@ -160,15 +353,31 @@ export default class VehicleSupplyEntry extends React.Component {
         <p className="headingViewPart">Vehicle Supply Entry</p>
         <div className="pt-5">
           <Autocomplete
+<<<<<<< HEAD
+            suggestions={partyNamesFromApi}
+            callbackFromParent={this.myCallbackForSelectedParty}
+=======
             suggestions={this.state.partyNamesFromApi}
             callbackFromParent={dataFromChild => {
               this.state.selectedParty = dataFromChild;
             }}
+<<<<<<< HEAD
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
+            checkFromParent={this.state.checkparty}
+=======
             checkFromParent={this.checkParty}
+>>>>>>> 6b960ada3a0d675a2c7544f7cf6e2cee71f69237
             placeholderfrom={"Party name"}
           />
 
           <p>{this.state.partyExistMessage}</p>
+<<<<<<< HEAD
+          <br/>
+
+          <Autocomplete
+            suggestions={itemNamesFromApi}
+            callbackFromParent={this.myCallbackForselectedItem}
+=======
           <br />
 
           <Autocomplete
@@ -176,10 +385,47 @@ export default class VehicleSupplyEntry extends React.Component {
             callbackFromParent={dataFromChild => {
               this.state.selectedItem = dataFromChild;
             }}
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
             placeholderfrom={"Item name"}
             checkFromParent={this.checkItem}
           />
 
+<<<<<<< HEAD
+          <br/>
+          <br/>
+
+          <input
+            type="date"
+            //data-date=""
+            data-date-format="YYYY-MM-DD"
+            defaultValue={this.state.date}
+            name="date"
+            onChange={e => {
+                this.setState({
+                    date: e.target.value
+                });
+            }}
+            required
+          />
+
+          <br/>
+          <br/>
+
+          <input
+            type="number"
+            className="mb-2"
+            name="quantity"
+            placeholder="Quantity"
+            autoComplete="off"
+            onChange={e => {
+                this.setState({
+                    quantity: parseInt(e.target.value)
+                });
+              }}
+            required
+          />
+
+=======
           <br />
           <br />
 
@@ -198,6 +444,7 @@ export default class VehicleSupplyEntry extends React.Component {
               this.state.quantity = dataFromChild;
             }}
           />
+>>>>>>> 63414e050b0cfab68922f55b7a5313fc3916db0e
         </div>
         <p>{this.state.responseMessage}</p>
         <button
