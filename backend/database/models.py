@@ -194,7 +194,7 @@ class MachineWork(models.Model):
         return template.format(self)
 
     class Meta:
-        unique_together = (("party", "date"),)
+        unique_together = (("party", "date"),)  #One work for a party for a single day
 
 class VehicleWork(models.Model):
     """
@@ -213,7 +213,7 @@ class VehicleWork(models.Model):
         return template.format(self)       
 
     class Meta:
-        unique_together = (("party", "date"),)
+        unique_together = (("party", "date"),)      #one work for a party for a single day
 
 class DailyWork(models.Model):
     """

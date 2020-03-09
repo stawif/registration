@@ -67,6 +67,8 @@ class App extends React.Component {
     console.log(this.state.currentPage);
   };
 
+  
+
   render() {
     let currentComponent;
     if (this.state.currentPage === this.state.allPages.machineReg) {
@@ -130,6 +132,7 @@ class App extends React.Component {
     } else {
       currentComponent = <MachineRegistration />;
     }
+    
     return (
       <div>
         <div id="container" className="row">
