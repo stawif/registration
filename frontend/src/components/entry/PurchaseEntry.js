@@ -22,7 +22,7 @@ export default class PurchaseEntry extends React.Component {
       );
       const jsonItemList = await responseItemList.json();
 
-      jsonItemList.map(item => this.state.itemNamesFromApi.push(item.name));
+      jsonItemList.map(item => this.state.materialNamesFromApi.push(item.name));
     } catch {
       this.toggleLoadStatus();
     }
@@ -52,7 +52,7 @@ export default class PurchaseEntry extends React.Component {
   };
 
   // Check existence of Item name
-  checkItem = dataFromChild => {
+  checkMaterial = dataFromChild => {
     try {
       this.setState({
         responseMessage: "",
@@ -70,7 +70,7 @@ export default class PurchaseEntry extends React.Component {
         } else {
         }
       };
-      this.state.itemNamesFromApi.forEach(showList);
+      this.state.materialNamesFromApi.forEach(showList);
     } catch (err) {}
   };
 
@@ -79,7 +79,7 @@ export default class PurchaseEntry extends React.Component {
     axios
       .post("http://127.0.0.1:8000/enter-purchase-detail/", {
         party: this.state.selectedParty,
-        item: this.state.selectedItem,
+        material: this.state.selectedMaterial,
         date: this.state.date,
         quantity: this.state.quantity,
         rate: this.state.rate,
@@ -93,11 +93,7 @@ export default class PurchaseEntry extends React.Component {
       .catch(error => {
         alert(error.response.request._response);
       });
-    console.log("quantity : "+this.state.quantity);  
-    console.log("rate : "+this.state.rate);  
 
-    console.log("quantity : "+typeof this.state.quantity);  
-    console.log("rate : "+typeof this.state.rate);  
     e.target.reset();
     e.preventDefault();
   };
@@ -130,9 +126,9 @@ export default class PurchaseEntry extends React.Component {
 
     this.state = {
       partyNamesFromApi: [],
-      itemNamesFromApi: [],
+      materialNamesFromApi: [],
       date: null,
-      selectedItem: "",
+      selectedMaterial: "",
       selectedParty: "",
       remark: "",
       quantity: 0,
@@ -150,7 +146,7 @@ export default class PurchaseEntry extends React.Component {
     };
     this.fetchProduct = this.fetchProduct.bind(this);
     this.checkParty = this.checkParty.bind(this);
-    this.checkItem = this.checkItem.bind(this);
+    this.checkMaterial = this.checkMaterial.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
     this.fetchProduct();
@@ -181,12 +177,12 @@ export default class PurchaseEntry extends React.Component {
           <br />
 
           <Autocomplete
-            suggestions={this.state.itemNamesFromApi}
+            suggestions={this.state.materialNamesFromApi}
             callbackFromParent={dataFromChild => {
-              this.state.selectedItem = dataFromChild;
+              this.state.selectedMaterial = dataFromChild;
             }}
-            placeholderfrom={"Item name"}
-            checkFromParent={this.checkItem}
+            placeholderfrom={"Material name"}
+            checkFromParent={this.checkMaterial}
           />
 
           <br />

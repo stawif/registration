@@ -21,7 +21,7 @@ export default class InputContactField extends Component {
         <input
           type="text"
           className="mb-2"
-          maxLength="10"
+          minLength="10"
           placeholder="Enter 10 digit Phone no"
           autoComplete="off"
           onChange={this.onChange}

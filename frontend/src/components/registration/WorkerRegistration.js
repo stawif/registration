@@ -3,6 +3,7 @@ import axios from "axios";
 import InputContactField from "../modular/InputContactField";
 import InputDateField from "../modular/InputDateField";
 import InputCommonName from "../modular/InputCommonName";
+import InputPartyVillageField from "../modular/InputPartyVillageField";
 export default class WorkerRegistration extends React.Component {
   // Fetch vehicle list from server
   fetchProduct = async () => {
@@ -154,7 +155,12 @@ export default class WorkerRegistration extends React.Component {
           <br />
           <br />
 
-          <input
+          <InputPartyVillageField
+            callbackFromParent={dataFromChild => {
+              this.state.workerVillage = dataFromChild;
+            }}
+          />
+          {/* <input
             type="text"
             className="mb-2"
             name="workerVillage"
@@ -166,7 +172,7 @@ export default class WorkerRegistration extends React.Component {
               this.state.workerVillage = e.target.value;
             }}
             required
-          />
+          /> */}
 
           <br />
           <br />

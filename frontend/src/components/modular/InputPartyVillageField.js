@@ -4,6 +4,12 @@ export default class InputPartyVillageField extends Component {
   
 
   onChange = e => {
+
+
+    // var numm = e.target.value.trim();
+    // e.target.value = numm;
+
+
     this.props.callbackFromParent(e.target.value);
     
   };
@@ -14,8 +20,8 @@ export default class InputPartyVillageField extends Component {
         <input
             type="text"
             className="mb-2"
-            name="partyVillage"
-            placeholder="Party Village"
+            //name="partyVillage"
+            placeholder="Village"
             autoComplete="off"
             maxLength="30"
             minLength="5"

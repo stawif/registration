@@ -13,12 +13,14 @@ export default class MachineSupplyEntry extends React.Component {
       const jsonMachineList = await responseMachineList.json();
       jsonMachineList.map(item => this.state.partyNamesFromApi.push(item.name));
 
-      const responseItemList = await fetch(
+      const responseMaterialList = await fetch(
         "http://127.0.0.1:8000/list-of-material/"
       );
 
-      const jsonItemList = await responseItemList.json();
-      jsonItemList.map(item => this.state.itemNamesFromApi.push(item.name));
+      const jsonMaterialList = await responseMaterialList.json();
+      jsonMaterialList.map(item =>
+        this.state.materialNamesFromApi.push(item.name)
+      );
     } catch {
       this.toggleLoadStatus();
     }
@@ -47,8 +49,8 @@ export default class MachineSupplyEntry extends React.Component {
     } catch (err) {}
   };
 
-  //Check Existance of Item Names
-  checkItem = dataFromChild => {
+  //Check Existance of Material Names
+  checkMaterial = dataFromChild => {
     try {
       this.setState({
         responseMessage: "",
@@ -66,7 +68,7 @@ export default class MachineSupplyEntry extends React.Component {
         } else {
         }
       };
-      this.state.itemNamesFromApi.forEach(showList);
+      this.state.materialNamesFromApi.forEach(showList);
     } catch (err) {}
   };
 
@@ -75,13 +77,13 @@ export default class MachineSupplyEntry extends React.Component {
     axios
       .post("http://127.0.0.1:8000/enter-machine-supply/", {
         party: this.state.selectedParty,
-        material: this.state.selectedItem,
+        material: this.state.selectedMaterial,
         date: this.state.date,
         quantity: this.state.quantity,
         drilling_feet: this.state.drillingfeet
       })
       .then(res => {
-        console.log("Debug message : "+res.data);
+        console.log("Debug message : " + res.data);
         this.setState({
           responseMessage: res.data
         });
@@ -121,11 +123,11 @@ export default class MachineSupplyEntry extends React.Component {
 
     this.state = {
       partyNamesFromApi: [],
-      itemNamesFromApi: [],
+      materialNamesFromApi: [],
       drillingfeet: 0,
       date: null,
       selectedParty: "",
-      selectedItem: "",
+      selectedMaterial: "",
       quantity: 0,
       responseMessage: "",
       buttonStatus: {
@@ -141,7 +143,7 @@ export default class MachineSupplyEntry extends React.Component {
 
     this.fetchProduct = this.fetchProduct.bind(this);
     this.checkParty = this.checkParty.bind(this);
-    this.checkItem = this.checkItem.bind(this);
+    this.checkMaterial = this.checkMaterial.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
     this.fetchProduct();
@@ -172,12 +174,12 @@ export default class MachineSupplyEntry extends React.Component {
           <br />
 
           <Autocomplete
-            suggestions={this.state.itemNamesFromApi}
+            suggestions={this.state.materialNamesFromApi}
             callbackFromParent={dataFromChild => {
-              this.state.selectedItem = dataFromChild;
+              this.state.selectedMaterial = dataFromChild;
             }}
-            placeholderfrom={"Item name"}
-            checkFromParent={this.checkItem}
+            placeholderfrom={"Material name"}
+            checkFromParent={this.checkMaterial}
           />
 
           <br />
