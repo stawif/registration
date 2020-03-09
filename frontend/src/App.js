@@ -22,6 +22,9 @@ import VehiclePartyDisplay from "./components/displaydata/VehiclePartyDisplay";
 import PurchasePartyDisplay from "./components/displaydata/PurchasePartyDisplay";
 import MachineWorkTable from "./components/tableDisplay/MachineWorkTable";
 
+//Dashboard components
+import PartyPins from "./components/dashboard/PartyPins";
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -135,6 +138,7 @@ class App extends React.Component {
               {" "}
               <p className="headingDashboard">DASHBOARD</p>{" "}
             </center>
+            <PartyPins />
           </div>
 
           <div id="display" className="col-sm-9">
