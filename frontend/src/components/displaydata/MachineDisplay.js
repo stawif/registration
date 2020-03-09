@@ -1,32 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { Table } from "react-fluid-table";
+import React from 'react';
 
-export default function MachineDisplay() {
-  const [data, setData] = useState([]);
-  
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/list-of-machines/")
-      .then(response => response.json())
-      .then(data => setData(data));
-  }, []);
-
-  const columns = [
-    {
-      key: "owner",
-      name: "owner Name",
-      width: 100
-    },
-    {
-      key: "name",
-      name: "Machine Name",
-      width: 100
-    }
-  ];
-  return (
-    <div>
-      <Table data={data} columns={columns} tableHeight={400} />
-    </div>
-  );
+class MachineDisplay extends React.Component {
+	state = {
+		todos: []
+	}
+	componentDidMount() {
+		fetch('http://127.0.0.1:8000/list-of-machines/')
+		.then(res => res.json())
+		.then((data) => {
+		this.setState({ todos: data })
+		})
+	}
+	render() {
+		return (
+			<div id="mainComponent">
+				<p className="headingViewPart">Machines</p>
+				<div>
+					<table className=" table table-borderd">
+						<thead className="thead-dark">
+							<tr>
+								<th>Name</th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.state.todos.map((todo) => (
+								<tr>
+									<td>{todo.name}</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		);
+	}
 }
+export default MachineDisplay;
 
