@@ -15,15 +15,6 @@ export default class VehicleWorkEntry extends React.Component {
       const jsonPartyList = await responsePartyList.json();
 
       jsonPartyList.map(item => this.state.partyNamesFromApi.push(item.name));
-
-      const responseVehicleList = await fetch(
-        "http://127.0.0.1:8000/list-of-vehicles/"
-      );
-      const jsonVehicleList = await responseVehicleList.json();
-
-      jsonVehicleList.map(item =>
-        this.state.vehicleNamesFromApi.push(item.name)
-      );
     } catch {
       this.toggleLoadStatus();
     }
@@ -57,11 +48,11 @@ export default class VehicleWorkEntry extends React.Component {
     axios
       .post("http://127.0.0.1:8000/enter-vehicleparty-work/", {
         party: this.state.selectedParty,
-        vehicle: this.state.selectedVehicle,
         date: this.state.date,
         five_feet: this.state.fiveFeet,
         two_half_feet: this.state.twoHalfFeet,
-        remark: this.state.remark
+        remark: this.state.remark,
+        payment: this.state.payment
       })
       .then(res => {
         this.setState({
@@ -104,9 +95,10 @@ export default class VehicleWorkEntry extends React.Component {
 
     this.state = {
       partyNamesFromApi: [],
-      vehicleNamesFromApi: [],
+
       date: null,
-      selectedVehicle: [],
+      payment: 0,
+
       selectedParty: "",
       remark: "",
       fiveFeet: 0,
@@ -132,15 +124,8 @@ export default class VehicleWorkEntry extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
     this.fetchProduct();
-    this.handleMultipleVehicle = this.handleMultipleVehicle.bind(this);
   }
 
-  //This Function Handles multiple vehicle to push them in an array to Pass to DataBase
-  handleMultipleVehicle = async e => {
-    await this.setState({
-      selectedVehicle: Array.from(e.target.selectedOptions, item => item.value)
-    });
-  };
   componentDidMount() {
     this.toggleLoadStatus();
   }
@@ -161,22 +146,6 @@ export default class VehicleWorkEntry extends React.Component {
             placeholderfrom={"Party name"}
           />
           <p>{this.state.partyExistMessage}</p>
-
-          {
-            <select
-              className="form-control"
-              name="vehicles"
-              onChange={e => this.handleMultipleVehicle(e)}
-              multiple
-              required
-            >
-              {this.state.vehicleNamesFromApi.map(item => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          }
 
           <br />
 
@@ -210,6 +179,13 @@ export default class VehicleWorkEntry extends React.Component {
               this.state.twoHalfFeet = dataFromChild;
             }}
             placeholderParent={"2.5 Feet"}
+          />
+
+          <InputRateField
+            placeholderParent={"Payment"}
+            callbackFromParent={dataFromChild => {
+              this.state.payment = dataFromChild;
+            }}
           />
         </div>
         <p>{this.state.responseMessage}</p>

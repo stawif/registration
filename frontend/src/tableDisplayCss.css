@@ -1,0 +1,34 @@
+/*Physical section*/
+#tableComponent{
+	height:100%;
+	width: 100%;
+	margin: 5px;
+}
+.upperTable{
+	height: 10%;
+	width: 100%;
+}
+#midTable{
+	height: 80%;
+	width: 100%;
+}
+#lowerTable{
+	height: 10%;
+	width: 100%;
+}
+
+/*Background section*/
+.lightGray{
+    background-color: rgb(211,211,211);
+}
+
+/*Font section*/
+.commonFont{
+    font-size: 1.4vw;
+}
+
+/*Input controll*/
+input[type="radio"]{
+    width: 40%;
+}
+

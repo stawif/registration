@@ -130,15 +130,16 @@ export default class WorkerRegistration extends React.Component {
         className="form-container form-group"
         onSubmit={e => this.onSubmit(e)}
       >
-        <p className="headingViewPart">Machine Worker Registration</p>
+        <p className="headingViewPart">Worker Registration</p>
         <div className="pt-5">
           <InputCommonName
             minLengthh={3}
             placeholderParent={"Worker Name"}
             callbackFromParent={dataFromChild => {
               this.state.workerName = dataFromChild;
+              this.checkWorker()
             }}
-            checkFromParent={this.checkWorker}
+            
           />
 
           <p>{this.state.workerExistMessage}</p>

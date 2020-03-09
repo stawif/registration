@@ -3,6 +3,7 @@ import axios from "axios";
 import InputPartyNameField from "../modular/InputPartyNameField";
 import InputContactField from "../modular/InputContactField";
 import InputPartyVillageField from "../modular/InputPartyVillageField";
+import InputCommonName from "../modular/InputCommonName";
 
 export default class MachinePartyRegistration extends React.Component {
   fetchProduct = async () => {
@@ -15,16 +16,6 @@ export default class MachinePartyRegistration extends React.Component {
     } catch {
       this.toggleLoadStatus();
     }
-  };
-
-  checkVillage = () => {
-    this.setState({
-      partyExistMessage: "",
-      responseMessage: "",
-      buttonStatus: {
-        visibility: "visible"
-      }
-    });
   };
   // Check existence of party name
   checkParty = () => {
@@ -58,7 +49,8 @@ export default class MachinePartyRegistration extends React.Component {
       .post("http://127.0.0.1:8000/machine-party-registration/", {
         name: this.state.partyName,
         contact: this.state.partyContact,
-        village: this.state.partyVillage
+        village: this.state.partyVillage,
+        crasher: this.state.crasher
       })
       .then(res => {
         this.state.fetchProduct();
@@ -69,9 +61,7 @@ export default class MachinePartyRegistration extends React.Component {
       .catch(error => {
         //console.log(error.response.request._response);
       });
-    console.log("Name : "+this.state.partyName);
-    console.log("Contact : "+this.state.partyContact);
-    console.log("Village : "+this.state.partyVillage);  
+
     e.target.reset();
     e.preventDefault();
   };
@@ -109,6 +99,7 @@ export default class MachinePartyRegistration extends React.Component {
       partyList: {},
       partyExistMessage: "",
       responseMessage: "",
+      crasher: "",
       buttonStatus: {
         visibility: "visible"
       },
@@ -121,7 +112,7 @@ export default class MachinePartyRegistration extends React.Component {
     };
     this.fetchProduct = this.fetchProduct.bind(this);
     this.checkParty = this.checkParty.bind(this);
-    this.checkVillage = this.checkVillage.bind(this);
+
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
     this.fetchProduct();
@@ -139,15 +130,11 @@ export default class MachinePartyRegistration extends React.Component {
       >
         <p className="headingViewPart">Machine Party Registration</p>
         <div className="pt-5">
-          
-
-          <InputPartyNameField 
-            callbackFromParent= {
-              dataFromChild => {
-                this.state.partyName = dataFromChild;
-                this.checkParty();
-              }
-            }
+          <InputPartyNameField
+            callbackFromParent={dataFromChild => {
+              this.state.partyName = dataFromChild;
+              this.checkParty();
+            }}
           />
           <p>{this.state.partyExistMessage}</p>
 
@@ -156,21 +143,25 @@ export default class MachinePartyRegistration extends React.Component {
           <InputContactField
             callbackFromParent={dataFromChild => {
               this.state.partyContact = dataFromChild;
-              }
-            }
+            }}
           />
 
           <br />
           <br />
 
-          <InputPartyVillageField 
-            callbackFromParent= {
-              dataFromChild => {
-                this.state.partyVillage = dataFromChild;
-              }
-            }
+          <InputPartyVillageField
+            callbackFromParent={dataFromChild => {
+              this.state.partyVillage = dataFromChild;
+            }}
           />
-          
+
+          <InputCommonName
+            minLength={5}
+            placeholderParent={"Crasher"}
+            callbackFromParent={dataFromChild => {
+              this.state.crasher = dataFromChild;
+            }}
+          />
         </div>
 
         <p>{this.state.responseMessage}</p>
@@ -185,4 +176,3 @@ export default class MachinePartyRegistration extends React.Component {
     );
   }
 }
- 

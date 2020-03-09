@@ -14,7 +14,7 @@ export default class MachineSupplyEntry extends React.Component {
       jsonMachineList.map(item => this.state.partyNamesFromApi.push(item.name));
 
       const responseItemList = await fetch(
-        "http://127.0.0.1:8000/list-of-item/"
+        "http://127.0.0.1:8000/list-of-material/"
       );
 
       const jsonItemList = await responseItemList.json();
@@ -75,11 +75,13 @@ export default class MachineSupplyEntry extends React.Component {
     axios
       .post("http://127.0.0.1:8000/enter-machine-supply/", {
         party: this.state.selectedParty,
-        item: this.state.selectedItem,
+        material: this.state.selectedItem,
         date: this.state.date,
-        quantity: this.state.quantity
+        quantity: this.state.quantity,
+        drilling_feet: this.state.drillingfeet
       })
       .then(res => {
+        console.log("Debug message : "+res.data);
         this.setState({
           responseMessage: res.data
         });
@@ -87,7 +89,6 @@ export default class MachineSupplyEntry extends React.Component {
       .catch(error => {
         alert(error.response.request._response);
       });
-
     e.target.reset();
     e.preventDefault();
   };
@@ -121,6 +122,7 @@ export default class MachineSupplyEntry extends React.Component {
     this.state = {
       partyNamesFromApi: [],
       itemNamesFromApi: [],
+      drillingfeet: 0,
       date: null,
       selectedParty: "",
       selectedItem: "",
@@ -188,6 +190,13 @@ export default class MachineSupplyEntry extends React.Component {
           />
           <br />
           <br />
+
+          <InputQuantityField
+            placeholder="Drilling Feet"
+            callbackFromParent={dataFromChild => {
+              this.state.drillingfeet = dataFromChild;
+            }}
+          />
 
           <InputQuantityField
             placeholder={"Quantity"}

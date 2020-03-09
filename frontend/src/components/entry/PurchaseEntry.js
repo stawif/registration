@@ -18,7 +18,7 @@ export default class PurchaseEntry extends React.Component {
       jsonPartyList.map(item => this.state.partyNamesFromApi.push(item.name));
 
       const responseItemList = await fetch(
-        "http://127.0.0.1:8000/list-of-item/"
+        "http://127.0.0.1:8000/list-of-material/"
       );
       const jsonItemList = await responseItemList.json();
 
