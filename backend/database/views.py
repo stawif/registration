@@ -616,6 +616,11 @@ class WorkerList(APIView):
         return Response(serializer.data)
 
 class MachinePayment(APIView):
+    """
+    View to change paid status in Machinework model.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
     def post(self,request):
         try:
             api_contact = request.data['contact']
@@ -634,12 +639,17 @@ class MachinePayment(APIView):
                     MachineWork.objects.filter(party=i.party,date=i.date).update(paid=True)
                 return Response('Machine Work for party {} from {} to {} is paid'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
             else:
-                 return Response('No machine work exists for this machine party')
+                 return Response('No machine work exists for this machine party',status=status.HTTP_200_OK)
         except:
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no work for this machine party exists.',status=status.HTTP_200_OK)
 
 class VehiclePayment(APIView):
+    """
+    View to change paid status in vehicleWork model.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
     def post(self,request):
         try:
             api_contact = request.data['contact']
@@ -650,7 +660,7 @@ class VehiclePayment(APIView):
         try:
             party_i = VehicleParty.objects.get(contact=api_contact)
         except:
-            return Response("contact not found Vehicle party",status=status.HTTP_404_NOT_FOUND)
+            return Response("contact not found in vehicle party",status=status.HTTP_404_NOT_FOUND)
         try:
             vehicle_work_i = VehicleWork.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
             if vehicle_work_i:
@@ -658,12 +668,17 @@ class VehiclePayment(APIView):
                     VehicleWork.objects.filter(party=i.party,date=i.date).update(paid=True)
                 return Response('Vehicle Work Work for party {} from {} to {} is paid'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
             else:
-                 return Response('No Vehicle work exists for this vehicle party')
+                 return Response('no vehicle work exists for this vehicle party',status=status.HTTP_200_OK)
         except:
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no work for this vehicle party exists.',status=status.HTTP_200_OK)
 
 class PurchasePayment(APIView):
+    """
+    View to change paid status in Purchase model.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
     def post(self,request):
         try:
             api_contact = request.data['contact']
@@ -688,6 +703,11 @@ class PurchasePayment(APIView):
         return Response('no purchase for this purchase party exists.',status=status.HTTP_200_OK)
 
 class UpdateAvgFeet(APIView):
+    """
+    View to update average feet in machine work during a time period.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
     def post(self,request):
         try:
             api_contact = request.data['contact']
@@ -710,4 +730,57 @@ class UpdateAvgFeet(APIView):
                  return Response('No machine work exists for this machine party during given date period')
         except:
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
-        return Response('no work for this machine party exists.',status=status.HTTP_200_OK)
+        return Response('no work for this machine party exists',status=status.HTTP_200_OK)
+
+class MachineWorkDetail(APIView):
+    """
+    View to get machine work of a party.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        try:
+            api_party = request.data['party']
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            party_detail = MachineParty.objects.get(name=api_party)
+        except Exception as e:
+            return Response('machine party does not exists',status=status.HTTP_200_OK)
+        try:
+            party_work_detail = MachineWork.objects.filter(party=party_detail).values('machine','date','drilling_feet',
+                                'diesel_amount','remark','average_feet','holes','payment')
+        except:
+            return Response('no work exists for this machine party',status=status.HTTP_200_OK)
+        if len(party_work_detail) == 0:
+            return Response('no work exists for this machine party',status=status.HTTP_200_OK)
+        else:
+            party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
+                                    'crasher':party_detail.crasher,'work':list(party_work_detail)}
+            return Response(party_detail_json,status=status.HTTP_200_OK)
+
+class VehicleWorkDetail(APIView):
+    """
+    View to Get Vehicle Work Detail of a party.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        try:
+            api_party = request.data['party']
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            party_detail = VehicleParty.objects.get(name=api_party)
+        except Exception as e:
+            return Response('vehicle party does not exists',status=status.HTTP_200_OK)
+        try:
+            party_work_detail = VehicleWork.objects.filter(party=party_detail).values('date','five_feet','two_half_feet','remark','payment')
+        except:
+            return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
+        if len(party_work_detail) == 0:
+            return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
+        else:
+            party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
+                                    'work':list(party_work_detail)}
+            return Response(party_detail_json,status=status.HTTP_200_OK)

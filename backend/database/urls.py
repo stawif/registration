@@ -3,7 +3,7 @@ from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRec
                     MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
                     AddVehicleParty,AddMachineWork,AddVehicleWork,AddWorker,AddPurchase, WorkerList,AddDailyWork,
                     AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,
-                    WorkerList, PartyContact,VehiclePayment,PurchasePayment,
+                    WorkerList, PartyContact,VehiclePayment,PurchasePayment,MachineWorkDetail,VehicleWorkDetail,
                     PartyThroughContact)
 
 urlpatterns = [
@@ -34,4 +34,6 @@ urlpatterns = [
     path('vehicle-payment/',VehiclePayment.as_view()),
     path('purchase-payment/',PurchasePayment.as_view()),
     path('update-avgfeet/',UpdateAvgFeet.as_view()),
+    path('machine-work-detail/',MachineWorkDetail.as_view()),
+    path('vehicle-work-detail/',VehicleWorkDetail.as_view()),
 ]
