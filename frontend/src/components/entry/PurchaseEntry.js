@@ -86,6 +86,7 @@ export default class PurchaseEntry extends React.Component {
         remark: this.state.remark
       })
       .then(res => {
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });

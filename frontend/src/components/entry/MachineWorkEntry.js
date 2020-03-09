@@ -6,6 +6,7 @@ import InputRemarkField from "../modular/InputRemarkField";
 import InputQuantityField from "../modular/InputQuantityField";
 import InputRateField from "../modular/InputRateField";
 
+
 export default class MachineWorkEntry extends React.Component {
   //Fetching Machines And Machine Parties from DataBase
   fetchProduct = async () => {
@@ -90,6 +91,7 @@ export default class MachineWorkEntry extends React.Component {
         holes: this.state.holes
       })
       .then(res => {
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });
@@ -142,10 +144,6 @@ export default class MachineWorkEntry extends React.Component {
       buttonStatus: {
         visibility: "visible"
       },
-      // ,
-      // radioButtonStyle: {
-      //   float: "left"
-      // }
       loadingStatus: {
         visibility: "visible"
       },
@@ -185,6 +183,7 @@ export default class MachineWorkEntry extends React.Component {
 
           <p>{this.state.partyExistMessage}</p>
           <br />
+          
 
           <Autocomplete
             suggestions={this.state.machineNamesFromApi}
@@ -203,8 +202,6 @@ export default class MachineWorkEntry extends React.Component {
               this.state.date = dataFromChild;
             }}
           />
-          <br />
-          <br />
 
           <br />
           <br />
@@ -216,6 +213,7 @@ export default class MachineWorkEntry extends React.Component {
           />
 
           <br />
+          <br />
 
           <InputQuantityField
             placeholder={"Drilling Feet"}
@@ -224,6 +222,8 @@ export default class MachineWorkEntry extends React.Component {
             }}
           />
           <br />
+          <br />
+
           <InputQuantityField
             placeholder={"Holes"}
             callbackFromParent={dataFromChild => {
@@ -231,6 +231,8 @@ export default class MachineWorkEntry extends React.Component {
             }}
           />
           <br />
+          <br />
+
           <InputRateField
             placeholderParent={"Payment"}
             callbackFromParent={dataFromChild => {
@@ -238,6 +240,8 @@ export default class MachineWorkEntry extends React.Component {
             }}
           />
           <br />
+          <br />
+
           <InputRemarkField
             callbackFromParent={dataFromChild => {
               this.state.remark = dataFromChild;

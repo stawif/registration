@@ -40,6 +40,7 @@ export default class DailyWorkEntry extends React.Component {
         diesel_spend: this.state.dieselSpend
       })
       .then(res => {
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });

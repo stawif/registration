@@ -155,6 +155,9 @@ export default class MachinePartyRegistration extends React.Component {
             }}
           />
 
+          <br />
+          <br />
+
           <InputCommonName
             minLength={5}
             placeholderParent={"Crasher"}

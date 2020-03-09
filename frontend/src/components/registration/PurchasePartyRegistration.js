@@ -135,6 +135,7 @@ export default class PurchasePartyRegistration extends React.Component {
             }}
           />
           <p>{this.state.partyExistMessage}</p>
+          
 
           <InputContactField
             callbackFromParent={dataFromChild => {
