@@ -60,10 +60,7 @@ export default class VehicleSupplyEntry extends React.Component {
       .catch(error => {
         alert(error.response.request._response);
       });
-    console.log(this.state.selectedItem);
-    console.log(this.state.date);
-    console.log(this.state.quantity);
-
+  
     e.target.reset();
     e.preventDefault();
   };

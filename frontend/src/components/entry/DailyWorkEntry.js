@@ -156,8 +156,8 @@ export default class DailyWorkEntry extends React.Component {
           <br />
           <br />
 
-          <InputQuantityField
-            placeholder="5 Feet"
+          <InputRateField
+            placeholderParent="5 Feet"
             callbackFromParent={dataFromChild => {
               this.state.fiveFeet = dataFromChild;
             }}
@@ -176,8 +176,8 @@ export default class DailyWorkEntry extends React.Component {
           <br />
           <br />
 
-          <InputQuantityField
-            placeholder="2.5 Feet"
+          <InputRateField
+            placeholderParent="2.5 Feet"
             callbackFromParent={dataFromChild => {
               this.state.twoHalfFeet = dataFromChild;
             }}
@@ -196,8 +196,8 @@ export default class DailyWorkEntry extends React.Component {
           <br />
           <br />
 
-          <InputQuantityField
-            placeholder="Diesel Spend"
+          <InputRateField
+            placeholderParent="Diesel Spend"
             callbackFromParent={dataFromChild => {
               this.state.dieselSpend = dataFromChild;
             }}

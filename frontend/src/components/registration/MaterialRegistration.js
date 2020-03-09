@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import InputQuantityField from "../modular/InputQuantityField";
 import InputCommonName from "../modular/InputCommonName";
+import InputRateField from "../modular/InputRateField";
 
 export default class MaterialRegistration extends React.Component {
   // Fetch material list from server
@@ -28,7 +29,7 @@ export default class MaterialRegistration extends React.Component {
         }
       });
       const showList = (item, index) => {
-        if (this.state.itemName.toLowerCase() === item.name.toLowerCase()) {
+        if (this.state.materialName.toLowerCase() === item.name.toLowerCase()) {
           this.setState({
             materialExistMessage: "* This material name is already exist!!!",
             buttonStatus: {
@@ -136,19 +137,11 @@ export default class MaterialRegistration extends React.Component {
 
           <p>{this.state.materialExistMessage}</p>
           <br />
-
-          <input
-            type="text"
-            className="mb-2"
-            name="materialMeasurement"
-            placeholder="Material Measurement"
-            autoComplete="off"
-            maxLength="30"
-            minLength="1"
-            onChange={e => {
-              this.state.materialMeasurement = e.target.value;
+          <InputRateField
+            callbackFromParent={dataFromChild => {
+              this.state.materialMeasurement = dataFromChild;
             }}
-            required
+            placeholderParent={"Material Measurement"}
           />
 
           <br />
