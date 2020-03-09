@@ -9,9 +9,6 @@ export default class InputCommonName extends Component {
   }
 
   onChange = e => {
-    var numm = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
-    e.target.value = numm;
-
     this.props.callbackFromParent(e.target.value);
   };
 
@@ -23,8 +20,8 @@ export default class InputCommonName extends Component {
           className="mb-2"
           placeholder={this.props.placeholderParent}
           autoComplete="off"
-          maxLength="30"
           minLength={this.props.minLengthh}
+          maxLength="30"
           onChange={this.onChange}
           required
         />

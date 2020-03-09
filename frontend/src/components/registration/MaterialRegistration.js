@@ -52,7 +52,7 @@ export default class MaterialRegistration extends React.Component {
         quantity: this.state.materialQuantity
       })
       .then(res => {
-        this.state.fetchProduct();
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });

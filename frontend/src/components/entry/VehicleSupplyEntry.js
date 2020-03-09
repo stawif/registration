@@ -53,6 +53,7 @@ export default class VehicleSupplyEntry extends React.Component {
         quantity: this.state.quantity
       })
       .then(res => {
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });

@@ -53,7 +53,7 @@ export default class MachinePartyRegistration extends React.Component {
         crasher: this.state.crasher
       })
       .then(res => {
-        this.state.fetchProduct();
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });
@@ -154,6 +154,9 @@ export default class MachinePartyRegistration extends React.Component {
               this.state.partyVillage = dataFromChild;
             }}
           />
+
+          <br />
+          <br />
 
           <InputCommonName
             minLength={5}

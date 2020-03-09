@@ -83,7 +83,7 @@ export default class MachineSupplyEntry extends React.Component {
         drilling_feet: this.state.drillingfeet
       })
       .then(res => {
-        console.log("Debug message : " + res.data);
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });
@@ -199,7 +199,8 @@ export default class MachineSupplyEntry extends React.Component {
               this.state.drillingfeet = dataFromChild;
             }}
           />
-
+          <br />
+          <br />
           <InputQuantityField
             placeholder={"Quantity"}
             callbackFromParent={dataFromChild => {

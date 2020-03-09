@@ -4,6 +4,7 @@ import InputContactField from "../modular/InputContactField";
 import InputDateField from "../modular/InputDateField";
 import InputCommonName from "../modular/InputCommonName";
 import InputPartyVillageField from "../modular/InputPartyVillageField";
+import InputRateField from "../modular/InputRateField";
 export default class WorkerRegistration extends React.Component {
   // Fetch vehicle list from server
   fetchProduct = async () => {
@@ -54,7 +55,7 @@ export default class WorkerRegistration extends React.Component {
         date: this.state.date
       })
       .then(res => {
-        this.state.fetchProduct();
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });
@@ -138,14 +139,13 @@ export default class WorkerRegistration extends React.Component {
             placeholderParent={"Worker Name"}
             callbackFromParent={dataFromChild => {
               this.state.workerName = dataFromChild;
-              this.checkWorker()
+              this.checkWorker();
             }}
-            
           />
 
           <p>{this.state.workerExistMessage}</p>
           <br />
-
+          
           <InputContactField
             callbackFromParent={dataFromChild => {
               this.state.workerContact = dataFromChild;
@@ -160,33 +160,15 @@ export default class WorkerRegistration extends React.Component {
               this.state.workerVillage = dataFromChild;
             }}
           />
-          {/* <input
-            type="text"
-            className="mb-2"
-            name="workerVillage"
-            placeholder="Worker Village"
-            autoComplete="off"
-            maxLength="30"
-            minLength="5"
-            onChange={e => {
-              this.state.workerVillage = e.target.value;
-            }}
-            required
-          /> */}
 
           <br />
           <br />
 
-          <input
-            type="number"
-            className="mb-2"
-            name="workerSalary"
-            placeholder="Worker Salary"
-            autoComplete="off"
-            onChange={e => {
-              this.state.workerSalary = parseInt(e.target.value);
+          <InputRateField
+            placeholderParent={"Worker Salary"}
+            callbackFromParent={dataFromChild => {
+              this.state.workerSalary = dataFromChild;
             }}
-            required
           />
 
           <br />
@@ -200,17 +182,11 @@ export default class WorkerRegistration extends React.Component {
 
           <br />
           <br />
-
-          <input
-            type="number"
-            className="mb-2"
-            name="workerAdvance"
-            placeholder="Worker Advance"
-            autoComplete="off"
-            onChange={e => {
-              this.state.advance = parseInt(e.target.value);
+          <InputRateField
+            placeholderParent={"Worker Advance"}
+            callbackFromParent={dataFromChild => {
+              this.state.advance = dataFromChild;
             }}
-            required
           />
         </div>
         <p>{this.state.responseMessage}</p>

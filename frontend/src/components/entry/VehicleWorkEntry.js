@@ -55,6 +55,7 @@ export default class VehicleWorkEntry extends React.Component {
         payment: this.state.payment
       })
       .then(res => {
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });
@@ -180,7 +181,8 @@ export default class VehicleWorkEntry extends React.Component {
             }}
             placeholderParent={"2.5 Feet"}
           />
-
+<br />
+          <br />
           <InputRateField
             placeholderParent={"Payment"}
             callbackFromParent={dataFromChild => {
