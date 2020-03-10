@@ -7,7 +7,7 @@ class VehicleWorkTable extends React.Component{
 
     render(){
         return(
-            <p>VehicleWorkTabel</p>
+            <p>{this.props.partyName}</p>
         );
     }
 }

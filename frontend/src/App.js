@@ -58,10 +58,12 @@ class App extends React.Component {
         vehicleWorkTable: "vehicleWorkTable",
         purchaseTable: "purchaseTable"
       },
-      currentPage: "machineWorkTable"
+      partyName: "",
+      currentPage: "machineRegistration"
     };
 
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
+    this.UpdateCurrentPageDashboard = this.UpdateCurrentPageDashboard.bind(this);
   }
 
   // Change pages when user choose from navbar
@@ -72,7 +74,13 @@ class App extends React.Component {
     });
   };
 
-  
+  UpdateCurrentPageDashboard = async (choosePage,partyName) => {
+    console.log("choosePage : " + choosePage);
+    await this.setState({
+      currentPage: choosePage,
+      partyName: partyName
+    });
+  }
 
   render() {
     let currentComponent;
@@ -125,11 +133,11 @@ class App extends React.Component {
     } else if (this.state.currentPage === this.state.allPages.purchasePartyDisplay) {
       currentComponent = <PurchasePartyDisplay />;
     } else if (this.state.currentPage === this.state.allPages.machineWorkTable) {
-      currentComponent = <MachineWorkTable />;
+      currentComponent = <MachineWorkTable partyName={this.state.partyName}/>;
     } else if (this.state.currentPage === this.state.allPages.vehicleWorkTable){
-      currentComponent = <VehicleWorkTable />
+      currentComponent = <VehicleWorkTable partyName={this.state.partyName}/>
     } else if (this.state.currentPage === this.state.allPages.purchaseTable){
-      currentComponent = <PurchaseTable />
+      currentComponent = <PurchaseTable  partyName={this.state.partyName}/>
     } else {
       currentComponent = <MachineRegistration />;
     }
@@ -142,7 +150,7 @@ class App extends React.Component {
               {" "}
               <p className="headingDashboard">DASHBOARD</p>{" "}
             </center>
-            <PartyPins updateCurrentPage={this.updateCurrentPage}/>
+            <PartyPins updateCurrentPage={this.UpdateCurrentPageDashboard}/>
           </div>
 
           <div id="display" className="col-sm-9">

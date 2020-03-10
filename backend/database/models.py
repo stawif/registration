@@ -181,7 +181,6 @@ class MachineWork(models.Model):
     drilling_feet = models.FloatField(blank=False)
     diesel_amount = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
-    average_feet = models.FloatField(default=0)
     paid = models.BooleanField(default=False)
     holes = models.IntegerField(default=0)
     payment = models.FloatField(default=0)
@@ -190,8 +189,9 @@ class MachineWork(models.Model):
     #     return self.party," ",str(self.date)    
 
     def __str__(self):
-        template = '{0.party} {0.date}'
-        return template.format(self)
+        return str(self.party)
+        #template = '{0.party} {0.date}'
+        #return template.format(self)
 
     class Meta:
         unique_together = (("party", "date"),)  #One work for a party for a single day

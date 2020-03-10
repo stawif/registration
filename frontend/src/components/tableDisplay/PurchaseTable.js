@@ -7,7 +7,7 @@ class PurchaseTabel extends React.Component{
 
     render(){
         return(
-            <p>PurchaseTable</p>
+            <p>{this.props.partyName}</p>
         );
     };
 }

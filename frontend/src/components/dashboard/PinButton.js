@@ -10,7 +10,7 @@ class PinButton extends React.Component{
             <button 
                 type="submit" 
                 className={this.props.class}
-                onClick={e => this.props.updateCurrentPage(this.props.partyType)}
+                onClick={e => this.props.updateCurrentPage(this.props.partyType,this.props.partyName)}
                 >
                     {this.props.partyName}
             </button>

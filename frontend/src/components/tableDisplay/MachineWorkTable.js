@@ -2,13 +2,37 @@ import React from 'react';
 import '../../tableDisplayCss.css';
 
 class MachineWorkTable extends React.Component{
+    fetchProduct = async () =>{
+        console.log("Party name : ",this.props.partyName);
+        const responsWorkDetail = await fetch('http://127.0.0.1:8000/machine-work-detail/', {
+                method: 'post',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                "party": this.props.partyName
+                })
+            });        
+        console.log("Json response : ",responsWorkDetail);    
+        const jsonWorkDetail = await responsWorkDetail.json();
+        this.setState({
+            workDetail: jsonWorkDetail
+        });    
+        console.log("Work Detail : ",this.state.jsonWorkDetail);
+    }
+
     constructor(props){
+        console.log("Machine work table debugging start...");
         super(props);
         this.state = {
-            floatDisplay: {
-                display: "float"
+            workDetail: {
+                name: "",
+                contact: "",
+                village: "",
+                crasher: "",
+                work: []
             }
         }
+        this.fetchProduct = this.fetchProduct.bind(this);
+        this.fetchProduct();
     }
     render(){
         return(
@@ -17,14 +41,13 @@ class MachineWorkTable extends React.Component{
                     
                     <div className="col-sm-2">
                         <blockquote className="commonFont blockquote text-center">
-                            <p className="mb-0"><b>Mahesh Party</b></p>
-                            {/*<footer className="blockquote-footer"> 7742879818</footer>
-                        */}</blockquote>                        
+                            <p className="mb-0"><b>{this.props.partyName}</b></p>
+                            </blockquote>                        
                     </div>
 
                     <div className="col-sm-2">
                         <blockquote className="commonFont blockquote text-center">
-                            <p className="mb-0">7742879818</p>
+                            <p className="mb-0">{this.state.workDetail.contact}</p>
                             {/*<footer className="blockquote-footer"> 7742879818</footer>
                         */}</blockquote>                        
                     </div>
@@ -49,8 +72,32 @@ class MachineWorkTable extends React.Component{
                         <input type="date" />
                     </div>
                 </div>
+
                 <div id="midTable">
+                        <table className=" table table-borderd">
+                            <thead className="thead-dark">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Drilling Feet</th>
+                                    <th>Holes</th>
+                                    <th>Diesel Amount</th>
+                                    <th>Payment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.workDetail.work.map((work) => (
+                                    <tr>
+                                        <td>{work.date}</td>
+                                        <td>{work.drilling_feet}</td>
+                                        <td>{work.holes}</td>
+                                        <td>{work.diesel_amount}</td>
+                                        <td>{work.payment}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                 </div>
+
                 <div id="lowerTable">
                     <div className="row text-center commonFont">
 
