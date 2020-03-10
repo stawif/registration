@@ -20,7 +20,11 @@ import MaterialDisplay from "./components/displaydata/MaterialDisplay";
 import MachinePartyDisplay from "./components/displaydata/MachinePartyDisplay";
 import VehiclePartyDisplay from "./components/displaydata/VehiclePartyDisplay";
 import PurchasePartyDisplay from "./components/displaydata/PurchasePartyDisplay";
+
+//Tables Components
 import MachineWorkTable from "./components/tableDisplay/MachineWorkTable";
+import VehicleWorkTable from "./components/tableDisplay/VehicleWorkTable";
+import PurchaseTable from "./components/tableDisplay/PurchaseTable";
 
 //Dashboard components
 import PartyPins from "./components/dashboard/PartyPins";
@@ -50,7 +54,9 @@ class App extends React.Component {
         machinePartyDisplay: "machinePartyDisplay",
         vehiclePartyDisplay: "vehiclePartyDisplay",
         purchasePartyDisplay: "purchasePartyDisplay",
-        machineWorkTable: "machineWorkTable"
+        machineWorkTable: "machineWorkTable",
+        vehicleWorkTable: "vehicleWorkTable",
+        purchaseTable: "purchaseTable"
       },
       currentPage: "machineWorkTable"
     };
@@ -64,7 +70,6 @@ class App extends React.Component {
     await this.setState({
       currentPage: choosePage
     });
-    console.log(this.state.currentPage);
   };
 
   
@@ -113,22 +118,18 @@ class App extends React.Component {
       currentComponent = <WorkerDisplay />;
     } else if (this.state.currentPage === this.state.allPages.materialDisplay) {
       currentComponent = <MaterialDisplay />;
-    } else if (
-      this.state.currentPage === this.state.allPages.machinePartyDisplay
-    ) {
+    } else if (this.state.currentPage === this.state.allPages.machinePartyDisplay) {
       currentComponent = <MachinePartyDisplay />;
-    } else if (
-      this.state.currentPage === this.state.allPages.vehiclePartyDisplay
-    ) {
+    } else if (this.state.currentPage === this.state.allPages.vehiclePartyDisplay) {
       currentComponent = <VehiclePartyDisplay />;
-    } else if (
-      this.state.currentPage === this.state.allPages.purchasePartyDisplay
-    ) {
+    } else if (this.state.currentPage === this.state.allPages.purchasePartyDisplay) {
       currentComponent = <PurchasePartyDisplay />;
-    } else if (
-      this.state.currentPage === this.state.allPages.machineWorkTable
-    ) {
+    } else if (this.state.currentPage === this.state.allPages.machineWorkTable) {
       currentComponent = <MachineWorkTable />;
+    } else if (this.state.currentPage === this.state.allPages.vehicleWorkTable){
+      currentComponent = <VehicleWorkTable />
+    } else if (this.state.currentPage === this.state.allPages.purchaseTable){
+      currentComponent = <PurchaseTable />
     } else {
       currentComponent = <MachineRegistration />;
     }
@@ -141,7 +142,7 @@ class App extends React.Component {
               {" "}
               <p className="headingDashboard">DASHBOARD</p>{" "}
             </center>
-            <PartyPins />
+            <PartyPins updateCurrentPage={this.updateCurrentPage}/>
           </div>
 
           <div id="display" className="col-sm-9">

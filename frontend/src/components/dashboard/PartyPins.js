@@ -28,7 +28,7 @@ class PartyPins extends React.Component{
       this.setState({
         purchasePartyList: jsonPurchaseList
       });
-
+      console.log("Fetch product calls in PartyPins");
     } catch(err) {
     }
   };
@@ -58,18 +58,24 @@ class PartyPins extends React.Component{
           { this.state.machinePartyList.map( (party) => (
             <PinButton 
               partyName={party.name}
+              partyType="machineWorkTable"
+              updateCurrentPage={this.props.updateCurrentPage}
               class="btn btn-primary pin"/>
           )) }
 
           { this.state.vehiclePartyList.map( (party) => (
             <PinButton 
               partyName={party.name}
+              partyType="vehicleWorkTable"
+              updateCurrentPage={this.props.updateCurrentPage}
               class="btn btn-success pin"/>
           )) }
 
           { this.state.purchasePartyList.map( (party) => (
             <PinButton 
               partyName={party.name}
+              partyType="purchaseTable"
+              updateCurrentPage={this.props.updateCurrentPage}
               class="btn btn-warning pin"/>
           )) }
 

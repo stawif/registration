@@ -8,8 +8,10 @@ class PinButton extends React.Component{
     render(){
         return(
             <button 
-                type="button" 
-                className={this.props.class}>
+                type="submit" 
+                className={this.props.class}
+                onClick={e => this.props.updateCurrentPage(this.props.partyType)}
+                >
                     {this.props.partyName}
             </button>
         );
