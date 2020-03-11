@@ -189,9 +189,8 @@ class MachineWork(models.Model):
     #     return self.party," ",str(self.date)    
 
     def __str__(self):
-        return str(self.party)
-        #template = '{0.party} {0.date}'
-        #return template.format(self)
+        template = '{0.party} {0.date}'
+        return template.format(self)
 
     class Meta:
         unique_together = (("party", "date"),)  #One work for a party for a single day

@@ -344,6 +344,8 @@ class AddMachineWork(APIView):
             api_remark = request.data['remark']
             api_holes = request.data['holes']
             api_payment = request.data['payment']
+            print(api_party_name)
+            print(api_date)
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         try:
@@ -752,12 +754,9 @@ class MachineWorkDetail(APIView):
                                 'diesel_amount','remark','holes','payment')
         except:
             return Response('no work exists for this machine party',status=status.HTTP_200_OK)
-        if len(party_work_detail) == 0:
-            return Response('no work exists for this machine party',status=status.HTTP_200_OK)
-        else:
-            party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
-                                    'crasher':party_detail.crasher,'work':list(party_work_detail)}
-            return Response(party_detail_json,status=status.HTTP_200_OK)
+        party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
+                            'crasher':party_detail.crasher,'work':list(party_work_detail)}
+        return Response(party_detail_json,status=status.HTTP_200_OK)
 
 class VehicleWorkDetail(APIView):
     """

@@ -2,13 +2,13 @@ import React from 'react';
 import '../../tableDisplayCss.css';
 
 class MachineWorkTable extends React.Component{
-    fetchProduct = async () =>{
+    fetchProduct = async (partyName) =>{
         console.log("Party name : ",this.props.partyName);
         const responsWorkDetail = await fetch('http://127.0.0.1:8000/machine-work-detail/', {
                 method: 'post',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify({
-                "party": this.props.partyName
+                "party": partyName
                 })
             });        
         console.log("Json response : ",responsWorkDetail);    
@@ -32,12 +32,19 @@ class MachineWorkTable extends React.Component{
             }
         }
         this.fetchProduct = this.fetchProduct.bind(this);
-        this.fetchProduct();
+        this.fetchProduct(this.props.partyName);
     }
+
+    componentWillReceiveProps(nextProps){
+        if(this.props.partyName != nextProps.partyName){
+            this.fetchProduct(nextProps.partyName);
+        }
+    }
+
     render(){
         return(
             <div id="tableComponent">
-                <div className="row upperTable">
+                <div className="row upperTable bg-primary">
                     
                     <div className="col-sm-2">
                         <blockquote className="commonFont blockquote text-center">
@@ -98,9 +105,7 @@ class MachineWorkTable extends React.Component{
                         </table>
                 </div>
 
-                <div id="lowerTable">
-                    <div className="row text-center commonFont">
-
+                <div className="row lowerTable text-center bg-primary">
                         <div className="col-sm-2">
                             <p>Drilling Feet =</p>
                         </div>
@@ -131,7 +136,6 @@ class MachineWorkTable extends React.Component{
                                 Payment
                             </button>
                         </div>
-                    </div>    
                 </div>
             </div>
         );
