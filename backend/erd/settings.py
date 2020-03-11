@@ -132,5 +132,5 @@ CORS_ORIGIN_WHITELIST = [
     ]
 
 # Fix date format in all site
-DATE_FORMAT = "Y-m-d"
-USE_L10N = False
+#DATE_FORMAT = "Y-m-d"
+#USE_L10N = False

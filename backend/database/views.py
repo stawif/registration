@@ -751,7 +751,7 @@ class MachineWorkDetail(APIView):
             return Response('machine party does not exists',status=status.HTTP_200_OK)
         try:
             party_work_detail = MachineWork.objects.filter(party=party_detail).values('machine','date','drilling_feet',
-                                'diesel_amount','remark','holes','payment')
+                                'diesel_amount','remark','holes','payment','paid')
         except:
             return Response('no work exists for this machine party',status=status.HTTP_200_OK)
         party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,

@@ -177,7 +177,7 @@ class MachineWork(models.Model):
     """
     party = models.ForeignKey(MachineParty, on_delete=models.CASCADE)
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)    
-    date = models.DateField(primary_key=True)
+    date = models.DateField()
     drilling_feet = models.FloatField(blank=False)
     diesel_amount = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)

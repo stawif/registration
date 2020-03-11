@@ -16,7 +16,33 @@ class MachineWorkTable extends React.Component{
         this.setState({
             workDetail: jsonWorkDetail
         });    
-        console.log("Work Detail : ",this.state.jsonWorkDetail);
+    }
+
+    paidFilter = (item, index) =>{
+        if(item.paid == true){
+            this.state.paidWork.push(item);
+        }
+        else{
+            this.state.unPaidWork.push(item);
+        }
+    }
+
+    setPaidStatus = (status) =>{
+        if(status==="paid"){
+            this.setState({
+                paidStatus: "paid"
+            });
+        }
+        else if(status==="unpaid"){
+            this.setState({
+                paidStatus: "unpaid"
+            });
+        }
+        else{
+            this.setState({
+                paidStatus: null
+            });
+        }
     }
 
     constructor(props){
@@ -29,9 +55,15 @@ class MachineWorkTable extends React.Component{
                 village: "",
                 crasher: "",
                 work: []
-            }
+            },
+            paidWork: [],
+            unPaidWork: [],
+            paidStatus: null
         }
+        this.currentWork= null;
         this.fetchProduct = this.fetchProduct.bind(this);
+        this.paidFilter = this.paidFilter.bind(this);
+        this.setPaidStatus = this.setPaidStatus.bind(this);
         this.fetchProduct(this.props.partyName);
     }
 
@@ -42,6 +74,18 @@ class MachineWorkTable extends React.Component{
     }
 
     render(){
+        this.state.paidWork=[];
+        this.state.unPaidWork=[];
+        this.state.workDetail.work.forEach(this.paidFilter);
+        if(this.state.paidStatus==="paid"){
+            this.currentWork= this.state.paidWork;
+        }
+        else if(this.state.paidStatus==="unpaid"){
+            this.currentWork= this.state.unPaidWork;
+        }
+        else{
+            this.currentWork= this.state.workDetail.work;
+        }
         return(
             <div id="tableComponent">
                 <div className="row upperTable bg-primary">
@@ -61,13 +105,13 @@ class MachineWorkTable extends React.Component{
                     
                     <div className="col-sm-2">
                     <blockquote className="commonFont blockquote text-center">
-                            <input type="radio" name="optradio"/>paid
+                            <input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>paid
                     </blockquote>                        
                     </div>
                     
                     <div className="col-sm-2">
                     <blockquote className="commonFont blockquote text-center">
-                            <input type="radio" name="optradio"/>Unpaid
+                            <input type="radio" name="paidStatus" value="unpaid" onChange={ e => {this.setPaidStatus(e.target.value)}} />Unpaid
                     </blockquote>                        
                     </div>
                     
@@ -84,28 +128,34 @@ class MachineWorkTable extends React.Component{
                         <table className=" table table-borderd">
                             <thead className="thead-dark">
                                 <tr>
+                                    <th>Paid</th>
                                     <th>Date</th>
                                     <th>Drilling Feet</th>
                                     <th>Holes</th>
                                     <th>Diesel Amount</th>
+                                    <th>Machine</th>
                                     <th>Payment</th>
+                                    <th>Remark</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.workDetail.work.map((work) => (
+                                {this.currentWork.map((work) => (
                                     <tr>
+                                        <td>{<input type="checkbox" checked={work.paid}></input>}</td>
                                         <td>{work.date}</td>
                                         <td>{work.drilling_feet}</td>
                                         <td>{work.holes}</td>
                                         <td>{work.diesel_amount}</td>
+                                        <td>{work.machine}</td>
                                         <td>{work.payment}</td>
+                                        <td>{work.remark}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                 </div>
 
-                <div className="row lowerTable text-center bg-primary">
+                <div className="row lowerTable text-center bg-primary commonFont">
                         <div className="col-sm-2">
                             <p>Drilling Feet =</p>
                         </div>
