@@ -20,6 +20,9 @@ import MaterialDisplay from "./components/displaydata/MaterialDisplay";
 import MachinePartyDisplay from "./components/displaydata/MachinePartyDisplay";
 import VehiclePartyDisplay from "./components/displaydata/VehiclePartyDisplay";
 import PurchasePartyDisplay from "./components/displaydata/PurchasePartyDisplay";
+import PartEntry from './components/entry/PartEntry';
+import OwnerDebitEntry from './components/entry/OwnerDebitEntry';
+import DailyExpenseEntry from './components/entry/DailyExpenseEntry';
 
 //Tables Components
 import MachineWorkTable from "./components/tableDisplay/MachineWorkTable";
@@ -56,7 +59,10 @@ class App extends React.Component {
         purchasePartyDisplay: "purchasePartyDisplay",
         machineWorkTable: "machineWorkTable",
         vehicleWorkTable: "vehicleWorkTable",
-        purchaseTable: "purchaseTable"
+        purchaseTable: "purchaseTable",
+        partEntry: "partEntry",
+        ownerDebitEntry: "ownerDebitEntry",
+        dailyExpenseEntry: "dailyExpenseEntry"
       },
       partyName: "",
       currentPage: "machineRegistration"
@@ -138,7 +144,14 @@ class App extends React.Component {
       currentComponent = <VehicleWorkTable partyName={this.state.partyName}/>
     } else if (this.state.currentPage === this.state.allPages.purchaseTable){
       currentComponent = <PurchaseTable  partyName={this.state.partyName}/>
-    } else {
+    } else if(this.state.currentPage === this.state.allPages.partEntry){
+      currentComponent = <PartEntry />;
+    } else if(this.state.currentPage === this.state.allPages.ownerDebitEntry){
+      currentComponent = <OwnerDebitEntry />;
+    } else if(this.state.currentPage === this.state.allPages.dailyExpenseEntry){
+      currentComponent = <DailyExpenseEntry />;
+    }
+    else {
       currentComponent = <MachineRegistration />;
     }
     
@@ -338,6 +351,36 @@ class App extends React.Component {
                           }
                         >
                           Vehicle Supply
+                        </a>
+                        <a
+                          className="dropdown-item"
+                          onClick={() =>
+                            this.updateCurrentPage(
+                              this.state.allPages.partEntry
+                            )
+                          }
+                        >
+                          Parts Entry
+                        </a>
+                        <a
+                          className="dropdown-item"
+                          onClick={() =>
+                            this.updateCurrentPage(
+                              this.state.allPages.ownerDebitEntry
+                            )
+                          }
+                        >
+                          Owner Debit
+                        </a>
+                        <a
+                          className="dropdown-item"
+                          onClick={() =>
+                            this.updateCurrentPage(
+                              this.state.allPages.dailyExpenseEntry
+                            )
+                          }
+                        >
+                          Daily Expense 
                         </a>
                       </div>
                     </li>

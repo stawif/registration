@@ -164,8 +164,20 @@ export default class VehicleWorkEntry extends React.Component {
               this.state.remark = dataFromChild;
             }}
           />
+
           <br />
           <br />
+
+          <InputRateField
+            callbackFromParent={dataFromChild => {
+              this.state.fiveFeet = dataFromChild;
+            }}
+            placeholderParent={"Feet (inch)"}
+          />
+
+          <br />
+          <br />
+
           <InputRateField
             callbackFromParent={dataFromChild => {
               this.state.fiveFeet = dataFromChild;
