@@ -19,6 +19,10 @@ class Owner(models.Model):
 def gen_daily_expense_debit_id(sender, instance, **kwarge):
     daily_expense_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"))
     daily_expense_i.save()
+    owner_debit_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"))
+    owner_debit_i.save()
+
+
 
 class Machine(models.Model):
     """
@@ -97,6 +101,7 @@ class MixCredit(models.Model):
 def gen_daily_expense_credit_id(sender, instance, **kwarge):
     daily_expense_i = MixCredit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"))
     daily_expense_i.save()
+    
 
 """
 Above models are complete
@@ -313,17 +318,33 @@ class Debit(models.Model):
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.debit_id   
+        return str(self.debit_id)   
 
+class Part(models.Model):
+    """
+    Model for Parts Entry.
+    """
+    owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
+    debit_id = models.ForeignKey(MixDebit,on_delete=models.CASCADE)
+    name = models.CharField(blank=False,max_length=50)
 
-"""
+    def __str__(self):
+        template = '{0.name}'
+        return template.format(self)
+
+category=(
+    ('staff','staff'),
+    ('petrol','petrol'),
+    ('food','food'),
+    ('office_accesories','office_accesories'),
+    ('other','other')
+)
+
 class DailyExpense(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     debit_id = models.OneToOneField(MixDebit,on_delete=models.CASCADE)
-    expense = models.IntegerField(blank=False)
-    remark = models.CharField(max_length=50, blank=True)
+    category = models.CharField(max_length=50,choices=category)
 
     def __str__(self):
         return str(self.debit_id)
 
-"""

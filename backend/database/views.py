@@ -2,11 +2,11 @@ from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , MaterialSerializer,
                             PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
                             MachineWorkSerializer , VehicleWorkSerializer,WorkerSerializer,
-                            DailyWorkSerializer,MaterialListSerializer)
+                            DailyWorkSerializer,MaterialListSerializer,PartSerializer)
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Material , 
-                        MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,
-                        MixDebit,Worker,Purchase,DailyWork,MachineSupply,VehicleSupply,MixCredit)
+                        MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,Part,DailyExpense,
+                        MixDebit,Worker,Purchase,DailyWork,MachineSupply,VehicleSupply,MixCredit,Debit)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse,HttpResponse
 from rest_framework import status
@@ -59,9 +59,9 @@ class PartyThroughContact(APIView):
         jsonPacket = json.dumps(packet)
         return JsonResponse(jsonPacket, safe= False)
 
-# """"""""""""""""""""""""""""""
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # APIView for List (get request)
-# """"""""""""""""""""""""""""""
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 class MachineList(APIView):
     """
@@ -128,9 +128,44 @@ class PurchasePartyList(APIView):
         serializer = PurchasePartySerializer(queryset,many=True)
         return Response(serializer.data)
 
-# """"""""""""""""""""""""""""""
+class PartList(APIView):
+    """
+    View to return List of Parts.
+    """
+    def get(self,request):
+        part_name_i = Part.objects.all()
+        part_list = []
+        for i in part_name_i:
+            debit_i = Debit.objects.get(debit_id=i.debit_id)
+            part_dict = {"name":i.name,"date":debit_i.date,"debit_amount":debit_i.debit_amount,"remark":debit_i.remark}
+            part_list.append(part_dict)
+        return Response(part_list,status=status.HTTP_200_OK)
+
+class OnwerDebitList(APIView):
+    """
+    View to return List of Owner Debit.
+    """
+    def get(self,request):
+        debit_i = Debit.objects.filter(debit_id=2).values('debit_amount','remark','date')
+        print(debit_i)
+        return Response(debit_i,status=status.HTTP_200_OK)
+
+class DailyExpenseList(APIView):
+    """
+    View to return List of Daily Expense.
+    """
+    def get(self,request):
+        daily_expense_i = DailyExpense.objects.all()
+        daily_expense_list = []
+        for i in daily_expense_i:
+            debit_i = Debit.objects.get(debit_id=i.debit_id)
+            daily_expense_dict = {"category":i.category,"date":debit_i.date,"debit_amount":debit_i.debit_amount,"remark":debit_i.remark}
+            daily_expense_list.append(daily_expense_dict)
+        return Response(daily_expense_list,status=status.HTTP_200_OK)
+
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # APIView for Registration (post request)
-# """"""""""""""""""""""""""""""
+# """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 class AddMachine(APIView):
     """
@@ -366,9 +401,9 @@ class AddWorker(APIView):
                 return Response('please provide all required datad',status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
-# """"""""""""""""""""""""""""""
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # APIView for Entry (post request)
-# """"""""""""""""""""""""""""""
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 class AddMachineWork(APIView):
     """
@@ -592,6 +627,97 @@ class AddVehicleSupply(APIView):
             except Exception as e:
                 print(e)
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)                
+
+class AddPart(APIView):
+    """
+    View for Add Parts
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        owner_i = Owner.objects.get(id=1)
+        try:
+            api_name = request.data['name']
+            api_debit_amount = request.data['debit_amount']
+            api_remark = request.data['remark']
+            api_date = request.data['date']
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            mix_debit_i = MixDebit.objects.create(owner=owner_i,date=api_date)
+        except Exception as e:
+            print(e)
+            return Response('please provide correct date',status=status.HTTP_404_NOT_FOUND)
+        try:
+            part_i = Part.objects.create(owner=owner_i,debit_id=mix_debit_i,name=api_name)
+        except Exception as e:
+            mix_debit_i.delete()
+            return Response('part not added',status=status.HTTP_200_OK)
+        try:
+            debit_i = Debit.objects.create(owner=owner_i,debit_id=mix_debit_i,date=api_date,debit_amount=api_debit_amount,
+                                            remark=api_remark)
+            return Response('{} part added'.format(api_name),status=status.HTTP_201_CREATED)
+        except Exception as e:
+            part_i.delete()
+            mix_debit_i.delete()
+            return Response('part not added,please try again',status=status.HTTP_200_OK)
+
+class AddOwnerDebit(APIView):
+    """
+    View to add Owner Debit.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        try:
+            api_debit_amount = request.data['debit_amount']
+            api_date = request.data['date']
+            api_remark = request.data['remark']
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            debit_id = MixDebit.objects.get(id=2)
+            owner_i = Owner.objects.get(id=1)
+            print(debit_id)
+        except Exception as e:
+            return Response('error in debit_id',status=status.HTTP_400_BAD_REQUEST)
+        try:
+            debit_i = Debit.objects.create(owner=owner_i,debit_id=debit_id,date=api_date,
+                                            debit_amount=api_debit_amount,remark=api_remark)
+            return Response('Owner Debit added',status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response('Owner debit not saved',status=status.HTTP_400_BAD_REQUEST)
+
+class AddDailyExpense(APIView):
+    """
+    View to add Daily Expense.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        owner_i = Owner.objects.get(id=1)
+        try:
+            api_expense = request.data['expense']
+            api_date = request.data['date']
+            api_remark = request.data['remark']
+            api_category = request.data['category']  # category=('staff','petrol','food','office-accesories","other")
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            debit_id = MixDebit.objects.create(owner=owner_i,date=api_date)
+        except Exception as e:
+            return Response('mix debit not found')
+        try:
+            daily_expense_i = DailyExpense.objects.create(owner=owner_i,debit_id=debit_id,category=api_category)
+        except Exception as e:
+            return Response('please provie correct information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            debit_i = Debit.objects.create(owner=owner_i,debit_id=debit_id,date=api_date,remark=api_remark,debit_amount=api_expense)
+            return Response('Daily Expense for {} added'.format(api_category),status=status.HTTP_201_CREATED)
+        except Exception as e:
+            daily_expense_i.delete()
+            debit_id.delete()
+            return Response('daily expense not added',status=status.HTTP_200_OK)
 
 class MachinePayment(APIView):
     """

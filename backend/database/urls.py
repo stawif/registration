@@ -2,9 +2,9 @@ from django.urls import path
 from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , MaterialList , AddMaterial,
                     MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
                     AddVehicleParty,AddMachineWork,AddVehicleWork,AddWorker,AddPurchase, WorkerList,AddDailyWork,
-                    AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,
+                    AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,AddPart,PartList,
                     WorkerList, PartyContact,VehiclePayment,PurchasePayment,MachineWorkDetail,VehicleWorkDetail,
-                    PartyThroughContact)
+                    PartyThroughContact,AddOwnerDebit,OnwerDebitList,AddDailyExpense,DailyExpenseList)
 
 urlpatterns = [
     # """
@@ -15,6 +15,9 @@ urlpatterns = [
     path('list-of-vehicles/',VehicleList.as_view()),
     path('list-of-material/',MaterialList.as_view()),
     path('list-of-worker/',WorkerList.as_view()),
+    path('list-of-part/',PartList.as_view()),
+    path('list-of-dailyexpense/',DailyExpenseList.as_view()),
+    path('list-of-ownerdebit/',OnwerDebitList.as_view()),
     path('list-of-machineparty/',MachinePartyList.as_view()),
     path('list-of-vehicleparty/',VehiclePartyList.as_view()),
     path('list-of-purchaseparty/',PurchasePartyList.as_view()),
@@ -41,6 +44,9 @@ urlpatterns = [
     path('enter-daily-work/',AddDailyWork.as_view()),
     path('enter-machine-supply/',AddMachineSupply.as_view()),
     path('enter-vehicle-supply/',AddVehicleSupply.as_view()),
+    path('enter-part/',AddPart.as_view()),
+    path('enter-owner-debit/',AddOwnerDebit.as_view()),
+    path('enter-daily-expense/',AddDailyExpense.as_view()),
     # """
     # other url
     # """
