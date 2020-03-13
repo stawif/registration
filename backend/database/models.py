@@ -304,7 +304,7 @@ class Credit(models.Model):
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.work
+        return str(self.work)
 
 
 class Debit(models.Model):

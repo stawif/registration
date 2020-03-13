@@ -4,7 +4,7 @@ from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerial
                             MachineWorkSerializer , VehicleWorkSerializer,WorkerSerializer,
                             DailyWorkSerializer,MaterialListSerializer,PartSerializer)
 from rest_framework.views import APIView
-from .models import  (Machine , Owner , Vehicle , Recorder , Material , 
+from .models import  (Machine , Owner , Vehicle , Recorder , Material , Credit,
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,Part,DailyExpense,
                         MixDebit,Worker,Purchase,DailyWork,MachineSupply,VehicleSupply,MixCredit,Debit)
 from rest_framework.response import Response
@@ -12,6 +12,7 @@ from django.http import Http404 ,JsonResponse,HttpResponse
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 import json
+from datetime import date
 # Create your views here.
 
 """
@@ -726,16 +727,24 @@ class MachinePayment(APIView):
     _i is for indication that this data is a model instance
     """
     def post(self,request):
+        owner_i = Owner.objects.get(id=1)
         try:
-            api_contact = request.data['contact']
+            api_party = request.data['party']
             api_start_date = request.data['start_date']
             api_end_date = request.data['end_date']
+            api_payment = request.data['payment']
+            api_remark = request.data['remark']
         except Exception as e:
             return Response('please provide all information')
         try:
-            party_i = MachineParty.objects.get(contact=api_contact)
+            party_i = MachineParty.objects.get(name=api_party)
         except:
-            return Response("contact not found for any machine party",status=status.HTTP_404_NOT_FOUND)
+            return Response("party not found for in machine party",status=status.HTTP_404_NOT_FOUND)
+        try:
+            credit_i = Credit.objects.create(work=party_i.credit_id,date=date.today(),owner=owner_i,remark=api_remark,
+            credit_amount=api_payment)
+        except Exception as e:
+            return Response("payment not succed due to some error",status=status.HTTP_400_BAD_REQUEST)
         try:
             machine_work_i = MachineWork.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
             if machine_work_i:
@@ -743,9 +752,11 @@ class MachinePayment(APIView):
                     MachineWork.objects.filter(party=i.party,date=i.date).update(paid=True)
                 return Response('Machine Work for party {} from {} to {} is paid'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
             else:
-                 return Response('No machine work exists for this machine party',status=status.HTTP_200_OK)
+                credit_i.delete()
+                return Response('No machine work exists for this machine party',status=status.HTTP_200_OK)
         except:
-            return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
+            credit_i.delete()
+            return Response('please provide correct date range',status=status.HTTP_400_BAD_REQUEST)
         return Response('no work for this machine party exists.',status=status.HTTP_200_OK)
 
 class VehiclePayment(APIView):
@@ -755,16 +766,24 @@ class VehiclePayment(APIView):
     _i is for indication that this data is a model instance
     """
     def post(self,request):
+        owner_i = Owner.objects.get(id=1)
         try:
-            api_contact = request.data['contact']
+            api_party = request.data['party']
             api_start_date = request.data['start_date']
             api_end_date = request.data['end_date']
+            api_payment = request.data['payment']
+            api_remark = request.data['remark']
         except Exception as e:
             return Response('please provide all information')
         try:
-            party_i = VehicleParty.objects.get(contact=api_contact)
+            party_i = VehicleParty.objects.get(name=api_party)
         except:
             return Response("contact not found in vehicle party",status=status.HTTP_404_NOT_FOUND)
+        try:
+            credit_i = Credit.objects.create(work=party_i.credit_id,date=date.today(),owner=owner_i,remark=api_remark,
+            credit_amount=api_payment)
+        except Exception as e:
+            return Response("payment not succed due to some error",status=status.HTTP_400_BAD_REQUEST)
         try:
             vehicle_work_i = VehicleWork.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
             if vehicle_work_i:
@@ -772,8 +791,11 @@ class VehiclePayment(APIView):
                     VehicleWork.objects.filter(party=i.party,date=i.date).update(paid=True)
                 return Response('Vehicle Work Work for party {} from {} to {} is paid'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
             else:
-                 return Response('no vehicle work exists for this vehicle party',status=status.HTTP_200_OK)
-        except:
+                credit_i.delete()
+                return Response('no vehicle work exists for this vehicle party',status=status.HTTP_200_OK)
+        except Exception as e:
+            credit_i.delete()
+            print(e)
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no work for this vehicle party exists.',status=status.HTTP_200_OK)
 
