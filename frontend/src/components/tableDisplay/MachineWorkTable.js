@@ -294,8 +294,22 @@ class MachineWorkTable extends React.Component{
 				</div>
 				
 				<div className="row topTable">
-						<button className="col-6 bg-primary">Party</button>
-						<button className="col-6 bg-primary">Payment</button>
+                    <div className="col-6">
+                        {/*Party and filter popup*/}
+                        <Popup modal trigger={
+                            <button className="bg-primary">Party</button>
+                        }>
+                            <h3>Party</h3>
+                        </Popup>
+                    </div>
+                    <div className="col-6">    
+                        {/*Payment popup*/}
+                        <Popup modal trigger={
+                            <button className="bg-primary">Payment</button>
+                        }>
+                            <h3>Payment</h3>
+                        </Popup>
+                    </div>    
 				</div>
 				
 				<div className="midTable">

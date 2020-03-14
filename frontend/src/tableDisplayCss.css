@@ -75,8 +75,13 @@ thead {
 		width: 100%;
 		margin:auto;
 	}
+	.topTable div{
+		padding: 0px;
+	}
 	.topTable button{
 		position: static;
+		height: 100%;
+		width: 100%;
 	}
 	.midTable{
 		display: block;
