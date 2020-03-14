@@ -31,9 +31,6 @@
 input[type="radio"]{
     width: 40%;
 }
-.paymentInput{
-	width:30%;
-}
 
 /*Position controll*/
 thead {

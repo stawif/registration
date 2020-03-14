@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../tableDisplayCss.css';
 import Popup from "reactjs-popup";
+import axios from "axios";
 
 class MachineWorkTable extends React.Component{
     //setDateRestriction 
@@ -103,19 +104,14 @@ class MachineWorkTable extends React.Component{
         document.getElementsByName('paidStatus')[1].checked=false;
     }
 
-    //Prepare data for payment
-    preparePaymentData = (item, index) =>{
-        this.state.drillingFeet= this.state.drillingFeet + item.drilling_feet;
-        this.state.dieselQuantity= this.state.dieselQuantity + item.diesel_amount;
-        this.state.payment= this.state.payment + item.payment;
-    }
-
-    //Set drilling feet rate
+    //Set drilling rate
     setDrillingRate = (rate) =>{
         this.setState({
             drillingRate: rate
         });
-
+        this.setState({
+            totalPayment: (this.state.drillingFeet*rate) - (this.state.dieselQuantity*this.state.dieselRate) - (this.state.payment)
+        });
     }
 
     //Set diesel rate
@@ -123,7 +119,41 @@ class MachineWorkTable extends React.Component{
         this.setState({
             dieselRate: rate
         });
+        this.setState({
+            totalPayment: (this.state.drillingFeet*this.state.drillingRate) - (this.state.dieselQuantity*rate) - (this.state.payment)
+        });
     }
+
+    //Prepare data for payment
+    preparePaymentData = (item, index) =>{
+        this.state.drillingFeet= this.state.drillingFeet + item.drilling_feet;
+        this.state.dieselQuantity= this.state.dieselQuantity + item.diesel_amount;
+        this.state.payment= this.state.payment + item.payment;
+    }
+
+    //Form Handler
+    onSubmit = e => {
+        axios
+        .post("http://127.0.0.1:8000/machine-payment/", {
+            party: this.props.partyName,
+            start_date: this.state.minDate,
+            end_date: this.state.maxFilterDate,
+            payment: this.state.totalPayment,
+            remark: this.state.remark
+        })
+        .then(res => {
+            this.fetchProduct();
+            this.setState({
+                responseMessage: res.data
+            });
+            console.log("Response message : ",res.data);
+        })
+        .catch(error => {
+            console.log("Error : ",error);
+        });
+        e.target.reset();
+        e.preventDefault();
+    };
 
     constructor(props){
         super(props);
@@ -148,6 +178,8 @@ class MachineWorkTable extends React.Component{
             payment: 0,
             drillingRate: 0,
             dieselRate: 0,
+            totalPayment: 0,
+            remark: "",
             buttonStatus: {
                 visibility: "hidden"
             },
@@ -166,6 +198,7 @@ class MachineWorkTable extends React.Component{
         this.setDateRestriction = this.setDateRestriction.bind(this);
         this.setDrillingRate = this.setDrillingRate.bind(this);
         this.setDieselRate = this.setDieselRate.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
         this.fetchProduct(this.props.partyName);
     }
 
@@ -176,8 +209,6 @@ class MachineWorkTable extends React.Component{
     }
 
     render(){
-        console.log("Drilling rate : ",this.state.drillingRate);
-        console.log("Diesel rate : ",this.state.dieselRate);
         // Reset all list so that next time it don't carry same values
         this.state.paidWork=[];
         this.state.unPaidWork=[];
@@ -321,23 +352,33 @@ class MachineWorkTable extends React.Component{
                                 Payment
                                 </button>   
                             }>
-                                <div>
-                                    <h3>Payment</h3>
-                                    <br/>
-                                    {this.state.minDate} to {this.state.maxFilterDate}
-                                    <p>Total Drilling Feet : {this.state.drillingFeet}</p>
-                                    <input type="text" placeholder="Drilling Feet Rate" className="paymentInput" onChange={e => this.setDrillingRate(e.target.value)}/>
-                                    <hr/>
-                                    <p>Total Diesel Quantity: {this.state.dieselQuantity}</p>
-                                    <input type="text" placeholder="Diesel Rate" className="paymentInput" onChange={e => this.setDieselRate(e.target.value)}/>
-                                    <hr/>
-                                    <p>Total Recieved Payment : {this.state.payment}</p>
-                                    <hr />
-                                    <p>Total Payment : {(this.state.drillingFeet*this.state.drillingRate)-(this.state.dieselQuantity*this.state.dieselRate)-(this.state.payment)}</p>
-                                    <hr />
-                                    <button>
-                                        Pay
-                                    </button>
+                                <div className="d-flex justify-content-center align-items-center">
+                                    <form
+                                        className="form-container form-group"
+                                        onSubmit={e => this.onSubmit(e)}
+                                    >
+                                        <h3>Payment</h3>
+                                        <br/>
+                                        {this.state.minDate} to {this.state.maxFilterDate}
+                                        <p>Total Drilling Feet : {this.state.drillingFeet}</p>
+                                        <input type="text" placeholder="Drilling Feet Rate" className="paymentInput" onChange={e => this.setDrillingRate(e.target.value)}/>
+                                        <hr/>
+                                        <p>Total Diesel Quantity: {this.state.dieselQuantity}</p>
+                                        <input type="text" placeholder="Diesel Rate" className="paymentInput" onChange={e => this.setDieselRate(e.target.value)}/>
+                                        <hr/>
+                                        <p>Total Recieved Payment : {this.state.payment}</p>
+                                        <hr />
+                                        <p>Total Payment : {this.state.totalPayment}</p>
+                                        <hr />
+                                        <input type="text" placeholder="Remark" className="remark" onChange={e => this.setState({ remark: e.target.value })} />
+                                        <hr />
+                                        <button
+                                            type="submit"
+                                            className="btn btn-outline-dark"
+                                            >
+                                                Pay
+                                        </button>
+                                    </form>    
                                 </div>
                             </Popup>                            
                         </div>
