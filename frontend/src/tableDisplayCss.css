@@ -1,0 +1,51 @@
+/*Physical section*/
+#tableComponent{
+	height:100%;
+	width: 100%;
+}
+.upperTable{
+	height: 10%;
+	width: 100%;
+}
+#midTable{
+	height: 80%;
+	width: 100%;
+	overflow-y: scroll;
+}
+.lowerTable{
+	height: 10%;
+	width: 100%;
+}
+
+/*Background section*/
+.lightGray{
+    background-color: rgb(211,211,211);
+}
+
+/*Font section*/
+.commonFont{
+    font-size: 1.4vw;
+}
+
+/*Input controll*/
+input[type="radio"]{
+    width: 40%;
+}
+
+/*Position controll*/
+thead {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+} 
+
+.lowerTable div{
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.upperTable div{
+	margin-top: auto;
+	margin-bottom: auto;
+}
+

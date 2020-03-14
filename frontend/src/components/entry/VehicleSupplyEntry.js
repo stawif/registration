@@ -8,46 +8,18 @@ export default class VehicleSupplyEntry extends React.Component {
   //Fetching Products from Database to use them in AutoSugestion and for Checking While Entered Value Exists in Database or Not
   fetchProduct = async () => {
     try {
-      const responsePartyList = await fetch(
-        "http://127.0.0.1:8000/list-of-vehicleparty/"
-      );
-      const jsonPartyList = await responsePartyList.json();
-
-      jsonPartyList.map(item => this.state.partyNamesFromApi.push(item.name));
-
       const responseItemList = await fetch(
-        "http://127.0.0.1:8000/list-of-item/"
+        "http://127.0.0.1:8000/list-of-material/"
       );
       const jsonItemList = await responseItemList.json();
 
-      jsonItemList.map(item => this.state.itemNamesFromApi.push(item.name));
+      jsonItemList.map(item => this.state.materialNamesFromApi.push(item.name));
     } catch {
       this.toggleLoadStatus();
     }
+    
   };
 
-  // Check existence of party name
-  checkParty = dataFromChild => {
-    try {
-      this.setState({
-        responseMessage: "",
-        buttonStatus: {
-          visibility: "hidden"
-        }
-      });
-      const showList = (item, index) => {
-        if (dataFromChild.toLowerCase() === item.toLowerCase()) {
-          this.setState({
-            buttonStatus: {
-              visibility: "visible"
-            }
-          });
-        } else {
-        }
-      };
-      this.state.partyNamesFromApi.forEach(showList);
-    } catch (err) {}
-  };
 
   //Check Existence of item list
   checkItem = dataFromChild => {
@@ -68,7 +40,7 @@ export default class VehicleSupplyEntry extends React.Component {
         } else {
         }
       };
-      this.state.itemNamesFromApi.forEach(showList);
+      this.state.materialNamesFromApi.forEach(showList);
     } catch (err) {}
   };
 
@@ -76,12 +48,12 @@ export default class VehicleSupplyEntry extends React.Component {
   onSubmit = e => {
     axios
       .post("http://127.0.0.1:8000/enter-vehicle-supply/", {
-        party: this.state.selectedParty,
-        item: this.state.selectedItem,
+        material: this.state.selectedItem,
         date: this.state.date,
         quantity: this.state.quantity
       })
       .then(res => {
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });
@@ -89,6 +61,7 @@ export default class VehicleSupplyEntry extends React.Component {
       .catch(error => {
         alert(error.response.request._response);
       });
+  
     e.target.reset();
     e.preventDefault();
   };
@@ -120,11 +93,9 @@ export default class VehicleSupplyEntry extends React.Component {
     super(props);
 
     this.state = {
-      partyNamesFromApi: [],
-      itemNamesFromApi: [],
+      materialNamesFromApi: [],
 
       date: null,
-      selectedParty: "",
       selectedItem: "",
       quantity: 0,
       responseMessage: "",
@@ -140,7 +111,6 @@ export default class VehicleSupplyEntry extends React.Component {
     };
 
     this.fetchProduct = this.fetchProduct.bind(this);
-    this.checkParty = this.checkParty.bind(this);
     this.checkItem = this.checkItem.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleLoadStatus = this.toggleLoadStatus.bind(this);
@@ -160,23 +130,11 @@ export default class VehicleSupplyEntry extends React.Component {
         <p className="headingViewPart">Vehicle Supply Entry</p>
         <div className="pt-5">
           <Autocomplete
-            suggestions={this.state.partyNamesFromApi}
-            callbackFromParent={dataFromChild => {
-              this.state.selectedParty = dataFromChild;
-            }}
-            checkFromParent={this.checkParty}
-            placeholderfrom={"Party name"}
-          />
-
-          <p>{this.state.partyExistMessage}</p>
-          <br />
-
-          <Autocomplete
-            suggestions={this.state.itemNamesFromApi}
+            suggestions={this.state.materialNamesFromApi}
             callbackFromParent={dataFromChild => {
               this.state.selectedItem = dataFromChild;
             }}
-            placeholderfrom={"Item name"}
+            placeholderfrom={"Material name"}
             checkFromParent={this.checkItem}
           />
 

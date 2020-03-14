@@ -53,7 +53,7 @@ export default class PurchasePartyRegistration extends React.Component {
         village: this.state.partyVillage
       })
       .then(res => {
-        this.state.fetchProduct();
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });
@@ -135,6 +135,7 @@ export default class PurchasePartyRegistration extends React.Component {
             }}
           />
           <p>{this.state.partyExistMessage}</p>
+          
 
           <InputContactField
             callbackFromParent={dataFromChild => {

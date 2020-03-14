@@ -121,12 +121,12 @@ export default class MachineRegistration extends React.Component {
           <p className="headingViewPart">Machine Registration</p>
           <div className="pt-5">
             <InputCommonName
-              minLengthh={5}
+              minLengthh={"5"}
               placeholderParent={"Machine Name"}
               callbackFromParent={dataFromChild => {
                 this.state.machineName = dataFromChild;
+                this.checkMachine();
               }}
-              checkFromParent={this.checkMachine}
             />
           </div>
           <p>{this.state.machineExistStatus}</p>

@@ -4,6 +4,9 @@ import Autocomplete from "./AutoComplete.jsx";
 import InputDateField from "../modular/InputDateField";
 import InputRemarkField from "../modular/InputRemarkField";
 import InputQuantityField from "../modular/InputQuantityField";
+import InputRateField from "../modular/InputRateField";
+
+
 export default class MachineWorkEntry extends React.Component {
   //Fetching Machines And Machine Parties from DataBase
   fetchProduct = async () => {
@@ -83,9 +86,12 @@ export default class MachineWorkEntry extends React.Component {
         date: this.state.date,
         drilling_feet: this.state.drillingFeet,
         diesel_amount: this.state.dieselAmount,
-        remark: this.state.remark
+        remark: this.state.remark,
+        payment: this.state.payment,
+        holes: this.state.holes
       })
       .then(res => {
+        this.fetchProduct();
         this.setState({
           responseMessage: res.data
         });
@@ -126,7 +132,8 @@ export default class MachineWorkEntry extends React.Component {
     this.state = {
       partyNamesFromApi: [],
       machineNamesFromApi: [],
-
+      payment: 0,
+      holes: 0,
       date: null,
       selectedMachine: "",
       selectedParty: "",
@@ -136,12 +143,7 @@ export default class MachineWorkEntry extends React.Component {
       responseMessage: "",
       buttonStatus: {
         visibility: "visible"
-      }
-      // ,
-      // radioButtonStyle: {
-      //   float: "left"
-      // }
-      ,
+      },
       loadingStatus: {
         visibility: "visible"
       },
@@ -181,6 +183,7 @@ export default class MachineWorkEntry extends React.Component {
 
           <p>{this.state.partyExistMessage}</p>
           <br />
+          
 
           <Autocomplete
             suggestions={this.state.machineNamesFromApi}
@@ -199,19 +202,11 @@ export default class MachineWorkEntry extends React.Component {
               this.state.date = dataFromChild;
             }}
           />
-          <br />
-          <br />
-
-          <InputRemarkField
-            callbackFromParent={dataFromChild => {
-              this.state.remark = dataFromChild;
-            }}
-          />
 
           <br />
           <br />
-          <InputQuantityField
-            placeholder={"Diesel Amount"}
+          <InputRateField
+            placeholderParent={"Diesel Amount"}
             callbackFromParent={dataFromChild => {
               this.state.dieselAmount = parseInt(dataFromChild);
             }}
@@ -224,6 +219,32 @@ export default class MachineWorkEntry extends React.Component {
             placeholder={"Drilling Feet"}
             callbackFromParent={dataFromChild => {
               this.state.drillingFeet = parseInt(dataFromChild);
+            }}
+          />
+          <br />
+          <br />
+
+          <InputQuantityField
+            placeholder={"Holes"}
+            callbackFromParent={dataFromChild => {
+              this.state.holes = parseInt(dataFromChild);
+            }}
+          />
+          <br />
+          <br />
+
+          <InputRateField
+            placeholderParent={"Payment"}
+            callbackFromParent={dataFromChild => {
+              this.state.payment = dataFromChild;
+            }}
+          />
+          <br />
+          <br />
+
+          <InputRemarkField
+            callbackFromParent={dataFromChild => {
+              this.state.remark = dataFromChild;
             }}
           />
         </div>

@@ -12,7 +12,7 @@ export default class InputPartyVillageField extends Component {
     return (
       <Fragment>
         <input
-            type="number"
+            type="text"
             className="mb-2"
             placeholder={this.props.placeholder}
             autoComplete="off"

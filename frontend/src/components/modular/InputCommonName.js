@@ -10,7 +10,6 @@ export default class InputCommonName extends Component {
 
   onChange = e => {
     this.props.callbackFromParent(e.target.value);
-    this.props.checkFromParent(e.target.value);
   };
 
   render() {
@@ -21,8 +20,8 @@ export default class InputCommonName extends Component {
           className="mb-2"
           placeholder={this.props.placeholderParent}
           autoComplete="off"
-          maxLength="30"
           minLength={this.props.minLengthh}
+          maxLength="30"
           onChange={this.onChange}
           required
         />

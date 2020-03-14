@@ -16,10 +16,10 @@ body{
 	height: 100%;
 }
 #navBar{
-	height: 15%;
+	height: 10%;
 }
 #displayPart{
-	height: 85%;
+	height: 90%;
 }
 #viewPart{
 	width: 100%;
@@ -38,6 +38,7 @@ body{
 	font-size: 40px;
 	font-family: 'Squada One', cursive;
 }
+
 input{
 	border:0;
 	outline:0;
@@ -45,6 +46,7 @@ input{
 	border-bottom: 1px solid black;
 	width:100%;
 }
+
 
 @media only screen and (min-width: 1000px){
 	#viewPart{
@@ -86,3 +88,5 @@ input{
 		width: 80%;
 	}
 }
+
+
