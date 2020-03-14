@@ -247,102 +247,113 @@ class MachineWorkTable extends React.Component{
 
         return(
             <div id="tableComponent">
-                <div className="row upperTable bg-primary">
-                    
-                    <div className="col-sm-2">
-                        <blockquote className="commonFont blockquote text-center">
-                            <p className="mb-0" onClick={e => this.setPaidStatusNull()}><b>{this.props.partyName}</b></p>
-                            </blockquote>                        
-                    </div>
+			
+                <div className="row upperTable bg-primary justify-content-center align-items-center">
+                  
+						<div className="col-sm-2">
+							<blockquote className="commonFont blockquote text-center">
+								<p className="mb-0" onClick={e => this.setPaidStatusNull()}><b>{this.props.partyName}</b></p>
+							</blockquote>                        
+						</div>
 
-                    <div className="col-sm-2">
-                        <blockquote className="commonFont blockquote text-center">
-                            <p className="mb-0">{this.state.workDetail.contact}</p>
-                            {/*<footer className="blockquote-footer"> 7742879818</footer>
-                        */}</blockquote>                        
-                    </div>
+						<div className="col-sm-2">
+							<blockquote className="commonFont blockquote text-center">
+								<p className="mb-0">{this.state.workDetail.contact}</p>
+								{/*<footer className="blockquote-footer"> 7742879818</footer>*/}
+							</blockquote>                        
+						</div>
                     
-                    <div className="col-sm-2">
-                    <blockquote className="commonFont blockquote text-center">
-                            <input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>paid
-                    </blockquote>                        
-                    </div>
+						<div className="col-sm-2">
+							<blockquote className="commonFont blockquote text-center">
+								<input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>paid
+							</blockquote>                        
+						</div>
                     
-                    <div className="col-sm-2">
-                    <blockquote className="commonFont blockquote text-center">
-                            <input type="radio" name="paidStatus" value="unpaid" onChange={ e => {this.setPaidStatus(e.target.value)}} />Unpaid
-                    </blockquote>                        
-                    </div>
+						<div className="col-sm-2">
+							<blockquote className="commonFont blockquote text-center">
+								<input type="radio" name="paidStatus" value="unpaid" onChange={ e => {this.setPaidStatus(e.target.value)}} />Unpaid
+							</blockquote>                        
+						</div>
                     
-                    <div className="col-sm-2">
-                        <input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
-                            this.setState({
-                                minFilterDate: e.target.value
-                            });
-                        }}/>
-                    </div>
+						<div className="col-sm-2">
+							<input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
+								this.setState({
+									minFilterDate: e.target.value
+								});
+							}}/>
+						</div>
 
-                    <div className="col-sm-2">
-                        <input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
-                            this.setState({
-                                maxFilterDate: e.target.value
-                            });
-                        }}/>
-                    </div>
-                </div>
-
-                <div id="midTable">
-                        <table className=" table table-borderd">
-                            <thead className="thead-dark">
+						<div className="col-sm-2">
+							<input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
+								this.setState({
+									maxFilterDate: e.target.value
+								});
+							}}/>
+						</div>
+					
+				</div>
+				
+				<div className="row topTable">
+						<button className="col-6 bg-primary">Party</button>
+						<button className="col-6 bg-primary">Payment</button>
+				</div>
+				
+				<div className="midTable">
+                    <table className=" table table-borderd">
+                        <thead className="thead-dark">
+                            <tr>
+                                <th>Paid</th>
+                                <th>Date</th>
+                                <th>Drilling Feet</th>
+                                <th>Holes</th>
+                                <th>Diesel Amount</th>
+                                <th>Machine</th>
+                                <th>Payment</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.currentWork.map((work) => (
                                 <tr>
-                                    <th>Paid</th>
-                                    <th>Date</th>
-                                    <th>Drilling Feet</th>
-                                    <th>Holes</th>
-                                    <th>Diesel Amount</th>
-                                    <th>Machine</th>
-                                    <th>Payment</th>
-                                    <th>Remark</th>
+                                    <td>{<input type="checkbox" checked={work.paid}></input>}</td>
+                                    <td>{work.date}</td>
+                                    <td>{work.drilling_feet}</td>
+                                    <td>{work.holes}</td>
+                                    <td>{work.diesel_amount}</td>
+                                    <td>{work.machine}</td>
+                                    <td>{work.payment}</td>
+                                    <td>{work.remark}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.currentWork.map((work) => (
-                                    <tr>
-                                        <td>{<input type="checkbox" checked={work.paid}></input>}</td>
-                                        <td>{work.date}</td>
-                                        <td>{work.drilling_feet}</td>
-                                        <td>{work.holes}</td>
-                                        <td>{work.diesel_amount}</td>
-                                        <td>{work.machine}</td>
-                                        <td>{work.payment}</td>
-                                        <td>{work.remark}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
 
-                <div className="row lowerTable text-center bg-primary commonFont">
-                        <div className="col-sm-2">
-                            <p>Drilling Feet =</p>
-                        </div>
-                        <div className="col-sm-1">
-                            <p>{this.state.drillingFeet}</p>
-                        </div>
+                <div className="row lowerTable text-center bg-primary commonFont justify-content-center align-items-center">
+                    <div className="col-sm-2">
+						<p>Drilling Feet =</p>
+                    </div>
+					
+					<div className="col-sm-1">
+						<p>{this.state.drillingFeet}</p>
+					</div>
 
-                        <div className="col-sm-2">
-                            <p>Diesel =</p>
-                        </div>
-                        <div className="col-sm-1">
-                                <p>{this.state.dieselQuantity}</p>
-                        </div>
+					<div className="col-sm-2">
+						<p>Diesel =</p>
+					</div>
+					
+					<div className="col-sm-1">
+						<p>{this.state.dieselQuantity}</p>
+					</div>
 
-                        <div className="col-sm-2">
-                            <p>Payment =</p>
-                        </div>
-                        <div className="col-sm-1">
-                            <p>{this.state.payment}</p>
-                        </div>
+
+					<div className="col-sm-2">
+						<p>Payment =</p>
+					</div>
+					
+					<div className="col-sm-1">
+						<p>{this.state.payment}</p>
+					</div>
 
                         <div className="col-sm-3">
                             <Popup modal trigger={

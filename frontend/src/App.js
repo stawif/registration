@@ -208,6 +208,8 @@ class App extends React.Component {
                       >
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.machineReg
@@ -218,6 +220,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.vehicleReg
@@ -228,6 +232,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(this.state.allPages.materialReg)
                           }
@@ -236,6 +242,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.workerReg
@@ -246,6 +254,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.machinePartyReg
@@ -256,6 +266,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.vehiclePartyReg
@@ -266,6 +278,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.purchasePartyReg
@@ -294,6 +308,8 @@ class App extends React.Component {
                       >
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.addMachineWork
@@ -304,6 +320,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.addVehicleWork
@@ -314,6 +332,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.addDailyWork
@@ -324,6 +344,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.addPurchaseDetail
@@ -334,6 +356,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.addMachineSupply
@@ -344,6 +368,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.addVehicleSupply
@@ -354,6 +380,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.partEntry
@@ -364,6 +392,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.ownerDebitEntry
@@ -374,6 +404,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.dailyExpenseEntry
@@ -402,6 +434,8 @@ class App extends React.Component {
                       >
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.machineDisplay
@@ -412,6 +446,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.vehicleDisplay
@@ -422,6 +458,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.itemDisplay
@@ -432,6 +470,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.workerDisplay
@@ -442,6 +482,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.machinePartyDisplay
@@ -452,6 +494,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.vehiclePartyDisplay
@@ -462,6 +506,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.purchasePartyDisplay
@@ -472,6 +518,8 @@ class App extends React.Component {
                         </a>
                         <a
                           className="dropdown-item"
+						  data-toggle="collapse" 
+						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.machineWorkTable
