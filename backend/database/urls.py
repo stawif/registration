@@ -2,9 +2,10 @@ from django.urls import path
 from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , MaterialList , AddMaterial,
                     MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
                     AddVehicleParty,AddMachineWork,AddVehicleWork,AddWorker,AddPurchase, WorkerList,AddDailyWork,
-                    AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,AddPart,PartList,
+                    AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,AddPart,PartList,PurchaseList,
                     WorkerList, PartyContact,VehiclePayment,PurchasePayment,MachineWorkDetail,VehicleWorkDetail,
-                    PartyThroughContact,AddOwnerDebit,OnwerDebitList,AddDailyExpense,DailyExpenseList,WorkerPayment)
+                    PartyThroughContact,AddOwnerDebit,OnwerDebitList,AddDailyExpense,DailyExpenseList,WorkerPayment,
+                    PurchaseDetail)
 
 urlpatterns = [
     # """
@@ -21,8 +22,10 @@ urlpatterns = [
     path('list-of-machineparty/',MachinePartyList.as_view()),
     path('list-of-vehicleparty/',VehiclePartyList.as_view()),
     path('list-of-purchaseparty/',PurchasePartyList.as_view()),
+    path('list-of-purchase/',PurchaseList.as_view()),
     path('machine-work-detail/',MachineWorkDetail.as_view()),
     path('vehicle-work-detail/',VehicleWorkDetail.as_view()),
+    path('purchase-detail/',PurchaseDetail.as_view()),
     path('party-through-contact/', PartyThroughContact.as_view()),
     # """
     # Registration URL

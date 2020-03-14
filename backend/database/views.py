@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , MaterialSerializer,
                             PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
                             MachineWorkSerializer , VehicleWorkSerializer,WorkerSerializer,
-                            DailyWorkSerializer,MaterialListSerializer,PartSerializer)
+                            DailyWorkSerializer,MaterialListSerializer,PartSerializer,PurchaseSerializer)
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Material , Credit,
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,Part,DailyExpense,
@@ -127,6 +127,15 @@ class PurchasePartyList(APIView):
     def get(self,request):
         queryset = PurchaseParty.objects.all()
         serializer = PurchasePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class PurchaseList(APIView):
+    """
+    View to return List of Purchase.
+    """
+    def get(self,request):
+        queryset = Purchase.objects.all()
+        serializer = PurchaseSerializer(queryset,many=True)
         return Response(serializer.data)
 
 class PartList(APIView):
@@ -875,15 +884,12 @@ class MachineWorkDetail(APIView):
             return Response('machine party does not exists',status=status.HTTP_200_OK)
         try:
             party_work_detail = MachineWork.objects.filter(party=party_detail).values('machine','date','drilling_feet',
-                                'diesel_amount','remark','average_feet','holes','payment')
+                                'diesel_amount','remark','average_feet','holes','payment').order_by('date')
         except:
             return Response('no work exists for this machine party',status=status.HTTP_200_OK)
-        if len(party_work_detail) == 0:
-            return Response('no work exists for this machine party',status=status.HTTP_200_OK)
-        else:
-            party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
+        party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
                                     'crasher':party_detail.crasher,'work':list(party_work_detail)}
-            return Response(party_detail_json,status=status.HTTP_200_OK)
+        return Response(party_detail_json,status=status.HTTP_200_OK)
 
 class VehicleWorkDetail(APIView):
     """
@@ -901,15 +907,36 @@ class VehicleWorkDetail(APIView):
         except Exception as e:
             return Response('vehicle party does not exists',status=status.HTTP_200_OK)
         try:
-            party_work_detail = VehicleWork.objects.filter(party=party_detail).values('date','five_feet','two_half_feet','remark','payment')
+            party_work_detail = VehicleWork.objects.filter(party=party_detail).values('date','five_feet','two_half_feet','remark','payment').order_by('date')
         except:
             return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
-        if len(party_work_detail) == 0:
-            return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
-        else:
-            party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
+        party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
                                     'work':list(party_work_detail)}
-            return Response(party_detail_json,status=status.HTTP_200_OK)
+        return Response(party_detail_json,status=status.HTTP_200_OK)
+
+class PurchaseDetail(APIView):
+    """
+    View to Get Vehicle Work Detail of a Purchase.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        try:
+            api_party = request.data['party']
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            party_detail = PurchaseParty.objects.get(name=api_party)
+        except Exception as e:
+            return Response('purchase party does not exists',status=status.HTTP_200_OK)
+        try:
+            purchase_detail = Purchase.objects.filter(party=party_detail).values('date','Material','quantity','remark',
+                                                    'rate','net_amount').order_by('date')
+        except:
+            return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
+        party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
+                                    'work':list(purchase_detail)}
+        return Response(party_detail_json,status=status.HTTP_200_OK)
 
 class WorkerPayment(APIView):
     """
@@ -939,4 +966,4 @@ class WorkerPayment(APIView):
             return Response("payment not saved due to network error",status=status.HTTP_404_NOT_FOUND)
 
 
-            
+
