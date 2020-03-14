@@ -320,6 +320,7 @@ class MachineWorkTable extends React.Component{
 				</div>
 				
 				<div className="row topTable">
+<<<<<<< HEAD
 						<button className="col-6 bg-primary" onClick={() =>
                             this.updateCurrentPage(
                               this.state.allPages.partyFilter
@@ -329,6 +330,24 @@ class MachineWorkTable extends React.Component{
                             this.updateCurrentPage(
                               this.state.allPages.paymentFilter
 						)}>Payment</button>
+=======
+                    <div className="col-6">
+                        {/*Party and filter popup*/}
+                        <Popup modal trigger={
+                            <button className="bg-primary">Party</button>
+                        }>
+                            <h3>Party</h3>
+                        </Popup>
+                    </div>
+                    <div className="col-6">    
+                        {/*Payment popup*/}
+                        <Popup modal trigger={
+                            <button className="bg-primary">Payment</button>
+                        }>
+                            <h3>Payment</h3>
+                        </Popup>
+                    </div>    
+>>>>>>> 54d9b4e8cf4ba0fca126f56336b630e8fc9a20f7
 				</div>
 				
 				<div className="midTable">

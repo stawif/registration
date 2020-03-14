@@ -1,4 +1,5 @@
 import React from "react";
+import '../../tableDisplayCss.css';
 
 export default class MaterialDisplay extends React.Component {
   state = {

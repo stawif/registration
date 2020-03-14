@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../tableDisplayCss.css';
 
 class MachinePartyDisplay extends React.Component {
 	state = {
