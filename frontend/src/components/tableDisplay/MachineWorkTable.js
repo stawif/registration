@@ -2,6 +2,8 @@ import React from 'react';
 import '../../tableDisplayCss.css';
 import Popup from "reactjs-popup";
 import axios from "axios";
+import PartyFilter from './PartyFilter';
+import PaymentFilter from './PaymentFilter';
 
 class MachineWorkTable extends React.Component{
     //setDateRestriction 
@@ -130,6 +132,12 @@ class MachineWorkTable extends React.Component{
         this.state.dieselQuantity= this.state.dieselQuantity + item.diesel_amount;
         this.state.payment= this.state.payment + item.payment;
     }
+	 updateCurrentPage = async choosePage => {
+			console.log("choosePage : " + choosePage);
+			await this.setState({
+			currentPage: choosePage
+    });
+  };
 
     //Form Handler
     onSubmit = e => {
@@ -186,7 +194,12 @@ class MachineWorkTable extends React.Component{
             paymentData:{
                 minToDate: null,
                 maxToDate: null,
-            }
+            },
+			allPages: {
+				partyFilter: "partyFilter",
+				paymentFilter: "paymentFilter"
+			},
+			currentPage: "partyFilter"
         }
         this.state.currentWork= null;
         this.fetchProduct = this.fetchProduct.bind(this);
@@ -200,7 +213,9 @@ class MachineWorkTable extends React.Component{
         this.setDieselRate = this.setDieselRate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.fetchProduct(this.props.partyName);
+		this.updateCurrentPage = this.updateCurrentPage.bind(this);
     }
+		
 
     componentWillReceiveProps(nextProps){
         if(this.props.partyName != nextProps.partyName){
@@ -209,6 +224,17 @@ class MachineWorkTable extends React.Component{
     }
 
     render(){
+		let currentComponent;
+		if (this.state.currentPage === this.state.allPages.PartyFilter) {
+			currentComponent = <PartyFilter />;
+		}
+		else if (this.state.currentPage === this.state.allPages.PartyFilter) {
+			currentComponent = <PaymentFilter />;
+		}
+		else {
+			currentComponent = <PartyFilter />;
+		}
+		
         // Reset all list so that next time it don't carry same values
         this.state.paidWork=[];
         this.state.unPaidWork=[];
@@ -294,8 +320,15 @@ class MachineWorkTable extends React.Component{
 				</div>
 				
 				<div className="row topTable">
-						<button className="col-6 bg-primary">Party</button>
-						<button className="col-6 bg-primary">Payment</button>
+						<button className="col-6 bg-primary" onClick={() =>
+                            this.updateCurrentPage(
+                              this.state.allPages.partyFilter
+                            )
+                          }>Party</button>
+						<button className="col-6 bg-primary" onClick={() =>
+                            this.updateCurrentPage(
+                              this.state.allPages.paymentFilter
+						)}>Payment</button>
 				</div>
 				
 				<div className="midTable">

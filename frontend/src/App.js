@@ -416,7 +416,7 @@ class App extends React.Component {
                         </a>
                       </div>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item dropdown">
                       <a
                         className="nav-link dropdown-toggle"
                         href=""
