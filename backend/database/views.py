@@ -2,16 +2,17 @@ from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , MaterialSerializer,
                             PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
                             MachineWorkSerializer , VehicleWorkSerializer,WorkerSerializer,
-                            DailyWorkSerializer,MaterialListSerializer)
+                            DailyWorkSerializer,MaterialListSerializer,PartSerializer)
 from rest_framework.views import APIView
-from .models import  (Machine , Owner , Vehicle , Recorder , Material , 
-                        MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,
-                        MixDebit,Worker,Purchase,DailyWork,MachineSupply,VehicleSupply,MixCredit)
+from .models import  (Machine , Owner , Vehicle , Recorder , Material , Credit,
+                        MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,Part,DailyExpense,
+                        MixDebit,Worker,Purchase,DailyWork,MachineSupply,VehicleSupply,MixCredit,Debit)
 from rest_framework.response import Response
 from django.http import Http404 ,JsonResponse,HttpResponse
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 import json
+from datetime import date
 # Create your views here.
 
 """
@@ -59,7 +60,114 @@ class PartyThroughContact(APIView):
         jsonPacket = json.dumps(packet)
         return JsonResponse(jsonPacket, safe= False)
 
-    
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# APIView for List (get request)
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+class MachineList(APIView):
+    """
+    View to return List of Vehicles.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        queryset = Machine.objects.all()
+        serializer = MachineSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class VehicleList(APIView):
+    """
+    View to return List of Vehicles.
+    """
+    def get(self,request):
+        queryset = Vehicle.objects.all()
+        serializer = VehicleSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class MaterialList(APIView):
+    """
+    View to return List of Party.
+    """
+    def get(self,request):
+        queryset = Material.objects.all()
+        serializer = MaterialListSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class WorkerList(APIView):
+    """
+    View to return List of party
+    """
+    def get(self,request):
+        queryset = Worker.objects.all()
+        serializer = WorkerSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class MachinePartyList(APIView):
+    """
+    View to return List of Machine Party.
+    """
+    def get(self,request):
+        queryset = MachineParty.objects.all()
+        serializer = MachinePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class VehiclePartyList(APIView):
+    """
+    View to return List of Vehicle Party.
+    """
+    def get(self,request):
+        queryset = VehicleParty.objects.all()
+        serializer = VehiclePartySerializer(queryset,many=True)
+        return Response(serializer.data)   
+
+class PurchasePartyList(APIView):
+    """
+    View to return List of Purchase Party.
+    """
+    def get(self,request):
+        queryset = PurchaseParty.objects.all()
+        serializer = PurchasePartySerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class PartList(APIView):
+    """
+    View to return List of Parts.
+    """
+    def get(self,request):
+        part_name_i = Part.objects.all()
+        part_list = []
+        for i in part_name_i:
+            debit_i = Debit.objects.get(debit_id=i.debit_id)
+            part_dict = {"name":i.name,"date":debit_i.date,"debit_amount":debit_i.debit_amount,"remark":debit_i.remark}
+            part_list.append(part_dict)
+        return Response(part_list,status=status.HTTP_200_OK)
+
+class OnwerDebitList(APIView):
+    """
+    View to return List of Owner Debit.
+    """
+    def get(self,request):
+        debit_i = Debit.objects.filter(debit_id=2).values('debit_amount','remark','date')
+        print(debit_i)
+        return Response(debit_i,status=status.HTTP_200_OK)
+
+class DailyExpenseList(APIView):
+    """
+    View to return List of Daily Expense.
+    """
+    def get(self,request):
+        daily_expense_i = DailyExpense.objects.all()
+        daily_expense_list = []
+        for i in daily_expense_i:
+            debit_i = Debit.objects.get(debit_id=i.debit_id)
+            daily_expense_dict = {"category":i.category,"date":debit_i.date,"debit_amount":debit_i.debit_amount,"remark":debit_i.remark}
+            daily_expense_list.append(daily_expense_dict)
+        return Response(daily_expense_list,status=status.HTTP_200_OK)
+
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# APIView for Registration (post request)
+# """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 class AddMachine(APIView):
     """
     View to Add New Machine in Database
@@ -85,26 +193,6 @@ class AddMachine(APIView):
                 serializer.save()
                 return Response("{} Machine Added".format(api_name), status=status.HTTP_201_CREATED)
             return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
-
-class MachineList(APIView):
-    """
-    View to return List of Vehicles.
-    api_ is for indication that this data in came from api
-    _i is for indication that this data is a model instance
-    """
-    def get(self,request):
-        queryset = Machine.objects.all()
-        serializer = MachineSerializer(queryset,many=True)
-        return Response(serializer.data)
-
-class VehicleList(APIView):
-    """
-    View to return List of Vehicles.
-    """
-    def get(self,request):
-        queryset = Vehicle.objects.all()
-        serializer = VehicleSerializer(queryset,many=True)
-        return Response(serializer.data)
 
 class AddVehicle(APIView):
     """
@@ -159,24 +247,6 @@ class AddRecorder(APIView):
                 return Response("{} Recorder created".format(api_username), status=status.HTTP_201_CREATED)
             return Response("Either recorder exists or details are incorrect",status=status.HTTP_400_BAD_REQUEST)
 
-class MaterialList(APIView):
-    """
-    View to return List of Party.
-    """
-    def get(self,request):
-        queryset = Material.objects.all()
-        serializer = MaterialListSerializer(queryset,many=True)
-        return Response(serializer.data)
-
-class WorkerList(APIView):
-    """
-    View to return List of party
-    """
-    def get(self,request):
-        queryset = Worker.objects.all()
-        serializer = WorkerSerializer(queryset,many=True)
-        return Response(serializer.data)
-
 class AddMaterial(APIView):
     """
     View to Add New Material in Store in Database.
@@ -207,15 +277,6 @@ class AddMaterial(APIView):
                 serializer.save()
                 return Response("{} Store Material added".format(api_name), status=status.HTTP_201_CREATED)
             return Response("Either exists or incorrect details",status=status.HTTP_400_BAD_REQUEST)
-
-class MachinePartyList(APIView):
-    """
-    View to return List of Machine Party.
-    """
-    def get(self,request):
-        queryset = MachineParty.objects.all()
-        serializer = MachinePartySerializer(queryset,many=True)
-        return Response(serializer.data)
 
 class AddMachineParty(APIView):
     """
@@ -250,15 +311,6 @@ class AddMachineParty(APIView):
 
         return Response("please provide correct details",status=status.HTTP_400_BAD_REQUEST)
 
-class VehiclePartyList(APIView):
-    """
-    View to return List of Vehicle Party.
-    """
-    def get(self,request):
-        queryset = VehicleParty.objects.all()
-        serializer = VehiclePartySerializer(queryset,many=True)
-        return Response(serializer.data)
-
 class AddVehicleParty(APIView):
     """
     View to Add New Vehicle Party in Database.
@@ -291,15 +343,6 @@ class AddVehicleParty(APIView):
 
         return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
 
-class PurchasePartyList(APIView):
-    """
-    View to return List of Purchase Party.
-    """
-    def get(self,request):
-        queryset = PurchaseParty.objects.all()
-        serializer = PurchasePartySerializer(queryset,many=True)
-        return Response(serializer.data)
-
 class AddPurchaseParty(APIView):
     """
     View to Add New Purchase Party in Database.
@@ -327,6 +370,41 @@ class AddPurchaseParty(APIView):
             mix_debit_create.delete()
             return Response("Party not Created due to Network problem.")
         return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
+
+class AddWorker(APIView):
+    """
+    View to Add New Worker in Database.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        owner = Owner.objects.get(id=1)
+        try:
+            api_name = request.data['name']
+            api_contact = request.data['contact']
+            api_date = request.data['date']
+            api_village = request.data['village']
+            api_salary = request.data['salary']
+        except Exception as e:
+            return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
+        if request.data:
+            try:
+                mix_debit_create_i = MixDebit.objects.create(owner=owner,date=api_date)
+            except Exception:
+                return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
+            try:
+                worker_create_i = Worker.objects.create(owner=owner,debit_id=mix_debit_create_i,name=api_name,contact=int(api_contact),
+                village=api_village,salary=float(api_salary))
+                return Response("{} Worker Added".format(api_name),status=status.HTTP_201_CREATED)
+            except Exception as e:
+                print(e)
+                mix_debit_create_i.delete()
+                return Response('please provide all required datad',status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# APIView for Entry (post request)
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 class AddMachineWork(APIView):
     """
@@ -429,37 +507,6 @@ class AddPurchase(APIView):
             print(e)
             return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
         #return Response(status=status.HTTP_400_BAD_REQUEST)
-
-class AddWorker(APIView):
-    """
-    View to Add New Worker in Database.
-    api_ is for indication that this data in came from api
-    _i is for indication that this data is a model instance
-    """
-    def post(self,request):
-        owner = Owner.objects.get(id=1)
-        try:
-            api_name = request.data['name']
-            api_contact = request.data['contact']
-            api_date = request.data['date']
-            api_village = request.data['village']
-            api_salary = request.data['salary']
-        except Exception as e:
-            return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
-        if request.data:
-            try:
-                mix_debit_create_i = MixDebit.objects.create(owner=owner,date=api_date)
-            except Exception:
-                return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
-            try:
-                worker_create_i = Worker.objects.create(owner=owner,debit_id=mix_debit_create_i,name=api_name,contact=int(api_contact),
-                village=api_village,salary=float(api_salary))
-                return Response("{} Worker Added".format(api_name),status=status.HTTP_201_CREATED)
-            except Exception as e:
-                print(e)
-                mix_debit_create_i.delete()
-                return Response('please provide all required datad',status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 class AddDailyWork(APIView):
     """
@@ -584,38 +631,96 @@ class AddVehicleSupply(APIView):
                 print(e)
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)                
 
-class MachinePartyList(APIView):
+class AddPart(APIView):
     """
-    View to return List of Machine Party.
+    View for Add Parts
     api_ is for indication that this data in came from api
     _i is for indication that this data is a model instance
     """
-    def get(self,request):
-        queryset = MachineParty.objects.all()
-        serializer = MachinePartySerializer(queryset,many=True)
-        return Response(serializer.data)
+    def post(self,request):
+        owner_i = Owner.objects.get(id=1)
+        try:
+            api_name = request.data['name']
+            api_debit_amount = request.data['debit_amount']
+            api_remark = request.data['remark']
+            api_date = request.data['date']
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            mix_debit_i = MixDebit.objects.create(owner=owner_i,date=api_date)
+        except Exception as e:
+            print(e)
+            return Response('please provide correct date',status=status.HTTP_404_NOT_FOUND)
+        try:
+            part_i = Part.objects.create(owner=owner_i,debit_id=mix_debit_i,name=api_name)
+        except Exception as e:
+            mix_debit_i.delete()
+            return Response('part not added',status=status.HTTP_200_OK)
+        try:
+            debit_i = Debit.objects.create(owner=owner_i,debit_id=mix_debit_i,date=api_date,debit_amount=api_debit_amount,
+                                            remark=api_remark)
+            return Response('{} part added'.format(api_name),status=status.HTTP_201_CREATED)
+        except Exception as e:
+            part_i.delete()
+            mix_debit_i.delete()
+            return Response('part not added,please try again',status=status.HTTP_200_OK)
 
-class VehiclePartyList(APIView):
+class AddOwnerDebit(APIView):
     """
-    View to return List of Vehicle Party.
+    View to add Owner Debit.
     api_ is for indication that this data in came from api
     _i is for indication that this data is a model instance
     """
-    def get(self,request):
-        queryset = VehicleParty.objects.all()
-        serializer = VehiclePartySerializer(queryset,many=True)
-        return Response(serializer.data)
+    def post(self,request):
+        try:
+            api_debit_amount = request.data['debit_amount']
+            api_date = request.data['date']
+            api_remark = request.data['remark']
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            debit_id = MixDebit.objects.get(id=2)
+            owner_i = Owner.objects.get(id=1)
+            print(debit_id)
+        except Exception as e:
+            return Response('error in debit_id',status=status.HTTP_400_BAD_REQUEST)
+        try:
+            debit_i = Debit.objects.create(owner=owner_i,debit_id=debit_id,date=api_date,
+                                            debit_amount=api_debit_amount,remark=api_remark)
+            return Response('Owner Debit added',status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response('Owner debit not saved',status=status.HTTP_400_BAD_REQUEST)
 
-class WorkerList(APIView):
+class AddDailyExpense(APIView):
     """
-    View to return List of Worker.
+    View to add Daily Expense.
     api_ is for indication that this data in came from api
     _i is for indication that this data is a model instance
     """
-    def get(self,request):
-        queryset = Worker.objects.all()
-        serializer = WorkerSerializer(queryset,many=True)
-        return Response(serializer.data)
+    def post(self,request):
+        owner_i = Owner.objects.get(id=1)
+        try:
+            api_expense = request.data['expense']
+            api_date = request.data['date']
+            api_remark = request.data['remark']
+            api_category = request.data['category']  # category=('staff','petrol','food','office-accesories","other")
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            debit_id = MixDebit.objects.create(owner=owner_i,date=api_date)
+        except Exception as e:
+            return Response('mix debit not found')
+        try:
+            daily_expense_i = DailyExpense.objects.create(owner=owner_i,debit_id=debit_id,category=api_category)
+        except Exception as e:
+            return Response('please provie correct information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            debit_i = Debit.objects.create(owner=owner_i,debit_id=debit_id,date=api_date,remark=api_remark,debit_amount=api_expense)
+            return Response('Daily Expense for {} added'.format(api_category),status=status.HTTP_201_CREATED)
+        except Exception as e:
+            daily_expense_i.delete()
+            debit_id.delete()
+            return Response('daily expense not added',status=status.HTTP_200_OK)
 
 class MachinePayment(APIView):
     """
@@ -624,16 +729,24 @@ class MachinePayment(APIView):
     _i is for indication that this data is a model instance
     """
     def post(self,request):
+        owner_i = Owner.objects.get(id=1)
         try:
-            api_contact = request.data['contact']
+            api_party = request.data['party']
             api_start_date = request.data['start_date']
             api_end_date = request.data['end_date']
+            api_payment = request.data['payment']
+            api_remark = request.data['remark']
         except Exception as e:
             return Response('please provide all information')
         try:
-            party_i = MachineParty.objects.get(contact=api_contact)
+            party_i = MachineParty.objects.get(name=api_party)
         except:
-            return Response("contact not found for any machine party",status=status.HTTP_404_NOT_FOUND)
+            return Response("party not found for in machine party",status=status.HTTP_404_NOT_FOUND)
+        try:
+            credit_i = Credit.objects.create(work=party_i.credit_id,date=date.today(),owner=owner_i,remark=api_remark,
+            credit_amount=api_payment)
+        except Exception as e:
+            return Response("payment not succed due to some error",status=status.HTTP_400_BAD_REQUEST)
         try:
             machine_work_i = MachineWork.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
             if machine_work_i:
@@ -641,9 +754,11 @@ class MachinePayment(APIView):
                     MachineWork.objects.filter(party=i.party,date=i.date).update(paid=True)
                 return Response('Machine Work for party {} from {} to {} is paid'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
             else:
-                 return Response('No machine work exists for this machine party',status=status.HTTP_200_OK)
+                credit_i.delete()
+                return Response('No machine work exists for this machine party',status=status.HTTP_200_OK)
         except:
-            return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
+            credit_i.delete()
+            return Response('please provide correct date range',status=status.HTTP_400_BAD_REQUEST)
         return Response('no work for this machine party exists.',status=status.HTTP_200_OK)
 
 class VehiclePayment(APIView):
@@ -653,16 +768,24 @@ class VehiclePayment(APIView):
     _i is for indication that this data is a model instance
     """
     def post(self,request):
+        owner_i = Owner.objects.get(id=1)
         try:
-            api_contact = request.data['contact']
+            api_party = request.data['party']
             api_start_date = request.data['start_date']
             api_end_date = request.data['end_date']
+            api_payment = request.data['payment']
+            api_remark = request.data['remark']
         except Exception as e:
             return Response('please provide all information')
         try:
-            party_i = VehicleParty.objects.get(contact=api_contact)
+            party_i = VehicleParty.objects.get(name=api_party)
         except:
             return Response("contact not found in vehicle party",status=status.HTTP_404_NOT_FOUND)
+        try:
+            credit_i = Credit.objects.create(work=party_i.credit_id,date=date.today(),owner=owner_i,remark=api_remark,
+            credit_amount=api_payment)
+        except Exception as e:
+            return Response("payment not succed due to some error",status=status.HTTP_400_BAD_REQUEST)
         try:
             vehicle_work_i = VehicleWork.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
             if vehicle_work_i:
@@ -670,8 +793,11 @@ class VehiclePayment(APIView):
                     VehicleWork.objects.filter(party=i.party,date=i.date).update(paid=True)
                 return Response('Vehicle Work Work for party {} from {} to {} is paid'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
             else:
-                 return Response('no vehicle work exists for this vehicle party',status=status.HTTP_200_OK)
-        except:
+                credit_i.delete()
+                return Response('no vehicle work exists for this vehicle party',status=status.HTTP_200_OK)
+        except Exception as e:
+            credit_i.delete()
+            print(e)
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no work for this vehicle party exists.',status=status.HTTP_200_OK)
 

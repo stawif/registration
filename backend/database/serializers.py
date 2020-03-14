@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (Machine , Owner , Vehicle , Recorder ,  Material , MachineParty,PurchaseParty,VehicleParty,
-                    MachineWork,VehicleWork,MixDebit,Worker,Purchase,DailyWork)
+                    MachineWork,VehicleWork,MixDebit,Worker,Purchase,DailyWork,Part,Debit)
 
 class MachineSerializer(serializers.ModelSerializer):
     """
@@ -131,3 +131,21 @@ class DailyWorkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchase
         fields = ['party','five_feet','five_feet_rate','two_half_feet','two_half_feet_rate','diesel_amount','net_amount']
+
+class DebitSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Part Model.
+    """
+    class Meta:
+        model = Debit
+        fields = ['debit_amount','date']
+
+class PartSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Part Model.
+    """
+    date = serializers.CharField(source='debit_id.date')
+    class Meta:
+        model = Part
+        fields = ['name','date']
+
