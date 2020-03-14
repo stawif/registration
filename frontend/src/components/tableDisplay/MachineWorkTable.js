@@ -1,11 +1,17 @@
 import React from 'react';
 import '../../tableDisplayCss.css';
+import Popup from "reactjs-popup";
 
 class MachineWorkTable extends React.Component{
     //setDateRestriction 
     setDateRestriction = (item, index) =>{
         if(item.paid == false){
-            this.state.paymentData.minToDate = item.date;
+            this.setState({
+                paymentData: {
+                    minToDate: item.date,  
+                    maxToDate: this.state.maxDate
+                    }
+            });
             return false;
         }
         else{
@@ -36,7 +42,11 @@ class MachineWorkTable extends React.Component{
         jsonWorkDetail.work.every(this.setDateRestriction);
 
         //Set paymentData maxToDate
-        this.state.paymentData.maxToDate = jsonWorkDetail.work.slice(-1)[0].date;
+        this.setState({
+            minToDate: this.state.minToDate,  
+            maxToDate: jsonWorkDetail.work.slice(-1)[0].date
+        });
+        //this.state.paymentData.maxToDate = jsonWorkDetail.work.slice(-1)[0].date;
     }
 
     //Push paid and unpaid work objects in different arrays 
@@ -60,12 +70,18 @@ class MachineWorkTable extends React.Component{
     setPaidStatus = (status) =>{
         if(status==="paid"){
             this.setState({
-                paidStatus: "paid"
+                paidStatus: "paid",
+                buttonStatus: {
+                    visibility: "hidden"
+                }
             });
         }
         else if(status==="unpaid"){
             this.setState({
-                paidStatus: "unpaid"
+                paidStatus: "unpaid",
+                buttonStatus: {
+                    visibility: "visible"
+                }
             });
         }
         else{
@@ -78,16 +94,37 @@ class MachineWorkTable extends React.Component{
     //Set paidStatus to null so that tables show both paid and unpaid
     setPaidStatusNull = () =>{
         this.setState({
-            paidStatus: null
-        }); 
+            paidStatus: null,
+            buttonStatus: {
+                visibility: "hidden"
+            }
+    }); 
+        document.getElementsByName('paidStatus')[0].checked=false;
+        document.getElementsByName('paidStatus')[1].checked=false;
     }
 
     //Prepare data for payment
     preparePaymentData = (item, index) =>{
         this.state.drillingFeet= this.state.drillingFeet + item.drilling_feet;
-        this.state.dieselAmount= this.state.dieselAmount + item.diesel_amount;
+        this.state.dieselQuantity= this.state.dieselQuantity + item.diesel_amount;
         this.state.payment= this.state.payment + item.payment;
     }
+
+    //Set drilling feet rate
+    setDrillingRate = (rate) =>{
+        this.setState({
+            drillingRate: rate
+        });
+
+    }
+
+    //Set diesel rate
+    setDieselRate = (rate) =>{
+        this.setState({
+            dieselRate: rate
+        });
+    }
+
     constructor(props){
         super(props);
         this.state = {
@@ -107,15 +144,16 @@ class MachineWorkTable extends React.Component{
             maxFilterDate: null,
             currentWork: [],
             drillingFeet: 0,
-            dieselAmount: 0,
+            dieselQuantity: 0,
             payment: 0,
+            drillingRate: 0,
+            dieselRate: 0,
+            buttonStatus: {
+                visibility: "hidden"
+            },
             paymentData:{
-                fromDate: null,
                 minToDate: null,
                 maxToDate: null,
-                drillingFeet: 0,
-                dieselAmount: 0,
-                payment: 0
             }
         }
         this.state.currentWork= null;
@@ -126,6 +164,8 @@ class MachineWorkTable extends React.Component{
         this.setPaidStatusNull = this.setPaidStatusNull.bind(this);
         this.preparePaymentData = this.preparePaymentData.bind(this);
         this.setDateRestriction = this.setDateRestriction.bind(this);
+        this.setDrillingRate = this.setDrillingRate.bind(this);
+        this.setDieselRate = this.setDieselRate.bind(this);
         this.fetchProduct(this.props.partyName);
     }
 
@@ -136,6 +176,8 @@ class MachineWorkTable extends React.Component{
     }
 
     render(){
+        console.log("Drilling rate : ",this.state.drillingRate);
+        console.log("Diesel rate : ",this.state.dieselRate);
         // Reset all list so that next time it don't carry same values
         this.state.paidWork=[];
         this.state.unPaidWork=[];
@@ -143,7 +185,7 @@ class MachineWorkTable extends React.Component{
 
         //Reset total values of lower strip
         this.state.drillingFeet= 0;
-        this.state.dieselAmount= 0;
+        this.state.dieselQuantity= 0;
         this.state.payment= 0;
 
         //Fill different lists
@@ -261,7 +303,7 @@ class MachineWorkTable extends React.Component{
                             <p>Diesel =</p>
                         </div>
                         <div className="col-sm-1">
-                                <p>{this.state.dieselAmount}</p>
+                                <p>{this.state.dieselQuantity}</p>
                         </div>
 
                         <div className="col-sm-2">
@@ -272,15 +314,35 @@ class MachineWorkTable extends React.Component{
                         </div>
 
                         <div className="col-sm-3">
-                            <button
-                                type="submit"
-                                className="btn btn-outline-dark"
-                                style={this.state.buttonStatus}
-                            >
+                            <Popup modal trigger={
+                                <button
+                                    className="btn btn-outline-dark"
+                                    style={this.state.buttonStatus}>
                                 Payment
-                            </button>
+                                </button>   
+                            }>
+                                <div>
+                                    <h3>Payment</h3>
+                                    <br/>
+                                    {this.state.minDate} to {this.state.maxFilterDate}
+                                    <p>Total Drilling Feet : {this.state.drillingFeet}</p>
+                                    <input type="text" placeholder="Drilling Feet Rate" className="paymentInput" onChange={e => this.setDrillingRate(e.target.value)}/>
+                                    <hr/>
+                                    <p>Total Diesel Quantity: {this.state.dieselQuantity}</p>
+                                    <input type="text" placeholder="Diesel Rate" className="paymentInput" onChange={e => this.setDieselRate(e.target.value)}/>
+                                    <hr/>
+                                    <p>Total Recieved Payment : {this.state.payment}</p>
+                                    <hr />
+                                    <p>Total Payment : {(this.state.drillingFeet*this.state.drillingRate)-(this.state.dieselQuantity*this.state.dieselRate)-(this.state.payment)}</p>
+                                    <hr />
+                                    <button>
+                                        Pay
+                                    </button>
+                                </div>
+                            </Popup>                            
                         </div>
                 </div>
+
             </div>
         );
     }
