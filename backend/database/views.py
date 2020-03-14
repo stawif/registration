@@ -910,3 +910,33 @@ class VehicleWorkDetail(APIView):
             party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
                                     'work':list(party_work_detail)}
             return Response(party_detail_json,status=status.HTTP_200_OK)
+
+class WorkerPayment(APIView):
+    """
+    View to Get Vehicle Work Detail of a party.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        owner_i = Owner.objects.get(id=1)
+        try:
+            api_name = request.data['name']
+            api_debit_amount = request.data['debit_amount']
+            api_remark = request.data['remark']
+            api_date = request.data['date']
+        except Exception as e:
+            print(e)
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            worker_i = Worker.objects.get(name=api_name)
+        except Exception as e:
+            return Response('worker not registered with this name',status=status.HTTP_200_OK)
+        try:
+            debit_i = Debit.objects.create(owner=owner_i,debit_id=worker_i.debit_id,date=api_date,
+                                        debit_amount=api_debit_amount,remark=api_remark)
+            return Response('payment for {} is debited'.format(api_name),status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response("payment not saved due to network error",status=status.HTTP_404_NOT_FOUND)
+
+
+            
