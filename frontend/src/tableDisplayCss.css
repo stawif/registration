@@ -32,11 +32,12 @@ input[type="radio"]{
 table{
 	position: relative;
 }
+
 thead {
 	position: -webkit-sticky; /* Safari */
 	position: sticky;																																								
 	top: 0;
-} 
+}
 
 @media only screen and (min-width: 1000px){
 	.topTable{
@@ -74,10 +75,19 @@ thead {
 		width: 100%;
 		margin:auto;
 	}
+	.topTable button{
+		position: static;
+	}
 	.midTable{
 		display: block;
 		margin-top: 0;
 		height:80%;
 		width:100%;
+	}
+	table{
+		position: static;
+	}
+	thead{
+		position: static;
 	}
 }
