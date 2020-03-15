@@ -2,8 +2,7 @@ import React from 'react';
 import '../../tableDisplayCss.css';
 import Popup from "reactjs-popup";
 import axios from "axios";
-import PartyFilter from './PartyFilter';
-import PaymentFilter from './PaymentFilter';
+
 
 class MachineWorkTable extends React.Component{
     //setDateRestriction 
@@ -132,12 +131,7 @@ class MachineWorkTable extends React.Component{
         this.state.dieselQuantity= this.state.dieselQuantity + item.diesel_amount;
         this.state.payment= this.state.payment + item.payment;
     }
-	 updateCurrentPage = async choosePage => {
-			console.log("choosePage : " + choosePage);
-			await this.setState({
-			currentPage: choosePage
-    });
-  };
+	
 
     //Form Handler
     onSubmit = e => {
@@ -194,12 +188,8 @@ class MachineWorkTable extends React.Component{
             paymentData:{
                 minToDate: null,
                 maxToDate: null,
-            },
-			allPages: {
-				partyFilter: "partyFilter",
-				paymentFilter: "paymentFilter"
-			},
-			currentPage: "partyFilter"
+            }
+			
         }
         this.state.currentWork= null;
         this.fetchProduct = this.fetchProduct.bind(this);
@@ -213,7 +203,6 @@ class MachineWorkTable extends React.Component{
         this.setDieselRate = this.setDieselRate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.fetchProduct(this.props.partyName);
-		this.updateCurrentPage = this.updateCurrentPage.bind(this);
     }
 		
 
@@ -224,16 +213,7 @@ class MachineWorkTable extends React.Component{
     }
 
     render(){
-		let currentComponent;
-		if (this.state.currentPage === this.state.allPages.PartyFilter) {
-			currentComponent = <PartyFilter />;
-		}
-		else if (this.state.currentPage === this.state.allPages.PartyFilter) {
-			currentComponent = <PaymentFilter />;
-		}
-		else {
-			currentComponent = <PartyFilter />;
-		}
+		
 		
         // Reset all list so that next time it don't carry same values
         this.state.paidWork=[];
@@ -320,34 +300,63 @@ class MachineWorkTable extends React.Component{
 				</div>
 				
 				<div className="row topTable">
-<<<<<<< HEAD
-						<button className="col-6 bg-primary" onClick={() =>
-                            this.updateCurrentPage(
-                              this.state.allPages.partyFilter
-                            )
-                          }>Party</button>
-						<button className="col-6 bg-primary" onClick={() =>
-                            this.updateCurrentPage(
-                              this.state.allPages.paymentFilter
-						)}>Payment</button>
-=======
+
                     <div className="col-6">
                         {/*Party and filter popup*/}
                         <Popup modal trigger={
                             <button className="bg-primary">Party</button>
                         }>
-                            <h3>Party</h3>
+                            <blockquote className="commonFont blockquote text-center">
+								<p onClick={e => this.setPaidStatusNull()}><b>{this.props.partyName}</b></p>
+							</blockquote>   
+							
+							<blockquote className="commonFont blockquote text-center">
+								<p className="mb-0">{this.state.workDetail.contact}</p>
+								{/*<footer className="blockquote-footer"> 7742879818</footer>*/}
+							</blockquote> 
+							
+							<blockquote className="commonFont blockquote text-center">
+								<input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>Paid
+							</blockquote>   
+
+							<blockquote className="commonFont blockquote text-center">
+								<input type="radio" name="paidStatus" value="unpaid" onChange={ e => {this.setPaidStatus(e.target.value)}} />Unpaid
+							</blockquote>   
+							
+							<input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
+								this.setState({
+									minFilterDate: e.target.value
+								});
+							}}/>
+							
+							<input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
+								this.setState({
+									maxFilterDate: e.target.value
+								});
+							}}/>
+							
                         </Popup>
                     </div>
                     <div className="col-6">    
                         {/*Payment popup*/}
                         <Popup modal trigger={
-                            <button className="bg-primary">Payment</button>
+                            <button className="bg-primary h-80 w-80">Payment</button>
                         }>
-                            <h3>Payment</h3>
+							<span>
+								<p>Drilling Feet =</p>
+								<p>{this.state.drillingFeet}</p>
+							</span>
+							<span>
+								<p>Diesel =</p>
+								<p>{this.state.dieselQuantity}</p>
+							</span>
+							<span>
+								<p>Payment =</p>
+								<p>{this.state.payment}</p> 
+							</span>
                         </Popup>
                     </div>    
->>>>>>> 54d9b4e8cf4ba0fca126f56336b630e8fc9a20f7
+
 				</div>
 				
 				<div className="midTable">

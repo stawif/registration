@@ -94,4 +94,10 @@ thead {
 	thead{
 		position: static;
 	}
+	.commonFont{
+    font-size: 3vw;
+}
+	span{
+		display: inline;
+	}
 }
