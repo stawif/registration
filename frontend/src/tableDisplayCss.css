@@ -24,10 +24,6 @@
 .commonFont{
     font-size: 1.4vw;
 }
-/*Input controll*/
-input[type="radio"]{
-    width: 40%;
-}
 /*Position controll*/
 table{
 	position: relative;
@@ -49,6 +45,10 @@ thead {
 	.lowerTable{
 		margin: auto;
 	}
+	/*Input controll*/
+	input[type="radio"]{
+		width: 40%;
+	}
 }
 
 @media only screen and (min-width: 500px) and (max-width: 1000px){
@@ -60,6 +60,10 @@ thead {
 	}
 	.lowerTable{
 		margin: auto;
+	}
+	/*Input controll*/
+	input[type="radio"]{
+		width: 40%;
 	}
 }
 
@@ -88,6 +92,9 @@ thead {
 		margin-top: 0;
 		height:80%;
 		width:100%;
+	}
+	input[type="radio"]{
+		width: 40%;
 	}
 	table{
 		position: static;
