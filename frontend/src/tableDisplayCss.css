@@ -93,7 +93,7 @@ thead {
 		width:100%;
 	}
 	input[type="radio"]{
-		width: 40%;
+		width: 20%;
 	}
 	table{
 		position: static;
@@ -102,9 +102,7 @@ thead {
 		position: static;
 	}
 	.commonFont{
-    font-size: 3vw;
-}
-	span{
-		display: inline;
+		font-size: 3vw;
 	}
+	
 }

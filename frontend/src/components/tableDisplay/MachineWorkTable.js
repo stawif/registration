@@ -310,13 +310,16 @@ class MachineWorkTable extends React.Component{
                         {/*Party and filter popup*/}
                         <Popup modal trigger={
                             <button className="bg-primary">Party</button>
-                        }>
-
+							
+                        } 
+						>
+							
                             <h4 onClick={e => this.setPaidStatusNull()}>{this.props.partyName}</h4>
                             <h5>{this.state.workDetail.contact}</h5>
-							<input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>paid
-							<input type="radio" name="paidStatus" value="unpaid" onChange={ e => {this.setPaidStatus(e.target.value)}} />Unpaid
-
+						
+							<label className="radio-inline mr-2"><input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>Paid</label>
+							<label className="radio-inline"><input type="radio" name="paidStatus" value="unpaid" onChange={ e => {this.setPaidStatus(e.target.value)}} />Unpaid</label>
+						
 							<input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
 								this.setState({
 									minFilterDate: e.target.value
@@ -328,42 +331,43 @@ class MachineWorkTable extends React.Component{
 									maxFilterDate: e.target.value
 								});
 							}}/>
-
+						
                         </Popup>
                     </div>
                     <div className="col-6">    
                         {/*Payment popup*/}
                         <Popup modal trigger={
-                            <button className="bg-primary h-80 w-80">Payment</button>
-                        }>
+                            <button className="bg-primary">Payment</button>
+                        }
+						>
 
                         <p>Drilling Feet= {this.state.drillingFeet}</p>
                         <p>Diesel Quantity= {this.state.dieselQuantity}</p>
                         <p>Payment= {this.state.payment}</p>
                             <Popup modal trigger={
                                     <button
-                                        className="btn btn-outline-dark"
+                                        className="btn btn-outline-dark style"
                                         style={this.state.buttonStatus}>
                                     Payment
                                     </button>
-                                    }>
+                                    } >
+									
                                     <div className="d-flex justify-content-center align-items-center">
+									
                                         <form
                                             className="form-container form-group"
                                             onSubmit={e => this.onSubmit(e)}
                                         >
-                                            <h3>Payment</h3>
-                                            <br/>
-                                            {this.state.minDate} to {this.state.maxFilterDate}
-                                            <p>Total Drilling Feet : {this.state.drillingFeet}</p>
+											{this.state.minDate} to {this.state.maxFilterDate}
+                                            <p>Total Drilling Feet: {this.state.drillingFeet}</p>
                                             <input type="text" placeholder="Drilling Feet Rate" className="paymentInput" onChange={e => this.setDrillingRate(e.target.value)}/>
                                             <hr/>
                                             <p>Total Diesel Quantity: {this.state.dieselQuantity}</p>
                                             <input type="text" placeholder="Diesel Rate" className="paymentInput" onChange={e => this.setDieselRate(e.target.value)}/>
                                             <hr/>
-                                            <p>Total Recieved Payment : {this.state.payment}</p>
+                                            <p>Total Recieved Payment: {this.state.payment}</p>
                                             <hr />
-                                            <p>Total Payment : {this.state.totalPayment}</p>
+                                            <p>Total Payment: {this.state.totalPayment}</p>
                                             <hr />
                                             <input type="text" placeholder="Remark" className="remark" onChange={e => this.setState({ remark: e.target.value })} />
                                             <hr />
@@ -374,7 +378,8 @@ class MachineWorkTable extends React.Component{
                                                     Pay
                                             </button>
                                         </form>    
-                                    </div>
+                                   
+									</div>
                             </Popup>                            
 
                         </Popup>
