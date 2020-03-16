@@ -206,6 +206,7 @@ class VehicleWork(models.Model):
     """
     party = models.ForeignKey(VehicleParty, on_delete=models.CASCADE)
     date = models.DateField()
+    feet = models.FloatField(blank=False)
     five_feet = models.FloatField(blank=False)
     two_half_feet = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)

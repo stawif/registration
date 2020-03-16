@@ -32,22 +32,24 @@ class MachineWorkTable extends React.Component{
         this.setState({
             workDetail: jsonWorkDetail
         });    
-        this.setState({
-            minFilterDate: jsonWorkDetail.work[0].date
-        });
-        this.setState({
-            maxFilterDate: jsonWorkDetail.work.slice(-1)[0].date    
-        });
+    if(jsonWorkDetail.work.length!=0)
+        {
+            this.setState({
+                minFilterDate: jsonWorkDetail.work[0].date
+            });
+            this.setState({
+                maxFilterDate: jsonWorkDetail.work.slice(-1)[0].date    
+            });
+            //Set paymentData minToDate
+            jsonWorkDetail.work.every(this.setDateRestriction);
 
-        //Set paymentData minToDate
-        jsonWorkDetail.work.every(this.setDateRestriction);
-
-        //Set paymentData maxToDate
-        this.setState({
-            minToDate: this.state.minToDate,  
-            maxToDate: jsonWorkDetail.work.slice(-1)[0].date
-        });
-        //this.state.paymentData.maxToDate = jsonWorkDetail.work.slice(-1)[0].date;
+            //Set paymentData maxToDate
+            this.setState({
+                minToDate: this.state.minToDate,  
+                maxToDate: jsonWorkDetail.work.slice(-1)[0].date
+            });
+            //this.state.paymentData.maxToDate = jsonWorkDetail.work.slice(-1)[0].date;
+        }    
     }
 
     //Push paid and unpaid work objects in different arrays 

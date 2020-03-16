@@ -49,6 +49,7 @@ export default class VehicleWorkEntry extends React.Component {
       .post("http://127.0.0.1:8000/enter-vehicleparty-work/", {
         party: this.state.selectedParty,
         date: this.state.date,
+        feet: (this.state.feet/12),
         five_feet: this.state.fiveFeet,
         two_half_feet: this.state.twoHalfFeet,
         remark: this.state.remark,
@@ -102,6 +103,7 @@ export default class VehicleWorkEntry extends React.Component {
 
       selectedParty: "",
       remark: "",
+      feet: 0,
       fiveFeet: 0,
       twoHalfFeet: 0,
       responseMessage: "",
@@ -170,7 +172,7 @@ export default class VehicleWorkEntry extends React.Component {
 
           <InputRateField
             callbackFromParent={dataFromChild => {
-              this.state.fiveFeet = dataFromChild;
+              this.state.feet = dataFromChild;
             }}
             placeholderParent={"Feet (inch)"}
           />

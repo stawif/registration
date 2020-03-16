@@ -454,6 +454,7 @@ class AddVehicleWork(APIView):
         try:
             api_party_name = request.data['party']
             api_date = request.data['date']
+            api_feet = request.data['feet']
             api_five_feet = request.data['five_feet']
             api_two_half_feet = request.data['two_half_feet']
             api_remark = request.data['remark']
@@ -467,7 +468,7 @@ class AddVehicleWork(APIView):
             party_id_i = VehicleParty.objects.get(name=api_party_name)
             try:
                  vehicle_work_i = VehicleWork.objects.create(party=party_id_i,date=api_date,
-                 five_feet=float(api_five_feet),two_half_feet=float(api_two_half_feet),remark=api_remark,payment=api_payment)
+                 feet=float(api_feet),five_feet=float(api_five_feet),two_half_feet=float(api_two_half_feet),remark=api_remark,payment=api_payment)
                  return Response("{} Vehicle work added".format(api_party_name),status = status.HTTP_201_CREATED)
             except Exception as e:
                 print(e)
@@ -703,7 +704,7 @@ class AddDailyExpense(APIView):
             api_expense = request.data['expense']
             api_date = request.data['date']
             api_remark = request.data['remark']
-            api_category = request.data['category']  # category=('staff','petrol','food','office-accesories","other")
+            api_category = request.data['category']  # category=('staff','petrol','food','office_accesories',"other")
         except Exception as e:
             return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
         try:

@@ -99,7 +99,7 @@ class VehicleWorkSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = VehicleWork
-        fields = ['party','date','five_feet','two_half_feet','remark']
+        fields = ['party','date','feet','five_feet','two_half_feet','remark']
 
 class MixDebitSerializer(serializers.ModelSerializer):
     """
