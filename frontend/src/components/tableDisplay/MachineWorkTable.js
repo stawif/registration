@@ -3,6 +3,7 @@ import '../../tableDisplayCss.css';
 import Popup from "reactjs-popup";
 import axios from "axios";
 
+
 class MachineWorkTable extends React.Component{
     //setDateRestriction 
     setDateRestriction = (item, index) =>{
@@ -138,6 +139,7 @@ class MachineWorkTable extends React.Component{
         this.state.dieselQuantity= this.state.dieselQuantity + item.diesel_amount;
         this.state.payment= this.state.payment + item.payment;
     }
+	
 
     //Form Handler
     onSubmit = e => {
@@ -195,6 +197,7 @@ class MachineWorkTable extends React.Component{
                 minToDate: null,
                 maxToDate: null,
             }
+			
         }
         this.state.currentWork= null;
         this.fetchProduct = this.fetchProduct.bind(this);
@@ -209,6 +212,7 @@ class MachineWorkTable extends React.Component{
         this.onSubmit = this.onSubmit.bind(this);
         this.fetchProduct(this.props.partyName);
     }
+		
 
     componentWillReceiveProps(nextProps){
         if(this.props.partyName != nextProps.partyName){
@@ -217,6 +221,8 @@ class MachineWorkTable extends React.Component{
     }
 
     render(){
+		
+		
         // Reset all list so that next time it don't carry same values
         this.state.paidWork=[];
         this.state.unPaidWork=[];
@@ -301,59 +307,69 @@ class MachineWorkTable extends React.Component{
 				</div>
 				
 				<div className="row topTable">
+
                     <div className="col-6">
                         {/*Party and filter popup*/}
                         <Popup modal trigger={
                             <button className="bg-primary">Party</button>
-                        }>
+							
+                        } 
+						>
+							
                             <h4 onClick={e => this.setPaidStatusNull()}>{this.props.partyName}</h4>
                             <h5>{this.state.workDetail.contact}</h5>
-							<input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>paid
-							<input type="radio" name="paidStatus" value="unpaid" onChange={ e => {this.setPaidStatus(e.target.value)}} />Unpaid
+						
+							<label className="radio-inline mr-2"><input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>Paid</label>
+							<label className="radio-inline"><input type="radio" name="paidStatus" value="unpaid" onChange={ e => {this.setPaidStatus(e.target.value)}} />Unpaid</label>
+						
 							<input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
 								this.setState({
 									minFilterDate: e.target.value
 								});
 							}}/>
+
 							<input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
 								this.setState({
 									maxFilterDate: e.target.value
 								});
 							}}/>
+						
                         </Popup>
                     </div>
                     <div className="col-6">    
                         {/*Payment popup*/}
                         <Popup modal trigger={
                             <button className="bg-primary">Payment</button>
-                        }>
+                        }
+						>
+
                         <p>Drilling Feet= {this.state.drillingFeet}</p>
                         <p>Diesel Quantity= {this.state.dieselQuantity}</p>
                         <p>Payment= {this.state.payment}</p>
                             <Popup modal trigger={
                                     <button
-                                        className="btn btn-outline-dark"
+                                        className="btn btn-outline-dark style"
                                         style={this.state.buttonStatus}>
                                     Payment
                                     </button>
-                                    }>
+                                    } >
+									
                                     <div className="d-flex justify-content-center align-items-center">
+									
                                         <form
                                             className="form-container form-group"
                                             onSubmit={e => this.onSubmit(e)}
                                         >
-                                            <h3>Payment</h3>
-                                            <br/>
-                                            {this.state.minDate} to {this.state.maxFilterDate}
-                                            <p>Total Drilling Feet : {this.state.drillingFeet}</p>
+											{this.state.minDate} to {this.state.maxFilterDate}
+                                            <p>Total Drilling Feet: {this.state.drillingFeet}</p>
                                             <input type="text" placeholder="Drilling Feet Rate" className="paymentInput" onChange={e => this.setDrillingRate(e.target.value)}/>
                                             <hr/>
                                             <p>Total Diesel Quantity: {this.state.dieselQuantity}</p>
                                             <input type="text" placeholder="Diesel Rate" className="paymentInput" onChange={e => this.setDieselRate(e.target.value)}/>
                                             <hr/>
-                                            <p>Total Recieved Payment : {this.state.payment}</p>
+                                            <p>Total Recieved Payment: {this.state.payment}</p>
                                             <hr />
-                                            <p>Total Payment : {this.state.totalPayment}</p>
+                                            <p>Total Payment: {this.state.totalPayment}</p>
                                             <hr />
                                             <input type="text" placeholder="Remark" className="remark" onChange={e => this.setState({ remark: e.target.value })} />
                                             <hr />
@@ -364,10 +380,13 @@ class MachineWorkTable extends React.Component{
                                                     Pay
                                             </button>
                                         </form>    
-                                    </div>
+                                   
+									</div>
                             </Popup>                            
+
                         </Popup>
                     </div>    
+
 				</div>
 				
 				<div className="midTable">

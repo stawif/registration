@@ -10,7 +10,6 @@
 .midTable{
 	height: 80%;
 	width: 100%;
-	margin-top: 0;
 }
 .lowerTable{
 	height: 10%;
@@ -94,7 +93,7 @@ thead {
 		width:100%;
 	}
 	input[type="radio"]{
-		width: 40%;
+		width: 20%;
 	}
 	table{
 		position: static;
@@ -102,4 +101,8 @@ thead {
 	thead{
 		position: static;
 	}
+	.commonFont{
+		font-size: 3vw;
+	}
+	
 }
