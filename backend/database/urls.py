@@ -5,7 +5,8 @@ from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRec
                     AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,AddPart,PartList,PurchaseList,
                     WorkerList, PartyContact,VehiclePayment,PurchasePayment,MachineWorkDetail,VehicleWorkDetail,
                     PartyThroughContact,AddOwnerDebit,OwnerDebitList,AddDailyExpense,DailyExpenseList,WorkerPayment,
-                    PurchaseDetail,MachinePartyCredit,VehiclePartyCredit,DailyWorkCredit)
+                    PurchaseDetail,MachinePartyCredit,VehiclePartyCredit,DailyWorkCredit,DailyExpenseDedit,
+                    PartDedit,WorkerDebit)
 
 urlpatterns = [
     # """
@@ -24,6 +25,9 @@ urlpatterns = [
     path('list-of-purchaseparty/',PurchasePartyList.as_view()),
     path('list-of-purchase/',PurchaseList.as_view()),
     path('party-through-contact/', PartyThroughContact.as_view()),
+    path('daily-work-credit/',DailyWorkCredit.as_view()),
+    path('daily-expense-debit/',DailyExpenseDedit.as_view()),
+    path('part-debit/',PartDedit.as_view()),
     # """
     # Registration URL
     # """
@@ -63,5 +67,5 @@ urlpatterns = [
     path('purchase-detail/',PurchaseDetail.as_view()),
     path('machine-party-credit/',MachinePartyCredit.as_view()),
     path('vehicle-party-credit/',VehiclePartyCredit.as_view()),
-    path('daily-work-credit/',DailyWorkCredit.as_view()),
+    path('worker-debit/',WorkerDebit.as_view()),
 ]

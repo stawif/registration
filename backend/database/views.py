@@ -173,6 +173,60 @@ class DailyExpenseList(APIView):
             daily_expense_list.append(daily_expense_dict)
         return Response(daily_expense_list,status=status.HTTP_200_OK)
 
+class DailyWorkCredit(APIView):
+    """
+    View to Get Daily Work Credit Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        try:
+            daily_work_i = DailyWork.objects.all()
+            daily_work_json = []
+            for i in daily_work_i:
+                credit_i = Credit.objects.get(work=i.credit_id)
+                daily_work_detail = {"party":i.name,"village":i.village,"credit":credit_i.credit_amount,"date":credit_i.date,"remark":credit_i.remark}
+                daily_work_json.append(daily_work_detail)
+            return Response(daily_work_json,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response('network error',status=status.HTTP_400_BAD_REQUEST)
+
+class DailyExpenseDedit(APIView):
+    """
+    View to Get Daily Expense Debit Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        try:
+            daily_expense_i = DailyExpense.objects.all()
+            daily_expense_detail = []
+            for i in daily_expense_i:
+                debit_i = Debit.objects.get(debit_id=i.debit_id)
+                daily_expense = {'category':i.category,"date":debit_i.date,"expense":debit_i.debit_amount,"remark":debit_i.remark}
+                daily_expense_detail.append(daily_expense)
+            return Response(daily_expense_detail,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response('network error',status=status.HTTP_400_BAD_REQUEST)
+
+class PartDedit(APIView):
+    """
+    View to Get Part Debit Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        try:
+            part_i = Part.objects.all()
+            part_debit_detail = []
+            for i in part_i:
+                part_debit_i = Debit.objects.get(debit_id=i.debit_id)
+                part_debit = {'name':i.name,"date":part_debit_i.date,"amount":part_debit_i.debit_amount,"remark":part_debit_i.remark}
+                part_debit_detail.append(part_debit)
+            return Response(part_debit_detail,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response('network error',status=status.HTTP_400_BAD_REQUEST)
+
 # """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # APIView for Registration (post request)
 # """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -827,25 +881,36 @@ class PurchasePayment(APIView):
     _i is for indication that this data is a model instance
     """
     def post(self,request):
+        owner_i = Owner.objects.get(id=1)
         try:
-            api_contact = request.data['contact']
+            api_party = request.data['party']
             api_start_date = request.data['start_date']
             api_end_date = request.data['end_date']
+            api_payment = request.data['payment']
+            api_remark = request.data['remark']
         except Exception as e:
             return Response('please provide all information')
         try:
-            party_i = PurchaseParty.objects.filter(contact=api_contact)
+            party_i = PurchaseParty.objects.get(name=api_party)
         except Exception as e:
-            return Response("contact not found Purchase party",status=status.HTTP_404_NOT_FOUND)
+            return Response("purchase party does not exists",status=status.HTTP_404_NOT_FOUND)
         try:
-            purchase_i = Purchase.objects.filter(party=party_i[1],date__range=[api_start_date,api_end_date])
+            debit_i = Debit.objects.create(debit_id=party_i.debit_id,date=date.today(),owner=owner_i,remark=api_remark,
+            debit_amount=api_payment)
+        except Exception as e:
+            print(e)
+            return Response("payment not succed due to some error",status=status.HTTP_400_BAD_REQUEST)
+        try:
+            purchase_i = Purchase.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
             if purchase_i:
                 for i in purchase_i:
                     Purchase.objects.filter(party=i.party,date=i.date).update(paid=True)
                 return Response('Purchase for party {} from {} to {} is paid'.format(party_i[1],api_start_date,api_end_date),status=status.HTTP_200_OK)
             else:
                  return Response('No Purchase exists for this purchase party')
-        except:
+        except Exception as e:
+            debit_i.delete()
+            print(e)
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no purchase for this purchase party exists.',status=status.HTTP_200_OK)
 
@@ -1029,17 +1094,25 @@ class VehiclePartyCredit(APIView):
                                 'credits':list(credit_i)}
         return Response(party_credit_detail,status=status.HTTP_200_OK)
 
-class DailyWorkCredit(APIView):
+class WorkerDebit(APIView):
     """
-    View to Get Daily Work Credit Detail.
+    View to Get Worker Debit Detail.
     api_ is for indication that this data in came from api
     _i is for indication that this data is a model instance
     """
-    def get(self,request):
-        daily_work_i = DailyWork.objects.all()
-        daily_work_json = []
-        for i in daily_work_i:
-            credit_i = Credit.objects.get(work=i.credit_id)
-            daily_work_detail = {"party":i.name,"village":i.village,"credit":credit_i.credit_amount,"date":credit_i.date,"remark":credit_i.remark}
-            daily_work_json.append(daily_work_detail)
-        return Response(daily_work_json)
+    def post(self,request):
+        try:
+            api_name = request.data['name']
+        except Exception as e:
+            return Response('please provide a party name',status=status.HTTP_404_NOT_FOUND)
+        try:
+            worker_i = Worker.objects.get(name=api_name)
+        except Exception as e:
+            return Response('worker does not exists',status=status.HTTP_404_NOT_FOUND)
+        try:
+            debit_i = Debit.objects.filter(debit_id=worker_i.debit_id).values('date','debit_amount','remark').order_by('date')
+        except Exception as e:
+            return Response('please provide all information')
+        worker_debit_detail = {'name':api_name,'contact':worker_i.contact,'village':worker_i.village,
+                                'debit':list(debit_i)}
+        return Response(worker_debit_detail,status=status.HTTP_200_OK)

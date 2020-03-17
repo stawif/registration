@@ -24,6 +24,9 @@ import PartEntry from './components/entry/PartEntry';
 import OwnerDebitEntry from './components/entry/OwnerDebitEntry';
 import DailyExpenseEntry from './components/entry/DailyExpenseEntry';
 
+//Accounts
+import MachineCredit from "./components/account/MachineCredit";
+
 //Tables Components
 import MachineWorkTable from "./components/tableDisplay/MachineWorkTable";
 import VehicleWorkTable from "./components/tableDisplay/VehicleWorkTable";
@@ -31,6 +34,7 @@ import PurchaseTable from "./components/tableDisplay/PurchaseTable";
 
 //Dashboard components
 import PartyPins from "./components/dashboard/PartyPins";
+
 
 class App extends React.Component {
   constructor(props) {
@@ -62,7 +66,8 @@ class App extends React.Component {
         purchaseTable: "purchaseTable",
         partEntry: "partEntry",
         ownerDebitEntry: "ownerDebitEntry",
-        dailyExpenseEntry: "dailyExpenseEntry"
+        dailyExpenseEntry: "dailyExpenseEntry",
+        machineCredit: "machineCredit"
       },
       partyName: "",
       currentPage: "machineRegistration"
@@ -150,6 +155,9 @@ class App extends React.Component {
       currentComponent = <OwnerDebitEntry />;
     } else if(this.state.currentPage === this.state.allPages.dailyExpenseEntry){
       currentComponent = <DailyExpenseEntry />;
+    }
+    else if(this.state.currentPage === this.state.allPages.machineCredit){
+      currentComponent = <MachineCredit />;
     }
     else {
       currentComponent = <MachineRegistration />;
@@ -534,8 +542,8 @@ class App extends React.Component {
                         className="dropdown-menu"
                         aria-labelledby="navbarDropdown"
                       >
-                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.machineDisplay)}>
-                          Machine Display
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.machineCredit)}>
+                          Machine Credit
                       </a>
                       </div>    
                     </li>  
