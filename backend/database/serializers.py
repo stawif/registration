@@ -113,9 +113,11 @@ class PurchaseSerializer(serializers.ModelSerializer):
     """
     Serializer for the Purchase Model.
     """
+    party_name = serializers.CharField(source='party.name')
+    material_name = serializers.CharField(source='Material.name')
     class Meta:
         model = Purchase
-        fields = ['party','Material','debit_id','rate','net_amount','paid','remaining','remark']
+        fields = ['party_name','material_name','rate','net_amount','paid','remark']
 
 """
 class DailyExpenseSerializer(serializers.ModelSerializer):

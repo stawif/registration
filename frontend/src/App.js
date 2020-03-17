@@ -516,21 +516,31 @@ class App extends React.Component {
                         >
                           Purchase Party Display
                         </a>
-                        <a
-                          className="dropdown-item"
-						  data-toggle="collapse" 
-						  data-target=".navbar-collapse.show"
-                          onClick={() =>
-                            this.updateCurrentPage(
-                              this.state.allPages.machineWorkTable
-                            )
-                          }
-                        >
-                          Machine Work Display
-                        </a>
                       </div>
                     </li>
+                    <li className="nav-item dropdown">
+                      <a
+                        className="nav-link dropdown-toggle"
+                        href=""
+                        id="navbarDropdown"
+                        role="button"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        Account
+                      </a>
+                      <div
+                        className="dropdown-menu"
+                        aria-labelledby="navbarDropdown"
+                      >
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.machineDisplay)}>
+                          Machine Display
+                      </a>
+                      </div>    
+                    </li>  
                   </ul>
+                  
                   <form className="form-inline my-2 my-lg-0">
                     <input
                       className="form-control mr-sm-2"

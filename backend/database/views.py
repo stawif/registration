@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , MaterialSerializer,
                             PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
                             MachineWorkSerializer , VehicleWorkSerializer,WorkerSerializer,
-                            DailyWorkSerializer,MaterialListSerializer,PartSerializer)
+                            DailyWorkSerializer,MaterialListSerializer,PartSerializer,PurchaseSerializer)
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Material , Credit,
                         MachineParty,PurchaseParty,VehicleParty,MachineWork,VehicleWork,Part,DailyExpense,
@@ -129,6 +129,15 @@ class PurchasePartyList(APIView):
         serializer = PurchasePartySerializer(queryset,many=True)
         return Response(serializer.data)
 
+class PurchaseList(APIView):
+    """
+    View to return List of Purchase.
+    """
+    def get(self,request):
+        queryset = Purchase.objects.all()
+        serializer = PurchaseSerializer(queryset,many=True)
+        return Response(serializer.data)
+
 class PartList(APIView):
     """
     View to return List of Parts.
@@ -142,7 +151,7 @@ class PartList(APIView):
             part_list.append(part_dict)
         return Response(part_list,status=status.HTTP_200_OK)
 
-class OnwerDebitList(APIView):
+class OwnerDebitList(APIView):
     """
     View to return List of Owner Debit.
     """
@@ -454,7 +463,7 @@ class AddVehicleWork(APIView):
         try:
             api_party_name = request.data['party']
             api_date = request.data['date']
-            api_feet = request.data['feet']
+            api_feet = round(request.data['feet'],2)
             api_five_feet = request.data['five_feet']
             api_two_half_feet = request.data['two_half_feet']
             api_remark = request.data['remark']
@@ -526,9 +535,13 @@ class AddDailyWork(APIView):
             api_two_half_feet = request.data['two_half_feet']
             api_two_half_feet_rate = request.data['two_half_feet_rate']
             api_diesel_spend = request.data['diesel_spend']
-            api_date = request.data['date']
+            api_remark = request.data['remark']
         except Exception as e:
             return Response('please provide all information correctly...',status=status.HTTP_204_NO_CONTENT)
+        try:
+            vehicle_i = Vehicle.objects.get(name=api_vehicle)
+        except Exception as e:
+            return Response("Vehicle does not exists")
         net_amount = float(api_five_feet)*float(api_five_feet_rate)+float(api_two_half_feet)*float(api_two_half_feet_rate)
         try:
             owner = Owner.objects.get(id=1)
@@ -537,21 +550,22 @@ class AddDailyWork(APIView):
             except Exception as e:
                 return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
             try:
-                vehicle_i = Vehicle.objects.get(name=api_vehicle)
-            except Exception as e:
-                print(e)
-                return Response("Vehicle does not exists")
-            try:
                 daily_work_i = DailyWork.objects.create(credit_id=credit_id_i,name=api_name,village=api_village,vehicle=vehicle_i,five_feet=float(api_five_feet),five_feet_rate=float(api_five_feet_rate),
                                             two_half_feet=float(api_two_half_feet),two_half_feet_rate=float(api_two_half_feet_rate),diesel_spend=float(api_diesel_spend),
                                             net_amount=float(net_amount),date=api_date)
-                return Response('daily work for party {} added'.format(api_name),status=status.HTTP_201_CREATED)
             except Exception as e:
-                print(e)
                 credit_id_i.delete()
                 return Response('please provide all information correctly.',status=status.HTTP_204_NO_CONTENT)
+            try:
+                credit_i = Credit.objects.create(owner=owner,work=credit_id_i,date=api_date,credit_amount=float(net_amount),remark=api_remark)
+                return Response('daily work added for party {}'.format(api_name),status=status.HTTP_200_OK)
+            except Exception as e:
+                print(e)
+                daily_work_i.delete()
+                credit_id_i.delete()
+                return Response('daily work not saved due to some error',status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-             return Response('please provide all data',status=status.HTTP_404_NOT_FOUND)
+            return Response('please provide all data',status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class AddMachineSupply(APIView):
@@ -723,6 +737,10 @@ class AddDailyExpense(APIView):
             debit_id.delete()
             return Response('daily expense not added',status=status.HTTP_200_OK)
 
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# APIView for Payment  (post request)
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 class MachinePayment(APIView):
     """
     View to change paid status in Machinework model.
@@ -831,6 +849,33 @@ class PurchasePayment(APIView):
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no purchase for this purchase party exists.',status=status.HTTP_200_OK)
 
+class WorkerPayment(APIView):
+    """
+    View to Get Vehicle Work Detail of a party.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        owner_i = Owner.objects.get(id=1)
+        try:
+            api_name = request.data['name']
+            api_debit_amount = request.data['debit_amount']
+            api_remark = request.data['remark']
+            api_date = request.data['date']
+        except Exception as e:
+            print(e)
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            worker_i = Worker.objects.get(name=api_name)
+        except Exception as e:
+            return Response('worker not registered with this name',status=status.HTTP_200_OK)
+        try:
+            debit_i = Debit.objects.create(owner=owner_i,debit_id=worker_i.debit_id,date=api_date,
+                                        debit_amount=api_debit_amount,remark=api_remark)
+            return Response('payment for {} is debited'.format(api_name),status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response("payment not saved due to network error",status=status.HTTP_404_NOT_FOUND)
+
 class UpdateAvgFeet(APIView):
     """
     View to update average feet in machine work during a time period.
@@ -860,6 +905,10 @@ class UpdateAvgFeet(APIView):
         except:
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no work for this machine party exists',status=status.HTTP_200_OK)
+
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# APIView for Party Details(Work , Credit , Debit) (post request)
+# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 class MachineWorkDetail(APIView):
     """
@@ -901,12 +950,96 @@ class VehicleWorkDetail(APIView):
         except Exception as e:
             return Response('vehicle party does not exists',status=status.HTTP_200_OK)
         try:
-            party_work_detail = VehicleWork.objects.filter(party=party_detail).values('date','five_feet','two_half_feet','remark','payment')
+            party_work_detail = VehicleWork.objects.filter(party=party_detail).values('date','feet','five_feet','two_half_feet','paid','remark','payment').order_by('date')
         except:
             return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
-        if len(party_work_detail) == 0:
-            return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
-        else:
-            party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
+        party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
                                     'work':list(party_work_detail)}
-            return Response(party_detail_json,status=status.HTTP_200_OK)
+        return Response(party_detail_json,status=status.HTTP_200_OK)
+
+class PurchaseDetail(APIView):
+    """
+    View to Get Vehicle Work Detail of a Purchase.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        try:
+            api_party = request.data['party']
+        except Exception as e:
+            return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
+        try:
+            party_detail = PurchaseParty.objects.get(name=api_party)
+        except Exception as e:
+            return Response('purchase party does not exists',status=status.HTTP_200_OK)
+        try:
+            purchase_detail = Purchase.objects.filter(party=party_detail).values('date','Material','quantity','remark',
+                                                    'rate','net_amount').order_by('date')
+        except:
+            return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
+        party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
+                                    'work':list(purchase_detail)}
+        return Response(party_detail_json,status=status.HTTP_200_OK)
+
+
+
+class MachinePartyCredit(APIView):
+    """
+    View to Get Machine Party Credit Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        try:
+            api_party = request.data['party']
+        except Exception as e:
+            return Response('please provide a party name',status=status.HTTP_404_NOT_FOUND)
+        try:
+            party_i = MachineParty.objects.get(name=api_party)
+        except Exception as e:
+            return Response('machine party does not exists',status=status.HTTP_404_NOT_FOUND)
+        try:
+            credit_i = Credit.objects.filter(work=party_i.credit_id).values('date','credit_amount','remark').order_by('date')
+        except Exception as e:
+            return Response('please provide all information')
+        party_credit_detail = {'party':api_party,'contact':party_i.contact,'village':party_i.village,'crasher':party_i.crasher,
+                                'credits':list(credit_i)}
+        return Response(party_credit_detail,status=status.HTTP_200_OK)
+
+class VehiclePartyCredit(APIView):
+    """
+    View to Get Vehicle Party Credit Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        try:
+            api_party = request.data['party']
+        except Exception as e:
+            return Response('please provide a party name',status=status.HTTP_404_NOT_FOUND)
+        try:
+            party_i = VehicleParty.objects.get(name=api_party)
+        except Exception as e:
+            return Response('vehicle party does not exists',status=status.HTTP_404_NOT_FOUND)
+        try:
+            credit_i = Credit.objects.filter(work=party_i.credit_id).values('date','credit_amount','remark').order_by('date')
+        except Exception as e:
+            return Response('please provide all information')
+        party_credit_detail = {'party':api_party,'contact':party_i.contact,'village':party_i.village,
+                                'credits':list(credit_i)}
+        return Response(party_credit_detail,status=status.HTTP_200_OK)
+
+class DailyWorkCredit(APIView):
+    """
+    View to Get Daily Work Credit Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        daily_work_i = DailyWork.objects.all()
+        daily_work_json = []
+        for i in daily_work_i:
+            credit_i = Credit.objects.get(work=i.credit_id)
+            daily_work_detail = {"party":i.name,"village":i.village,"credit":credit_i.credit_amount,"date":credit_i.date,"remark":credit_i.remark}
+            daily_work_json.append(daily_work_detail)
+        return Response(daily_work_json)

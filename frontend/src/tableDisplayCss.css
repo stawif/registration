@@ -27,6 +27,11 @@
 table{
 	position: relative;
 }
+.scroll-class{
+	height: 100%;
+	width: 100%;
+	overflow-y: scroll;
+}
 
 thead {
 	position: -webkit-sticky; /* Safari */

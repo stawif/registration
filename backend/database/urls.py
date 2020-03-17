@@ -2,9 +2,10 @@ from django.urls import path
 from .views import (AddMachine , MachineList , VehicleList , AddVehicle , AddRecorder , MaterialList , AddMaterial,
                     MachinePartyList , PurchasePartyList,VehiclePartyList , AddMachineParty , AddPurchaseParty , 
                     AddVehicleParty,AddMachineWork,AddVehicleWork,AddWorker,AddPurchase, WorkerList,AddDailyWork,
-                    AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,AddPart,PartList,
+                    AddMachineSupply,AddVehicleSupply,MachinePayment,UpdateAvgFeet,AddPart,PartList,PurchaseList,
                     WorkerList, PartyContact,VehiclePayment,PurchasePayment,MachineWorkDetail,VehicleWorkDetail,
-                    PartyThroughContact,AddOwnerDebit,OnwerDebitList,AddDailyExpense,DailyExpenseList)
+                    PartyThroughContact,AddOwnerDebit,OwnerDebitList,AddDailyExpense,DailyExpenseList,WorkerPayment,
+                    PurchaseDetail,MachinePartyCredit,VehiclePartyCredit,DailyWorkCredit)
 
 urlpatterns = [
     # """
@@ -17,12 +18,11 @@ urlpatterns = [
     path('list-of-worker/',WorkerList.as_view()),
     path('list-of-part/',PartList.as_view()),
     path('list-of-dailyexpense/',DailyExpenseList.as_view()),
-    path('list-of-ownerdebit/',OnwerDebitList.as_view()),
+    path('list-of-ownerdebit/',OwnerDebitList.as_view()),
     path('list-of-machineparty/',MachinePartyList.as_view()),
     path('list-of-vehicleparty/',VehiclePartyList.as_view()),
     path('list-of-purchaseparty/',PurchasePartyList.as_view()),
-    path('machine-work-detail/',MachineWorkDetail.as_view()),
-    path('vehicle-work-detail/',VehicleWorkDetail.as_view()),
+    path('list-of-purchase/',PurchaseList.as_view()),
     path('party-through-contact/', PartyThroughContact.as_view()),
     # """
     # Registration URL
@@ -48,10 +48,20 @@ urlpatterns = [
     path('enter-owner-debit/',AddOwnerDebit.as_view()),
     path('enter-daily-expense/',AddDailyExpense.as_view()),
     # """
-    # other url
+    # Payment url
     # """
     path('machine-payment/',MachinePayment.as_view()),
+    path('worker-payment/',WorkerPayment.as_view()),
     path('vehicle-payment/',VehiclePayment.as_view()),
     path('purchase-payment/',PurchasePayment.as_view()),
     path('update-avgfeet/',UpdateAvgFeet.as_view()),
+    # """
+    # Detail(Work,Credit,Debit) URL
+    # """
+    path('machine-work-detail/',MachineWorkDetail.as_view()),
+    path('vehicle-work-detail/',VehicleWorkDetail.as_view()),
+    path('purchase-detail/',PurchaseDetail.as_view()),
+    path('machine-party-credit/',MachinePartyCredit.as_view()),
+    path('vehicle-party-credit/',VehiclePartyCredit.as_view()),
+    path('daily-work-credit/',DailyWorkCredit.as_view()),
 ]
