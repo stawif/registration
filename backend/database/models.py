@@ -300,7 +300,7 @@ class Credit(models.Model):
     work = models.ForeignKey(MixCredit, on_delete=models.CASCADE)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     date = models.DateField(blank=False)
-    credit_amount = models.IntegerField(blank=False)
+    credit_amount = models.FloatField(blank=False)
     remark = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
