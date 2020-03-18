@@ -24,6 +24,7 @@ import PartEntry from './components/entry/PartEntry';
 import OwnerDebitEntry from './components/entry/OwnerDebitEntry';
 import DailyExpenseEntry from './components/entry/DailyExpenseEntry';
 import WorkerDebit from './components/entry/WorkerDebit';
+import VehicleCredit from './components/account/VehicleCredit';
 
 //Accounts
 import MachineCredit from "./components/account/MachineCredit";
@@ -68,8 +69,9 @@ class App extends React.Component {
         partEntry: "partEntry",
         ownerDebitEntry: "ownerDebitEntry",
         dailyExpenseEntry: "dailyExpenseEntry",
+        workerDebit: "workerDebit",
         machineCredit: "machineCredit",
-        workerDebit: "workerDebit"
+        vehicleCredit: "vehicleCredit"
       },
       partyName: "",
       currentPage: "machineRegistration"
@@ -163,6 +165,9 @@ class App extends React.Component {
     }
     else if(this.state.currentPage === this.state.allPages.workerDebit){
       currentComponent = <WorkerDebit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.vehicleCredit){
+      currentComponent = <VehicleCredit />;
     }
     else {
       currentComponent = <MachineRegistration />;
@@ -543,6 +548,9 @@ class App extends React.Component {
                       >
                       <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.machineCredit)}>
                           Machine Credit
+                      </a>
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.vehicleCredit)}>
+                          Vehicle Credit
                       </a>
                       </div>    
                     </li>  
