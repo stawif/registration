@@ -41,7 +41,7 @@ class Autocomplete extends Component {
       showSuggestions: true,
       userInput: e.currentTarget.value
     });
-    this.props.checkFromParent(e.currentTarget.value);
+    //this.props.checkFromParent(e.currentTarget.value);
     this.props.callbackFromParent(e.currentTarget.value);
   };
 
@@ -53,7 +53,7 @@ class Autocomplete extends Component {
       userInput: e.currentTarget.innerText
     });
     this.props.callbackFromParent(e.currentTarget.innerText);
-    this.props.checkFromParent(e.currentTarget.innerText);
+    //this.props.checkFromParent(e.currentTarget.innerText);
   };
 
   onKeyDown = e => {

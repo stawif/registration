@@ -122,8 +122,9 @@ export default class VehicleRegistration extends React.Component {
             placeholderParent={"Vehicle Name"}
             callbackFromParent={dataFromChild => {
               this.state.vehicleName = dataFromChild;
+              this.checkVehicle()
             }}
-            checkFromParent={this.checkVehicle}
+            
           />
         </div>
         <p>{this.state.vehicleExistStatus}</p>

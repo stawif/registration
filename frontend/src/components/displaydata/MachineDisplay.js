@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../tableDisplayCss.css';
 
 class MachineDisplay extends React.Component {
 	state = {
@@ -15,8 +16,7 @@ class MachineDisplay extends React.Component {
 		return (
 			<div id="mainComponent">
 				<p className="headingViewPart">Machines</p>
-				<div>
-					<table className=" table table-borderd">
+				<table className="table table-borderd">
 						<thead className="thead-dark">
 							<tr>
 								<th>Name</th>
@@ -30,7 +30,6 @@ class MachineDisplay extends React.Component {
 							))}
 						</tbody>
 					</table>
-				</div>
 			</div>
 		);
 	}

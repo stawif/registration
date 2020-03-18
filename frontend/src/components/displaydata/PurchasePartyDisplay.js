@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../tableDisplayCss.css';
 
 class PurchasePartyDisplay extends React.Component {
 	state = {
