@@ -1,6 +1,6 @@
 import React from 'react';
 import Autocomplete from "../entry/AutoComplete";
-
+import './account.css';
 class MachineCredit extends React.Component{
     // Fetch machine list from server
     fetchProduct = async () => {
@@ -16,7 +16,7 @@ class MachineCredit extends React.Component{
     };
 
   //form Handler Submitting
-  onSubmit = async e => {
+  onSubmit = async () => {
     const responsCreditDetail = await fetch('http://127.0.0.1:8000/machine-party-credit/', {
         method: 'post',
         headers: {'Content-Type':'application/json'},
@@ -26,22 +26,15 @@ class MachineCredit extends React.Component{
     });        
     const jsonCreditDetail = await responsCreditDetail.json();
 
-    this.state.creditDetail= jsonCreditDetail;
-    /*this.setState({
-        creditDetail: jsonCreditDetail
-    });*/    
-
     this.setState({
-        input: {
+        creditDetail: jsonCreditDetail,
+        input:{
             visibility: "hidden"
         },
-        table: {
+        table:{
             visibility: "visible"
         }
     });
-
-    //e.target.reset();
-    e.preventDefault();
   };
 
     constructor(props){
@@ -56,13 +49,13 @@ class MachineCredit extends React.Component{
             },
             partyList: {},
             selectedParty: "",
-            input: {
+            partyNamesFromApi: [],
+            input:{
                 visibility: "visible"
             },
-            table: {
+            table:{
                 visibility: "hidden"
-            },
-            partyNamesFromApi: []
+            }
         }
         
         this.fetchProduct= this.fetchProduct.bind(this);
@@ -71,12 +64,9 @@ class MachineCredit extends React.Component{
     }
     render(){
         return(
-            <form
-            className="form-container form-group"
-            onSubmit={e => this.onSubmit(e)}
-            >
+            <div id="mainDiv" className="d-flex justify-content-center align-items-center scrollingSection">
                 <div style={this.state.table}>
-                <table className=" table table-borderd">
+                    <table className=" table table-borderd">
                         <thead className="thead-dark">
                             <tr>
                                 <th>Date</th>
@@ -95,24 +85,28 @@ class MachineCredit extends React.Component{
                         </tbody>
                     </table>
                 </div>
-                <div style={this.state.input}>
-                    <Autocomplete
-                        suggestions={this.state.partyNamesFromApi}
-                        callbackFromParent={dataFromChild => {
-                        this.state.selectedParty = dataFromChild;
-                        }}
-                        placeholderfrom={"Party name"}
-                    />
-                    <br />
-                    <br />
-                    <button
-                        type="submit"
-                        className="btn btn-outline-dark"
-                        style={this.state.buttonStatus}>
-                    Save
-                    </button>
-                </div>
-            </form>
+                <form
+                    className="form-container form-group"
+                    style={this.state.input}
+                >
+                        <Autocomplete
+                            suggestions={this.state.partyNamesFromApi}
+                            callbackFromParent={dataFromChild => {
+                            this.state.selectedParty = dataFromChild;
+                            }}
+                            placeholderfrom={"Party name"}
+                        />
+                        <br />
+                        <br />
+                        <button
+                            type="button"
+                            className="btn btn-outline-dark"
+                            style={this.state.buttonStatus}
+                            onClick={e => this.onSubmit()}>
+                        Save
+                        </button>
+                </form>
+            </div>    
         );
     }
 }
