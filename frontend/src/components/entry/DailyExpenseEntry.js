@@ -48,7 +48,7 @@ class DailyExpenseEntry extends React.Component{
             <form
             className="form-container form-group"
             onSubmit={e => this.onSubmit(e)} >
-                <p className="headingViewPart">Owner Debit</p>
+                <p className="headingViewPart">Daily Expense Entry</p>
 
                 <br />    
                 <InputRateField 

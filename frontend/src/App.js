@@ -23,11 +23,16 @@ import PurchasePartyDisplay from "./components/displaydata/PurchasePartyDisplay"
 import PartEntry from './components/entry/PartEntry';
 import OwnerDebitEntry from './components/entry/OwnerDebitEntry';
 import DailyExpenseEntry from './components/entry/DailyExpenseEntry';
-import WorkerDebit from './components/entry/WorkerDebit';
-import VehicleCredit from './components/account/VehicleCredit';
+import WorkerDebitEntry from './components/entry/WorkerDebit';
 
 //Accounts
 import MachineCredit from "./components/account/MachineCredit";
+import VehicleCredit from './components/account/VehicleCredit';
+import PurchaseDebit from './components/account/PurchaseDebit';
+import DailyExpenseDebit from './components/account/DailyExpenseDebit';
+import PartDebit from "./components/account/PartDebit";
+import OwnerDebit from './components/account/OwnerDebit';
+import WorkerDebit from './components/account/WorkerDebit';
 
 //Tables Components
 import MachineWorkTable from "./components/tableDisplay/MachineWorkTable";
@@ -69,9 +74,14 @@ class App extends React.Component {
         partEntry: "partEntry",
         ownerDebitEntry: "ownerDebitEntry",
         dailyExpenseEntry: "dailyExpenseEntry",
-        workerDebit: "workerDebit",
+        workerDebitEntry: "workerDebitEntry",
         machineCredit: "machineCredit",
-        vehicleCredit: "vehicleCredit"
+        vehicleCredit: "vehicleCredit",
+        purchaseDebit: "purchaseDebit",
+        dailyExpenseDebit: "dailyExpenseDebit",
+        partDebit: "partDebit",
+        ownerDebit: "ownerDebit",
+        workerDebit: "workerDebit"
       },
       partyName: "",
       currentPage: "machineRegistration"
@@ -163,11 +173,26 @@ class App extends React.Component {
     else if(this.state.currentPage === this.state.allPages.machineCredit){
       currentComponent = <MachineCredit />;
     }
-    else if(this.state.currentPage === this.state.allPages.workerDebit){
-      currentComponent = <WorkerDebit />;
+    else if(this.state.currentPage === this.state.allPages.workerDebitEntry){
+      currentComponent = <WorkerDebitEntry />;
     }
     else if(this.state.currentPage === this.state.allPages.vehicleCredit){
       currentComponent = <VehicleCredit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.purchaseDebit){
+      currentComponent = <PurchaseDebit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.dailyExpenseDebit){
+      currentComponent = <DailyExpenseDebit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.partDebit){
+      currentComponent = <PartDebit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.ownerDebit){
+      currentComponent = <OwnerDebit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.workerDebit){
+      currentComponent = <WorkerDebit />;
     }
     else {
       currentComponent = <MachineRegistration />;
@@ -423,7 +448,7 @@ class App extends React.Component {
                         <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() => this.updateCurrentPage(this.state.allPages.dailyExpenseEntry)}>
                           Daily Expense 
                         </a>
-                        <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() => this.updateCurrentPage(this.state.allPages.workerDebit)}>
+                        <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() => this.updateCurrentPage(this.state.allPages.workerDebitEntry)}>
                           Worker Debit 
                         </a>
                       </div>
@@ -551,6 +576,21 @@ class App extends React.Component {
                       </a>
                       <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.vehicleCredit)}>
                           Vehicle Credit
+                      </a>
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.purchaseDebit)}>
+                          Purchase Debit
+                      </a>
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.dailyExpenseDebit)}>
+                          Daily Expense Debit
+                      </a>
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.partDebit)}>
+                          Part Debit
+                      </a>
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.ownerDebit)}>
+                          Owner Debit
+                      </a>
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.workerDebit)}>
+                          Worker Debit
                       </a>
                       </div>    
                     </li>  

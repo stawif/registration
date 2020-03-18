@@ -1140,5 +1140,5 @@ class PurchasePartyDebit(APIView):
         except Exception as e:
             return Response('please provide all information')
         party_credit_detail = {'party':api_party,'contact':party_i.contact,'village':party_i.village,
-                                'dedits':list(dedit_i)}
+                                'debits':list(dedit_i)}
         return Response(party_credit_detail,status=status.HTTP_200_OK)

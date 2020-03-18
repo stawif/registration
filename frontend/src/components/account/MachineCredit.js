@@ -12,7 +12,6 @@ class MachineCredit extends React.Component{
             );
             const jsonPartyList = await responsePartyList.json();
             jsonPartyList.map(item => this.state.partyNamesFromApi.push(item.name));
-            this.state.partyList = jsonPartyList;
         }
         catch {
         }
@@ -81,7 +80,6 @@ class MachineCredit extends React.Component{
             startDate: null,
             endDate: null,
             currentCredit: [],
-            partyList: {},
             selectedParty: "",
             partyNamesFromApi: [],
             input:{
