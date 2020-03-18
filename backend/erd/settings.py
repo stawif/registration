@@ -124,10 +124,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+#ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = [
+"""CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000'
     ]
-
+"""
+# Fix date format in all site
+#DATE_FORMAT = "Y-m-d"
+#USE_L10N = False
