@@ -4,6 +4,7 @@ import Popup from "reactjs-popup";
 import axios from "axios";
 
 
+
 class MachineWorkTable extends React.Component{
     //setDateRestriction 
     setDateRestriction = (item, index) =>{
@@ -197,7 +198,7 @@ class MachineWorkTable extends React.Component{
                 minToDate: null,
                 maxToDate: null,
             }
-			
+		
         }
         this.state.currentWork= null;
         this.fetchProduct = this.fetchProduct.bind(this);
@@ -212,7 +213,8 @@ class MachineWorkTable extends React.Component{
         this.onSubmit = this.onSubmit.bind(this);
         this.fetchProduct(this.props.partyName);
     }
-		
+	
+	
 
     componentWillReceiveProps(nextProps){
         if(this.props.partyName != nextProps.partyName){
@@ -258,6 +260,8 @@ class MachineWorkTable extends React.Component{
 
         //Prepare payment data
         this.state.currentWork.forEach(this.preparePaymentData);
+		
+	
 
         return(
             <div id="tableComponent">
@@ -266,7 +270,7 @@ class MachineWorkTable extends React.Component{
                   
 						<div className="col-sm-2">
 							<blockquote className="commonFont blockquote text-center">
-								<p className="mb-0" onClick={e => this.setPaidStatusNull()}><b>{this.props.partyName}</b></p>
+								<p className="mb-0" onClick={e => this.setPaidStatusNull()}> <b>{this.props.partyName}</b></p>
 							</blockquote>                        
 						</div>
 
