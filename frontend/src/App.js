@@ -23,6 +23,7 @@ import PurchasePartyDisplay from "./components/displaydata/PurchasePartyDisplay"
 import PartEntry from './components/entry/PartEntry';
 import OwnerDebitEntry from './components/entry/OwnerDebitEntry';
 import DailyExpenseEntry from './components/entry/DailyExpenseEntry';
+import WorkerDebit from './components/entry/WorkerDebit';
 
 //Accounts
 import MachineCredit from "./components/account/MachineCredit";
@@ -67,7 +68,8 @@ class App extends React.Component {
         partEntry: "partEntry",
         ownerDebitEntry: "ownerDebitEntry",
         dailyExpenseEntry: "dailyExpenseEntry",
-        machineCredit: "machineCredit"
+        machineCredit: "machineCredit",
+        workerDebit: "workerDebit"
       },
       partyName: "",
       currentPage: "machineRegistration"
@@ -158,6 +160,9 @@ class App extends React.Component {
     }
     else if(this.state.currentPage === this.state.allPages.machineCredit){
       currentComponent = <MachineCredit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.workerDebit){
+      currentComponent = <WorkerDebit />;
     }
     else {
       currentComponent = <MachineRegistration />;
@@ -410,17 +415,11 @@ class App extends React.Component {
                         >
                           Owner Debit
                         </a>
-                        <a
-                          className="dropdown-item"
-						  data-toggle="collapse" 
-						  data-target=".navbar-collapse.show"
-                          onClick={() =>
-                            this.updateCurrentPage(
-                              this.state.allPages.dailyExpenseEntry
-                            )
-                          }
-                        >
+                        <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() => this.updateCurrentPage(this.state.allPages.dailyExpenseEntry)}>
                           Daily Expense 
+                        </a>
+                        <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() => this.updateCurrentPage(this.state.allPages.workerDebit)}>
+                          Worker Debit 
                         </a>
                       </div>
                     </li>
