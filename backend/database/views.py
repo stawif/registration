@@ -1035,10 +1035,13 @@ class PurchaseDetail(APIView):
         except Exception as e:
             return Response('purchase party does not exists',status=status.HTTP_200_OK)
         try:
-            purchase_detail = Purchase.objects.filter(party=party_detail).values('date','Material','quantity','remark',
+            purchase_detail = Purchase.objects.filter(party=party_detail).values('date','material','quantity','remark',
                                                     'rate','net_amount').order_by('date')
-        except:
-            return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
+            for i in purchase_detail:
+                material = Material.objects.get(id=i['material'])
+                i['material']=material.name
+        except Exception as e:
+            return Response('no work exists for this purchase party',status=status.HTTP_200_OK)
         party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
                                     'work':list(purchase_detail)}
         return Response(party_detail_json,status=status.HTTP_200_OK)

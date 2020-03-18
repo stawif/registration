@@ -245,7 +245,7 @@ class Purchase(models.Model):
     Purchase records of owner from any party
     """
     party = models.ForeignKey(PurchaseParty, on_delete=models.CASCADE)
-    Material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.now, blank=False)    
     quantity = models.IntegerField(blank=False)
     rate = models.FloatField(blank=False)
