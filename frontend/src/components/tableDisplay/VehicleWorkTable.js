@@ -163,7 +163,7 @@ class VehicleWorkTable extends React.Component{
             remark: this.state.remark
         })
         .then(res => {
-            this.fetchProduct();
+            //this.fetchProduct();
             this.setState({
                 responseMessage: res.data
             });

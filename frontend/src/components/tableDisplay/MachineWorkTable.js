@@ -153,7 +153,7 @@ class MachineWorkTable extends React.Component{
             remark: this.state.remark
         })
         .then(res => {
-            this.fetchProduct();
+            //this.fetchProduct();
             this.setState({
                 responseMessage: res.data
             });
@@ -320,7 +320,7 @@ class MachineWorkTable extends React.Component{
                         } 
 						>
 							
-                            <h4 onClick={e => this.setPaidStatusNull()}>{this.props.partyName}</h4>
+							<h4 onClick={e => this.setPaidStatusNull()}>{this.props.partyName}</h4>
                             <h5>{this.state.workDetail.contact}</h5>
 						
 							<label className="radio-inline mr-2"><input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>Paid</label>
