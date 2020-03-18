@@ -137,11 +137,11 @@ export default class MaterialRegistration extends React.Component {
 
           <p>{this.state.materialExistMessage}</p>
           <br />
-          <InputRateField
+          <InputCommonName
             callbackFromParent={dataFromChild => {
               this.state.materialMeasurement = dataFromChild;
             }}
-            placeholderParent={"Material Measurement"}
+            placeholderParent={"Measurement"}
           />
 
           <br />

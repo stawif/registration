@@ -550,7 +550,7 @@ class AddPurchase(APIView):
         except Exception:
             return Response("Purchase Party Does not Exists.")
         try:
-            Material_instance = Material.objects.get(name=request.data['Material'])
+            Material_instance = Material.objects.get(name=request.data['material'])
         except Exception:
             return Response("Material Does not Exists.Please Add Material.")
         try:
@@ -564,7 +564,7 @@ class AddPurchase(APIView):
             date =api_date,quantity=api_quantity,net_amount=net_amount,remark=api_remark)
             
             new_quantity = Material_instance.quantity+api_quantity
-            Material.objects.filter(name=request.data['Material']).update(quantity=new_quantity)          
+            Material.objects.filter(name=request.data['material']).update(quantity=new_quantity)          
             
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -1038,7 +1038,7 @@ class PurchaseDetail(APIView):
         except Exception as e:
             return Response('purchase party does not exists',status=status.HTTP_200_OK)
         try:
-            purchase_detail = Purchase.objects.filter(party=party_detail).values('date','Material','quantity','remark',
+            purchase_detail = Purchase.objects.filter(party=party_detail).values('date','material','quantity','remark',
                                                     'rate','net_amount').order_by('date')
         except:
             return Response('no work exists for this vehicle party',status=status.HTTP_200_OK)
