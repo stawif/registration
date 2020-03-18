@@ -902,7 +902,7 @@ class PurchasePayment(APIView):
             if purchase_i:
                 for i in purchase_i:
                     Purchase.objects.filter(party=i.party,date=i.date).update(paid=True)
-                return Response('Purchase for party {} from {} to {} is paid'.format(party_i[1],api_start_date,api_end_date),status=status.HTTP_200_OK)
+                return Response('Purchase for party {} from {} to {} is paid'.format(party_i,api_start_date,api_end_date),status=status.HTTP_200_OK)
             else:
                  return Response('No Purchase exists for this purchase party')
         except Exception as e:
@@ -1101,7 +1101,7 @@ class WorkerDebit(APIView):
         try:
             api_name = request.data['name']
         except Exception as e:
-            return Response('please provide a party name',status=status.HTTP_404_NOT_FOUND)
+            return Response('please provide a worker name',status=status.HTTP_404_NOT_FOUND)
         try:
             worker_i = Worker.objects.get(name=api_name)
         except Exception as e:
@@ -1113,3 +1113,26 @@ class WorkerDebit(APIView):
         worker_debit_detail = {'name':api_name,'contact':worker_i.contact,'village':worker_i.village,
                                 'debit':list(debit_i)}
         return Response(worker_debit_detail,status=status.HTTP_200_OK)
+
+class PurchasePartyDebit(APIView):
+    """
+    View to Get Purchase Party dedit Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def post(self,request):
+        try:
+            api_party = request.data['party']
+        except Exception as e:
+            return Response('please provide a party name',status=status.HTTP_404_NOT_FOUND)
+        try:
+            party_i = PurchaseParty.objects.get(name=api_party)
+        except Exception as e:
+            return Response('purchase party does not exists',status=status.HTTP_404_NOT_FOUND)
+        try:
+            dedit_i = Debit.objects.filter(debit_id=party_i.debit_id).values('date','debit_amount','remark').order_by('date')
+        except Exception as e:
+            return Response('please provide all information')
+        party_credit_detail = {'party':api_party,'contact':party_i.contact,'village':party_i.village,
+                                'dedits':list(dedit_i)}
+        return Response(party_credit_detail,status=status.HTTP_200_OK)
