@@ -1,6 +1,8 @@
 import React from 'react';
 import Autocomplete from "../entry/AutoComplete";
 import './account.css';
+import Popup from "reactjs-popup";
+
 class MachineCredit extends React.Component{
     // Fetch machine list from server
     fetchProduct = async () => {
@@ -136,25 +138,54 @@ class MachineCredit extends React.Component{
                             }}/>
                         </div>
                     </div>
-                    <table className="table table-borderd tablePart">
-                        <thead className="thead-dark">
-                            <tr>
-                                <th>Date</th>
-                                <th>Credit Amount</th>
-                                <th>Remark</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.state.currentCredit.map((credit) => (
-                                <tr>
-                                    <td>{credit.date}</td>
-                                    <td>{credit.credit_amount}</td>
-                                    <td>{credit.remark}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+					<div className="highTable">
+
+						<div>
+							{/*Party and filter popup*/}
+							<Popup modal trigger={
+								<button className="bg-primary">Party</button>
+	                        } 
+							>
+							
+								<h4>{this.state.creditDetail.party}</h4>
+								<h4>{this.state.creditDetail.contact}</h4>
+								<h4>{this.state.creditDetail.village}</h4>
+								<input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
+									this.setState({
+										minFilterDate: e.target.value
+									});
+								}}/>
+
+								<input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
+									this.setState({
+										maxFilterDate: e.target.value
+									});
+								}}/>
+						
+							</Popup>
+						</div>
+					</div>
+					<div className="lowerHeader">
+						<table className="table table-borderd tablePart">
+							<thead className="thead-dark">
+								<tr>
+									<th>Date</th>
+									<th>Credit Amount</th>
+									<th>Remark</th>
+								</tr>
+							</thead>
+							<tbody>
+								{this.state.currentCredit.map((credit) => (
+									<tr>
+										<td>{credit.date}</td>
+										<td>{credit.credit_amount}</td>
+										<td>{credit.remark}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				</div>
                 <form
                     className="form-container form-group"
                     style={this.state.input}

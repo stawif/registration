@@ -4,6 +4,7 @@ import Popup from "reactjs-popup";
 import axios from "axios";
 
 
+
 class MachineWorkTable extends React.Component{
     //setDateRestriction 
     setDateRestriction = (item, index) =>{
@@ -197,7 +198,7 @@ class MachineWorkTable extends React.Component{
                 minToDate: null,
                 maxToDate: null,
             }
-			
+		
         }
         this.state.currentWork= null;
         this.fetchProduct = this.fetchProduct.bind(this);
@@ -212,7 +213,8 @@ class MachineWorkTable extends React.Component{
         this.onSubmit = this.onSubmit.bind(this);
         this.fetchProduct(this.props.partyName);
     }
-		
+	
+	
 
     componentWillReceiveProps(nextProps){
         if(this.props.partyName != nextProps.partyName){
@@ -258,6 +260,8 @@ class MachineWorkTable extends React.Component{
 
         //Prepare payment data
         this.state.currentWork.forEach(this.preparePaymentData);
+		
+	
 
         return(
             <div id="tableComponent">
@@ -266,7 +270,7 @@ class MachineWorkTable extends React.Component{
                   
 						<div className="col-sm-2">
 							<blockquote className="commonFont blockquote text-center">
-								<p className="mb-0" onClick={e => this.setPaidStatusNull()}><b>{this.props.partyName}</b></p>
+								<p className="mb-0" onClick={e => this.setPaidStatusNull()}> <b>{this.props.partyName}</b></p>
 							</blockquote>                        
 						</div>
 
@@ -316,7 +320,7 @@ class MachineWorkTable extends React.Component{
                         } 
 						>
 							
-                            <h4 onClick={e => this.setPaidStatusNull()}>{this.props.partyName}</h4>
+							<h4 onClick={e => this.setPaidStatusNull()}>{this.props.partyName}</h4>
                             <h5>{this.state.workDetail.contact}</h5>
 						
 							<label className="radio-inline mr-2"><input type="radio" name="paidStatus" value="paid" onChange={ e => {this.setPaidStatus(e.target.value)}}/>Paid</label>
