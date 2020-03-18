@@ -3,3 +3,14 @@
     width: 100%;
 }
 
+.tableShow{
+    height: 100%;
+    width: 100%;
+}
+
+.upperHeader{
+    height: 10%;
+}
+.commonFont{
+    font-size: 1.4vw;
+}

@@ -5,13 +5,14 @@ class MachineCredit extends React.Component{
     // Fetch machine list from server
     fetchProduct = async () => {
         try {
-        const responsePartyList = await fetch(
-            "http://127.0.0.1:8000/list-of-machineparty/" 
-        );
-        const jsonPartyList = await responsePartyList.json();
-        jsonPartyList.map(item => this.state.partyNamesFromApi.push(item.name));
-        this.state.partyList = jsonPartyList;
-        } catch {
+            const responsePartyList = await fetch(
+                "http://127.0.0.1:8000/list-of-machineparty/" 
+            );
+            const jsonPartyList = await responsePartyList.json();
+            jsonPartyList.map(item => this.state.partyNamesFromApi.push(item.name));
+            this.state.partyList = jsonPartyList;
+        }
+        catch {
         }
     };
 
@@ -26,16 +27,40 @@ class MachineCredit extends React.Component{
     });        
     const jsonCreditDetail = await responsCreditDetail.json();
 
+    if(jsonCreditDetail.credits.length!=0)
+    {
+        this.setState({
+            minDate: jsonCreditDetail.credits[0].date
+        });
+        this.setState({
+            maxDate: jsonCreditDetail.credits.slice(-1)[0].date    
+        });
+    } 
     this.setState({
         creditDetail: jsonCreditDetail,
         input:{
-            visibility: "hidden"
+            display: "none"
         },
         table:{
-            visibility: "visible"
+            display: "block"
         }
     });
   };
+
+  
+    // Set final showing rows of table currentWork
+    setDateFilter = (item, index) => {
+        if(!this.state.minFilterDate){
+            this.state.minFilterDate= this.state.minDate;
+        }
+        if(!this.state.maxFilterDate){
+            this.state.maxFilterDate= this.state.maxDate;
+        }
+        if(this.state.minFilterDate <= item.date && item.date <= this.state.maxFilterDate){
+            this.state.currentCredit.push(item);
+        }
+    }
+
 
     constructor(props){
         super(props);
@@ -47,26 +72,71 @@ class MachineCredit extends React.Component{
                 crasher: "",
                 credits: []
             },
+            minDate: null,
+            maxDate: null,
+            minFilterDate: null,
+            maxFilterDate: null,
+            startDate: null,
+            endDate: null,
+            currentCredit: [],
             partyList: {},
             selectedParty: "",
             partyNamesFromApi: [],
             input:{
-                visibility: "visible"
+                display: "block"
             },
             table:{
-                visibility: "hidden"
+                display: "none"
             }
         }
         
         this.fetchProduct= this.fetchProduct.bind(this);
         this.onSubmit= this.onSubmit.bind(this);
+        this.setDateFilter= this.setDateFilter.bind(this);
         this.fetchProduct();
     }
     render(){
+        //Clean old data
+        this.state.currentCredit=[];
+        
+        //  fill current credit
+        this.state.creditDetail.credits.forEach(this.setDateFilter);
+
         return(
             <div id="mainDiv" className="d-flex justify-content-center align-items-center scrollingSection">
-                <div style={this.state.table}>
-                    <table className=" table table-borderd">
+                <div className="tableShow" style={this.state.table}>
+                    <div className="upperHeader row">
+                        <div className="col-sm-2">
+                            <blockquote className="commonFont blockquote text-center">
+								<p className="mb-0"><b>{this.state.creditDetail.party}</b></p>
+							</blockquote>                        
+                        </div>
+                        <div className="col-sm-2">
+                            <blockquote className="commonFont blockquote text-center">
+								<p className="mb-0">{this.state.creditDetail.contact}</p>
+							</blockquote>                        
+                        </div>
+                        <div className="col-sm-2">
+                            <blockquote className="commonFont blockquote text-center">
+								<p className="mb-0">{this.state.creditDetail.village}</p>
+							</blockquote>                        
+                        </div>
+                        <div className="col-sm-3">
+                            <input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
+                                this.setState({
+                                    minFilterDate: e.target.value
+                                });
+                            }}/>
+                        </div>
+                        <div className="col-sm-3">
+                            <input type="date" min={this.state.minDate} max={this.state.maxDate} onChange={e => {
+                                this.setState({
+                                    maxFilterDate: e.target.value
+                                });
+                            }}/>
+                        </div>
+                    </div>
+                    <table className="table table-borderd tablePart">
                         <thead className="thead-dark">
                             <tr>
                                 <th>Date</th>
@@ -75,7 +145,7 @@ class MachineCredit extends React.Component{
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.creditDetail.credits.map((credit) => (
+                            {this.state.currentCredit.map((credit) => (
                                 <tr>
                                     <td>{credit.date}</td>
                                     <td>{credit.credit_amount}</td>
