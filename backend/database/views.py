@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .serializers import (MachineSerializer , VehicleSerializer , RecorderSerializer , MaterialSerializer,
-                            PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,
-                            MachineWorkSerializer , VehicleWorkSerializer,WorkerSerializer,
+                            PurchasePartySerializer,VehiclePartySerializer,MachinePartySerializer,VehicleSupplySerializer,
+                            MachineWorkSerializer , VehicleWorkSerializer,WorkerSerializer,MachineSupplySerializer,
                             DailyWorkSerializer,MaterialListSerializer,PartSerializer,PurchaseSerializer)
 from rest_framework.views import APIView
 from .models import  (Machine , Owner , Vehicle , Recorder , Material , Credit,
@@ -281,6 +281,35 @@ class DebitList(APIView):
             return Response(debit_i,status=status.HTTP_200_OK)
         except Exception as e:
             return Response("network error",status=status.HTTP_404_NOT_FOUND)
+
+class MachineSupplyList(APIView):
+    """
+    View to Machine Supply Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        try:
+            queryset = MachineSupply.objects.all().order_by('date')
+            serializer = MachineSupplySerializer(queryset,many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response("network error",status=status.HTTP_400_BAD_REQUEST)
+
+class VehicleSupplyList(APIView):
+    """
+    View to vehicle Supply Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        try:
+            queryset = VehicleSupply.objects.all().order_by('date')
+            serializer = VehicleSupplySerializer(queryset,many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response("network error",status=status.HTTP_400_BAD_REQUEST)
+
 # """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # APIView for Registration (post request)
 # """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -390,7 +419,6 @@ class AddMaterial(APIView):
             request.data["owner"]=owner.id                                      #Owner Id for Owner field in 
             serializer = MaterialSerializer(data=request.data)
             if serializer.is_valid():
-                print("Reacher here")
                 serializer.save()
                 return Response("{} Store Material added".format(api_name), status=status.HTTP_201_CREATED)
             return Response("Either exists or incorrect details",status=status.HTTP_400_BAD_REQUEST)
@@ -483,7 +511,6 @@ class AddPurchaseParty(APIView):
             purchase_party_instance = PurchaseParty.objects.create(owner=owner,debit_id=mix_debit_create,name=api_name,contact=api_contact,village=api_village)
             return Response("{} party added".format(api_name),status=status.HTTP_201_CREATED)
         except Exception as e:
-            print(e)
             mix_debit_create.delete()
             return Response("Party not Created due to Network problem.")
         return Response("Please Provide Correct data.",status=status.HTTP_400_BAD_REQUEST)
@@ -514,7 +541,6 @@ class AddWorker(APIView):
                 village=api_village,salary=float(api_salary))
                 return Response("{} Worker Added".format(api_name),status=status.HTTP_201_CREATED)
             except Exception as e:
-                print(e)
                 mix_debit_create_i.delete()
                 return Response('please provide all required datad',status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -539,8 +565,6 @@ class AddMachineWork(APIView):
             api_remark = request.data['remark']
             api_holes = request.data['holes']
             api_payment = request.data['payment']
-            print(api_party_name)
-            print(api_date)
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         try:
@@ -555,7 +579,6 @@ class AddMachineWork(APIView):
                 payment=api_payment)
                 return Response("{} Machine work added".format(machine_id.name),status=status.HTTP_201_CREATED)
             except Exception as e:
-                print(e)
                 return Response("{} for date {} is already exists".format(api_party_name,api_date))
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -588,7 +611,6 @@ class AddVehicleWork(APIView):
                  feet=float(api_feet),five_feet=float(api_five_feet),two_half_feet=float(api_two_half_feet),remark=api_remark,payment=api_payment)
                  return Response("{} Vehicle work added".format(api_party_name),status = status.HTTP_201_CREATED)
             except Exception as e:
-                print(e)
                 return Response("{} for date {} is already exists".format(api_party_name,api_date),status=status.HTTP_204_NO_CONTENT)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -622,7 +644,6 @@ class AddPurchase(APIView):
             
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
-            print(e)
             return Response('Please Provide All Required Data.',status=status.HTTP_204_NO_CONTENT)
         #return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -693,31 +714,25 @@ class AddMachineSupply(APIView):
                 api_quantity = request.data['quantity']
                 api_drilling_feet = request.data['drilling_feet']
             except Exception as e:
-                print(e) 
                 return Response("please provide all information correctly",status=status.HTTP_204_NO_CONTENT)   
             # get MachineParty instance from databse
             try:
                 machine_party_i = MachineParty.objects.get(name=api_party)
             except Exception as e:
-                print(e)
                 return Response("please provide a valid party name",status=status.HTTP_204_NO_CONTENT)        
             # get Material instance from database
             try:
                 Material_i = Material.objects.get(name=api_Material)
             except Exception as e:
-                print(e)
                 return Response("please provide a valid Material name",status=status.HTTP_204_NO_CONTENT)        
             try:
                 machine_supply_create = MachineSupply.objects.create(party=machine_party_i,
                 Material=Material_i,date=api_date,quantity=api_quantity,drilling_feet=api_drilling_feet)
-                print("is drilling feet")
                 Material_new_quantity = Material_i.quantity - api_quantity
                 Material.objects.filter(pk=Material_i.pk).update(quantity=Material_new_quantity)          
 
                 return Response("{} is supplied to {} at {}".format(api_Material,api_party,api_date),status=status.HTTP_201_CREATED)
             except Exception as e:
-                print(e)
-                print("Error")
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)    
 
 class AddVehicleSupply(APIView):
@@ -735,13 +750,11 @@ class AddVehicleSupply(APIView):
                 api_date = request.data['date']
                 api_quantity = request.data['quantity']
             except Exception as e:
-                print(e) 
                 return Response("please provide all information correctly",status=status.HTTP_204_NO_CONTENT)   
             # get Material instance from database
             try:
                 Material_i = Material.objects.get(name=api_Material)
             except Exception as e:
-                print(e)
                 return Response("please provide a valid Material name",status=status.HTTP_204_NO_CONTENT)        
             try:
                 vehicle_supply_create = VehicleSupply.objects.create(Material=Material_i,date=api_date,quantity=api_quantity)
@@ -751,7 +764,6 @@ class AddVehicleSupply(APIView):
 
                 return Response("{} is supplied to {}".format(api_Material,api_date),status=status.HTTP_201_CREATED)
             except Exception as e:
-                print(e)
                 return Response("there is error while saving data in database",status=status.HTTP_204_NO_CONTENT)                
 
 class AddPart(APIView):
@@ -772,7 +784,6 @@ class AddPart(APIView):
         try:
             mix_debit_i = MixDebit.objects.create(owner=owner_i,date=api_date,category="part_debit")
         except Exception as e:
-            print(e)
             return Response('please provide correct date',status=status.HTTP_404_NOT_FOUND)
         try:
             part_i = Part.objects.create(owner=owner_i,debit_id=mix_debit_i,name=api_name)
@@ -923,7 +934,6 @@ class VehiclePayment(APIView):
                 return Response('no vehicle work exists for this vehicle party',status=status.HTTP_200_OK)
         except Exception as e:
             credit_i.delete()
-            print(e)
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no work for this vehicle party exists.',status=status.HTTP_200_OK)
 
@@ -951,7 +961,6 @@ class PurchasePayment(APIView):
             debit_i = Debit.objects.create(debit_id=party_i.debit_id,date=date.today(),owner=owner_i,remark=api_remark,
             debit_amount=api_payment)
         except Exception as e:
-            print(e)
             return Response("payment not succed due to some error",status=status.HTTP_400_BAD_REQUEST)
         try:
             purchase_i = Purchase.objects.filter(party=party_i,date__range=[api_start_date,api_end_date])
@@ -963,7 +972,6 @@ class PurchasePayment(APIView):
                  return Response('No Purchase exists for this purchase party')
         except Exception as e:
             debit_i.delete()
-            print(e)
             return Response('please provide correct date',status=status.HTTP_400_BAD_REQUEST)
         return Response('no purchase for this purchase party exists.',status=status.HTTP_200_OK)
 
@@ -981,7 +989,6 @@ class WorkerPayment(APIView):
             api_remark = request.data['remark']
             api_date = request.data['date']
         except Exception as e:
-            print(e)
             return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
         try:
             worker_i = Worker.objects.get(name=api_name)
