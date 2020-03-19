@@ -227,7 +227,30 @@ class PartDedit(APIView):
         except Exception as e:
             return Response('network error',status=status.HTTP_400_BAD_REQUEST)
 
-# """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+class DailyWorkList(APIView):
+    """
+    View to Get Daily Work Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        try:
+            daily_work_i = DailyWork.objects.all().order_by('date')
+            daily_work_list = []
+            for i in daily_work_i:
+                credit_i = Credit.objects.get(work=i.credit_id)
+                vehicle_i = Vehicle.objects.get(name=i.vehicle)
+                daily_work_data = {"name":i.name,"village":i.village,"date":i.date,"vehicle":vehicle_i.name,
+                                    "five_feet":i.five_feet,"five_feet_rate":i.five_feet_rate,"two_half_feet":i.two_half_feet,
+                                    "two_half_feet_rate":i.two_half_feet_rate,"diesel_spend":i.diesel_spend,
+                                    "net_amount":i.net_amount,"received_amount":credit_i.credit_amount,'remark':credit_i.remark}
+                daily_work_list.append(daily_work_data)
+            return Response(daily_work_list,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response('network error',status=status.HTTP_400_BAD_REQUEST)
+
+
+# """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # APIView for Registration (post request)
 # """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -362,7 +385,7 @@ class AddMachineParty(APIView):
             return Response('Party Already Exists in Machine Work ')
         else:
                 try:
-                    credit_id_i = MixCredit.objects.create(owner=owner)
+                    credit_id_i = MixCredit.objects.create(owner=owner,category="machine_party")
                 except Exception:
                     return Response("Data is not sufficient",status=status.HTTP_404_NOT_FOUND)
                 try:
@@ -394,7 +417,7 @@ class AddVehicleParty(APIView):
             return Response('Party Already Exists in Vehicle Work')
         else:
                 try:
-                    credit_id_i = MixCredit.objects.create(owner=owner)
+                    credit_id_i = MixCredit.objects.create(owner=owner,category="vehicle_party")
                 except Exception:
                     return Response("Data is not correct",status=status.HTTP_400_BAD_REQUEST)
                 try:
@@ -422,7 +445,7 @@ class AddPurchaseParty(APIView):
         except Exception as e:
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         try:
-            mix_debit_create = MixDebit.objects.create(owner=owner)
+            mix_debit_create = MixDebit.objects.create(owner=owner,category="purchase_debit")
         except Exception:
             return Response("Error due to mix_debit_creation")
         try:
@@ -452,7 +475,7 @@ class AddWorker(APIView):
             return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         if request.data:
             try:
-                mix_debit_create_i = MixDebit.objects.create(owner=owner,date=api_date)
+                mix_debit_create_i = MixDebit.objects.create(owner=owner,date=api_date,category="worker_debit")
             except Exception:
                 return Response("please provide correct data",status=status.HTTP_400_BAD_REQUEST)
             try:
@@ -590,8 +613,10 @@ class AddDailyWork(APIView):
             api_two_half_feet_rate = request.data['two_half_feet_rate']
             api_diesel_spend = request.data['diesel_spend']
             api_remark = request.data['remark']
+            api_received_amount = request.data['received_amount']
         except Exception as e:
-            return Response('please provide all information correctly...',status=status.HTTP_204_NO_CONTENT)
+            print(e)
+            return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
         try:
             vehicle_i = Vehicle.objects.get(name=api_vehicle)
         except Exception as e:
@@ -600,21 +625,20 @@ class AddDailyWork(APIView):
         try:
             owner = Owner.objects.get(id=1)
             try:
-                credit_id_i = MixCredit.objects.create(owner=owner,date=api_date)
+                credit_id_i = MixCredit.objects.create(owner=owner,date=api_date,category="daily_work")
             except Exception as e:
-                return Response('please provide all information correctly',status=status.HTTP_204_NO_CONTENT)
+                return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
             try:
                 daily_work_i = DailyWork.objects.create(credit_id=credit_id_i,name=api_name,village=api_village,vehicle=vehicle_i,five_feet=float(api_five_feet),five_feet_rate=float(api_five_feet_rate),
                                             two_half_feet=float(api_two_half_feet),two_half_feet_rate=float(api_two_half_feet_rate),diesel_spend=float(api_diesel_spend),
                                             net_amount=float(net_amount),date=api_date)
             except Exception as e:
                 credit_id_i.delete()
-                return Response('please provide all information correctly.',status=status.HTTP_204_NO_CONTENT)
+                return Response('daily work not saved,please try again',status=status.HTTP_204_NO_CONTENT)
             try:
-                credit_i = Credit.objects.create(owner=owner,work=credit_id_i,date=api_date,credit_amount=float(net_amount),remark=api_remark)
+                credit_i = Credit.objects.create(owner=owner,work=credit_id_i,date=api_date,credit_amount=float(api_received_amount),remark=api_remark)
                 return Response('daily work added for party {}'.format(api_name),status=status.HTTP_200_OK)
             except Exception as e:
-                print(e)
                 daily_work_i.delete()
                 credit_id_i.delete()
                 return Response('daily work not saved due to some error',status=status.HTTP_400_BAD_REQUEST)
@@ -716,7 +740,7 @@ class AddPart(APIView):
         except Exception as e:
             return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
         try:
-            mix_debit_i = MixDebit.objects.create(owner=owner_i,date=api_date)
+            mix_debit_i = MixDebit.objects.create(owner=owner_i,date=api_date,category="part_debit")
         except Exception as e:
             print(e)
             return Response('please provide correct date',status=status.HTTP_404_NOT_FOUND)
@@ -750,7 +774,6 @@ class AddOwnerDebit(APIView):
         try:
             debit_id = MixDebit.objects.get(id=2)
             owner_i = Owner.objects.get(id=1)
-            print(debit_id)
         except Exception as e:
             return Response('error in debit_id',status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -776,9 +799,9 @@ class AddDailyExpense(APIView):
         except Exception as e:
             return Response('please provide all information',status=status.HTTP_204_NO_CONTENT)
         try:
-            debit_id = MixDebit.objects.create(owner=owner_i,date=api_date)
+            debit_id = MixDebit.objects.create(owner=owner_i,date=api_date,category="daily_expense_debit")
         except Exception as e:
-            return Response('mix debit not found')
+            return Response('mix debit not created,please try again')
         try:
             daily_expense_i = DailyExpense.objects.create(owner=owner_i,debit_id=debit_id,category=api_category)
         except Exception as e:

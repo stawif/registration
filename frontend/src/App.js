@@ -33,6 +33,7 @@ import DailyExpenseDebit from './components/account/DailyExpenseDebit';
 import PartDebit from "./components/account/PartDebit";
 import OwnerDebit from './components/account/OwnerDebit';
 import WorkerDebit from './components/account/WorkerDebit';
+import DailyWorkCredit from './components/account/DailyWorkCredit';
 
 //Tables Components
 import MachineWorkTable from "./components/tableDisplay/MachineWorkTable";
@@ -81,7 +82,8 @@ class App extends React.Component {
         dailyExpenseDebit: "dailyExpenseDebit",
         partDebit: "partDebit",
         ownerDebit: "ownerDebit",
-        workerDebit: "workerDebit"
+        workerDebit: "workerDebit",
+        dailyWorkCredit: "dailyWorkCredit"
       },
       partyName: "",
       currentPage: "machineRegistration"
@@ -193,6 +195,9 @@ class App extends React.Component {
     }
     else if(this.state.currentPage === this.state.allPages.workerDebit){
       currentComponent = <WorkerDebit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.dailyWorkCredit){
+      currentComponent = <DailyWorkCredit />;
     }
     else {
       currentComponent = <MachineRegistration />;
@@ -591,6 +596,9 @@ class App extends React.Component {
                       </a>
                       <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.workerDebit)}>
                           Worker Debit
+                      </a>
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.dailyWorkCredit)}>
+                          Daily Work Credit
                       </a>
                       </div>    
                     </li>  

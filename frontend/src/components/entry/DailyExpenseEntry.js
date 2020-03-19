@@ -22,10 +22,6 @@ class DailyExpenseEntry extends React.Component{
       .catch(error => {
         console.log(error.response.request._response);
       });
-    console.log("Expense : ",this.state.expense);
-    console.log("Date : ",this.state.date);
-    console.log("remark : ",this.state.remark);
-    console.log("category : ",this.state.category);
     e.target.reset();
     e.preventDefault();
   };
