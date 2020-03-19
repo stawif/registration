@@ -115,7 +115,7 @@ export default class VehicleRegistration extends React.Component {
         className="form-container form-group"
         onSubmit={e => this.onSubmit(e)}
       >
-        <p className="headingViewPart">vehicle Registration</p>
+        <p className="headingViewPart">Vehicle Registration</p>
         <div className="pt-5">
           <InputCommonName
             minLengthh={5}

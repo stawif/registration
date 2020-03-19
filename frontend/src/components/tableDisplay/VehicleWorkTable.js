@@ -277,7 +277,7 @@ class VehicleWorkTable extends React.Component{
         return(
             <div id="tableComponent">
 			
-                <div className="row upperTable bg-primary justify-content-center align-items-center">
+                <div className="row upperTable bg-success justify-content-center align-items-center">
                   
 						<div className="col-sm-2">
 							<blockquote className="commonFont blockquote text-center">
@@ -326,7 +326,7 @@ class VehicleWorkTable extends React.Component{
                     <div className="col-6">
                         {/*Party and filter popup*/}
                         <Popup modal trigger={
-                            <button className="bg-primary">Party</button>
+                            <button className="bg-success">Party</button>
 							
                         } 
 						>
@@ -354,7 +354,7 @@ class VehicleWorkTable extends React.Component{
                     <div className="col-6">    
                         {/*Payment popup*/}
                         <Popup modal trigger={
-                            <button className="bg-primary">Payment</button>
+                            <button className="bg-success">Payment</button>
                         }
 						>
 
@@ -437,7 +437,7 @@ class VehicleWorkTable extends React.Component{
                     </table>
                 </div>
 
-                <div className="row lowerTable text-center bg-primary commonFont justify-content-center align-items-center">
+                <div className="row lowerTable text-center bg-success commonFont justify-content-center align-items-center">
                     <div className="col-sm-2">
 						<p>Feet =</p>
                     </div>

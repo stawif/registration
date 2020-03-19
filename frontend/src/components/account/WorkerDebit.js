@@ -187,6 +187,9 @@ class WorkerDebit extends React.Component{
                     className="form-container form-group"
                     style={this.state.input}
                 >
+                        <p className="headingViewPart">Worker Debit</p>
+                        <br />
+
                         <Autocomplete
                             suggestions={this.state.workerNamesFromApi}
                             callbackFromParent={dataFromChild => {
@@ -201,7 +204,7 @@ class WorkerDebit extends React.Component{
                             className="btn btn-outline-dark"
                             style={this.state.buttonStatus}
                             onClick={e => this.onSubmit()}>
-                        Save
+                        Show
                         </button>
                 </form>
             </div>    

@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import '../../homePage.css';
+import './entry.css';
 import InputPartyNameField from "../modular/InputPartyNameField";
 import InputDateField from "../modular/InputDateField";
 import Autocomplete from "./AutoComplete";
@@ -17,7 +18,9 @@ export default class DailyWorkEntry extends React.Component {
       );
       const jsonVehicleList = await responseVehicleList.json();
       jsonVehicleList.map(item =>
-        this.state.vehicleNamesFromApi.push(item.name)
+        this.setState({ 
+          vehicleNamesFromApi: [...this.state.vehicleNamesFromApi, item.name] 
+        })
       );
     } catch {
       this.toggleLoadStatus();
@@ -131,17 +134,14 @@ export default class DailyWorkEntry extends React.Component {
                 }}
               />
 
-              <p>{this.state.workerExistMessage}</p>
+              <br />  
               <br />
 
-              <Autocomplete
-                suggestions={this.state.vehicleNamesFromApi}
-                callbackFromParent={dataFromChild => {
-                  this.state.selectedVehicle = dataFromChild;
-                }}
-                checkFromParent={this.checkVehicle}
-                placeholderfrom={"Vehicle name"}
-              />
+              <select onChange={e => this.state.selectedVehicle=e.target.value}>
+                {this.state.vehicleNamesFromApi.map((item) => (
+                    <option value={item}>{item}</option>
+                ))}
+              </select> 
 
               <br />
               <br />

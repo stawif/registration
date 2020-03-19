@@ -134,7 +134,9 @@ export default class PurchasePartyRegistration extends React.Component {
               this.checkParty();
             }}
           />
+
           <p>{this.state.partyExistMessage}</p>
+          <br />
           
 
           <InputContactField

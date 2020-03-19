@@ -44,7 +44,7 @@ class OwnerDebitEntry extends React.Component{
             <form
             className="form-container form-group"
             onSubmit={e => this.onSubmit(e)} >
-                <p className="headingViewPart">Owner Debit</p>
+                <p className="headingViewPart">Owner Debit Entry</p>
 
                 <br />    
                 <InputRateField 

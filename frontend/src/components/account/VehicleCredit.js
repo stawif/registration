@@ -190,6 +190,9 @@ class VehicleCredit extends React.Component{
                     className="form-container form-group"
                     style={this.state.input}
                 >
+                        <p className="headingViewPart">Vehicle Party Credit</p>
+                        <br />
+
                         <Autocomplete
                             suggestions={this.state.partyNamesFromApi}
                             callbackFromParent={dataFromChild => {
@@ -204,7 +207,7 @@ class VehicleCredit extends React.Component{
                             className="btn btn-outline-dark"
                             style={this.state.buttonStatus}
                             onClick={e => this.onSubmit()}>
-                        Save
+                        Show
                         </button>
                 </form>
             </div>    

@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import './entry.css';
 import Autocomplete from "./AutoComplete.jsx";
 import InputDateField from "../modular/InputDateField";
 import InputQuantityField from "../modular/InputQuantityField";
@@ -13,7 +14,11 @@ export default class VehicleSupplyEntry extends React.Component {
       );
       const jsonItemList = await responseItemList.json();
 
-      jsonItemList.map(item => this.state.materialNamesFromApi.push(item.name));
+      jsonItemList.map(item => 
+        this.setState({ 
+          materialNamesFromApi: [...this.state.materialNamesFromApi, item.name] 
+        })
+      );
     } catch {
       this.toggleLoadStatus();
     }
@@ -129,14 +134,11 @@ export default class VehicleSupplyEntry extends React.Component {
       >
         <p className="headingViewPart">Vehicle Supply Entry</p>
         <div className="pt-5">
-          <Autocomplete
-            suggestions={this.state.materialNamesFromApi}
-            callbackFromParent={dataFromChild => {
-              this.state.selectedItem = dataFromChild;
-            }}
-            placeholderfrom={"Material name"}
-            checkFromParent={this.checkItem}
-          />
+         <select onChange={e => this.state.selectedMaterial=e.target.value}>
+                {this.state.materialNamesFromApi.map((item) => (
+                    <option value={item}>{item}</option>
+                ))}
+          </select> 
 
           <br />
           <br />

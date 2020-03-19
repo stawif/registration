@@ -236,7 +236,7 @@ class PurchaseTabel extends React.Component{
         return(
             <div id="tableComponent">
 			
-                <div className="row upperTable bg-primary justify-content-center align-items-center">
+                <div className="row upperTable bg-warning justify-content-center align-items-center">
                   
 						<div className="col-sm-2">
 							<blockquote className="commonFont blockquote text-center">
@@ -285,7 +285,7 @@ class PurchaseTabel extends React.Component{
                     <div className="col-6">
                         {/*Party and filter popup*/}
                         <Popup modal trigger={
-                            <button className="bg-primary">Party</button>
+                            <button className="bg-warning">Party</button>
 							
                         } 
 						>
@@ -312,7 +312,7 @@ class PurchaseTabel extends React.Component{
                     <div className="col-6">    
                         {/*netAmount popup*/}
                         <Popup modal trigger={
-                            <button className="bg-primary">netAmount</button>
+                            <button className="bg-warning">netAmount</button>
                         }
 						>
 
@@ -380,7 +380,7 @@ class PurchaseTabel extends React.Component{
                     </table>
                 </div>
 
-                <div className="row lowerTable text-center bg-primary commonFont justify-content-center align-items-center">
+                <div className="row lowerTable text-center bg-warning commonFont justify-content-center align-items-center">
                     <div className="col-sm-2">
 						<p>Total Payment</p>
                     </div>
