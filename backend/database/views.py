@@ -249,7 +249,39 @@ class DailyWorkList(APIView):
         except Exception as e:
             return Response('network error',status=status.HTTP_400_BAD_REQUEST)
 
+class CreditList(APIView):
+    """
+    View to Credit Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        try:
+            credit_i = Credit.objects.all().order_by('date').values('date','remark','credit_amount','work')
+            for i in credit_i:
+                mixcredit_i = MixCredit.objects.get(id=i['work'])
+                i['category']=mixcredit_i.category
+                del i['work']
+            return Response(credit_i,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response('network errror',status=status.HTTP_404_NOT_FOUND)
 
+class DebitList(APIView):
+    """
+    View to Debit Detail.
+    api_ is for indication that this data in came from api
+    _i is for indication that this data is a model instance
+    """
+    def get(self,request):
+        try:
+            debit_i = Debit.objects.all().order_by('date').values('date','remark','debit_amount','debit_id')
+            for i in debit_i:
+                mixdebit_i = MixDebit.objects.get(id=i['debit_id'])
+                i['category']=mixdebit_i.category
+                del i['debit_id']
+            return Response(debit_i,status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response("network error",status=status.HTTP_404_NOT_FOUND)
 # """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # APIView for Registration (post request)
 # """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
