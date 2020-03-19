@@ -34,6 +34,8 @@ import PartDebit from "./components/account/PartDebit";
 import OwnerDebit from './components/account/OwnerDebit';
 import WorkerDebit from './components/account/WorkerDebit';
 import DailyWorkCredit from './components/account/DailyWorkCredit';
+import Credit from './components/account/Credit';
+import Debit from './components/account/Debit';
 
 //Tables Components
 import MachineWorkTable from "./components/tableDisplay/MachineWorkTable";
@@ -83,7 +85,9 @@ class App extends React.Component {
         partDebit: "partDebit",
         ownerDebit: "ownerDebit",
         workerDebit: "workerDebit",
-        dailyWorkCredit: "dailyWorkCredit"
+        dailyWorkCredit: "dailyWorkCredit",
+        credit: "credit",
+        debit: "debit"
       },
       partyName: "",
       currentPage: "machineRegistration"
@@ -198,6 +202,12 @@ class App extends React.Component {
     }
     else if(this.state.currentPage === this.state.allPages.dailyWorkCredit){
       currentComponent = <DailyWorkCredit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.credit){
+      currentComponent = <Credit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.debit){
+      currentComponent = <Debit />;
     }
     else {
       currentComponent = <MachineRegistration />;
@@ -576,6 +586,12 @@ class App extends React.Component {
                         className="dropdown-menu"
                         aria-labelledby="navbarDropdown"
                       >
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.credit)}>
+                          Credit
+                      </a>
+                      <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.debit)}>
+                          Debit
+                      </a>
                       <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.machineCredit)}>
                           Machine Credit
                       </a>
