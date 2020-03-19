@@ -98,7 +98,7 @@ class WorkerList(APIView):
     View to return List of party
     """
     def get(self,request):
-        queryset = Worker.objects.all()
+        queryset = Worker.objects.all().order_by('exit_date')
         serializer = WorkerSerializer(queryset,many=True)
         return Response(serializer.data)
 
@@ -134,7 +134,7 @@ class PurchaseList(APIView):
     View to return List of Purchase.
     """
     def get(self,request):
-        queryset = Purchase.objects.all()
+        queryset = Purchase.objects.all().order_by('date')
         serializer = PurchaseSerializer(queryset,many=True)
         return Response(serializer.data)
 
@@ -149,15 +149,14 @@ class PartList(APIView):
             debit_i = Debit.objects.get(debit_id=i.debit_id)
             part_dict = {"name":i.name,"date":debit_i.date,"debit_amount":debit_i.debit_amount,"remark":debit_i.remark}
             part_list.append(part_dict)
-        return Response(part_list,status=status.HTTP_200_OK)
+        return Response(sorted(part_list,key=lambda i:i['date']),status=status.HTTP_200_OK)
 
 class OwnerDebitList(APIView):
     """
     View to return List of Owner Debit.
     """
     def get(self,request):
-        debit_i = Debit.objects.filter(debit_id=2).values('debit_amount','remark','date')
-        print(debit_i)
+        debit_i = Debit.objects.filter(debit_id=2).values('debit_amount','remark','date').order_by('date')
         return Response(debit_i,status=status.HTTP_200_OK)
 
 class DailyExpenseList(APIView):
@@ -171,7 +170,7 @@ class DailyExpenseList(APIView):
             debit_i = Debit.objects.get(debit_id=i.debit_id)
             daily_expense_dict = {"category":i.category,"date":debit_i.date,"debit_amount":debit_i.debit_amount,"remark":debit_i.remark}
             daily_expense_list.append(daily_expense_dict)
-        return Response(daily_expense_list,status=status.HTTP_200_OK)
+        return Response(sorted(daily_expense_list,key=lambda i:i['date']),status=status.HTTP_200_OK)
 
 class DailyWorkCredit(APIView):
     """
@@ -181,13 +180,13 @@ class DailyWorkCredit(APIView):
     """
     def get(self,request):
         try:
-            daily_work_i = DailyWork.objects.all()
+            daily_work_i = DailyWork.objects.all().order_by('date')
             daily_work_json = []
             for i in daily_work_i:
                 credit_i = Credit.objects.get(work=i.credit_id)
                 daily_work_detail = {"party":i.name,"village":i.village,"credit":credit_i.credit_amount,"date":credit_i.date,"remark":credit_i.remark}
                 daily_work_json.append(daily_work_detail)
-            return Response(daily_work_json,status=status.HTTP_200_OK)
+            return Response(sorted(daily_work_json,key=lambda i:i['date']),status=status.HTTP_200_OK)
         except Exception as e:
             return Response('network error',status=status.HTTP_400_BAD_REQUEST)
 
@@ -205,7 +204,7 @@ class DailyExpenseDedit(APIView):
                 debit_i = Debit.objects.get(debit_id=i.debit_id)
                 daily_expense = {'category':i.category,"date":debit_i.date,"expense":debit_i.debit_amount,"remark":debit_i.remark}
                 daily_expense_detail.append(daily_expense)
-            return Response(daily_expense_detail,status=status.HTTP_200_OK)
+            return Response(sorted(daily_expense_detail,key=lambda i:i['date']),status=status.HTTP_200_OK)
         except Exception as e:
             return Response('network error',status=status.HTTP_400_BAD_REQUEST)
 
@@ -223,7 +222,7 @@ class PartDedit(APIView):
                 part_debit_i = Debit.objects.get(debit_id=i.debit_id)
                 part_debit = {'name':i.name,"date":part_debit_i.date,"amount":part_debit_i.debit_amount,"remark":part_debit_i.remark}
                 part_debit_detail.append(part_debit)
-            return Response(part_debit_detail,status=status.HTTP_200_OK)
+            return Response(sorted(part_debit_detail,key=lambda i:i['date']),status=status.HTTP_200_OK)
         except Exception as e:
             return Response('network error',status=status.HTTP_400_BAD_REQUEST)
 
@@ -1046,7 +1045,7 @@ class MachineWorkDetail(APIView):
             return Response('machine party does not exists',status=status.HTTP_200_OK)
         try:
             party_work_detail = MachineWork.objects.filter(party=party_detail).values('machine','date','drilling_feet',
-                                'diesel_amount','remark','holes','payment','paid')
+                                'diesel_amount','remark','holes','payment','paid').order_by('date')
         except:
             return Response('no work exists for this machine party',status=status.HTTP_200_OK)
         party_detail_json = {'name':party_detail.name,'contact':party_detail.contact,'village':party_detail.village,
