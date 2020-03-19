@@ -19,7 +19,7 @@ class Owner(models.Model):
 def gen_daily_expense_debit_id(sender, instance, **kwarge):
     daily_expense_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"))
     daily_expense_i.save()
-    owner_debit_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"))
+    owner_debit_i = MixDebit(owner=instance, date=datetime.now().strftime ("%Y-%m-%d"),category="owner_debit")
     owner_debit_i.save()
 
 
@@ -87,12 +87,19 @@ def check_Material_availability(sender,instance,**kwarge):
 #     def __str__(self):
 #         return str(self.pk)    
 
+credit_category=(
+    ('machine_party','machine_party'),
+    ('vehicle_party','vehicle_party'),
+    ('daily_work','daily_work')
+)
+
 class MixCredit(models.Model):
     """
     A class to generalize credit type
     """
     owner = models.ForeignKey(Owner,on_delete=models.CASCADE)
     date = models.DateField(blank=False,auto_now_add=True)
+    category = models.CharField(max_length=100, choices=credit_category,null=True)
 
     def __str__(self):
         return str(self.pk)
@@ -107,12 +114,21 @@ def gen_daily_expense_credit_id(sender, instance, **kwarge):
 Above models are complete
 """
 
+debit_category = (
+    ('part_debit','part_debit'),
+    ('owner_debit','owner_debit'),
+    ('purchase_debit','purchase_debit'),
+    ('worker_debit','worker_debit'),
+    ('daily_expense_debit','daily_expense_debit')
+)
+
 class MixDebit(models.Model):
     """
     A class to generalize debit type
     """
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.now, blank=False)
+    category = models.CharField(max_length=100,choices=debit_category,null=True)
 
     def __str__(self):
         return str(self.pk)
@@ -235,7 +251,6 @@ class DailyWork(models.Model):
     diesel_spend = models.FloatField(blank=False)
     net_amount = models.FloatField(blank=False)
     date = models.DateField(blank=False)
-
 
     def __str__(self):
         return self.name      
