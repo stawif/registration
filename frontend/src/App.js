@@ -24,6 +24,8 @@ import PartEntry from './components/entry/PartEntry';
 import OwnerDebitEntry from './components/entry/OwnerDebitEntry';
 import DailyExpenseEntry from './components/entry/DailyExpenseEntry';
 import WorkerDebitEntry from './components/entry/WorkerDebit';
+import MachineSupplyDisplay from './components/displaydata/MachineSupplyDisplay';
+import VehiclesupplyDisplay from './components/displaydata/VehicleSupplyDisplay';
 
 //Accounts
 import MachineCredit from "./components/account/MachineCredit";
@@ -44,6 +46,7 @@ import PurchaseTable from "./components/tableDisplay/PurchaseTable";
 
 //Dashboard components
 import PartyPins from "./components/dashboard/PartyPins";
+import VehicleSupplyDisplay from "./components/displaydata/VehicleSupplyDisplay";
 
 
 class App extends React.Component {
@@ -87,7 +90,9 @@ class App extends React.Component {
         workerDebit: "workerDebit",
         dailyWorkCredit: "dailyWorkCredit",
         credit: "credit",
-        debit: "debit"
+        debit: "debit",
+        machineSupplyDisplay: "machineSupplyDisplay",
+        vehicleSupplyDisplay: "vehicleSupplyDisplay"
       },
       partyName: "",
       currentPage: "machineRegistration"
@@ -208,6 +213,12 @@ class App extends React.Component {
     }
     else if(this.state.currentPage === this.state.allPages.debit){
       currentComponent = <Debit />;
+    }
+    else if(this.state.currentPage === this.state.allPages.machineSupplyDisplay){
+      currentComponent = <MachineSupplyDisplay />;
+    }
+    else if(this.state.currentPage === this.state.allPages.vehicleSupplyDisplay){
+      currentComponent = <VehicleSupplyDisplay />;
     }
     else {
       currentComponent = <MachineRegistration />;
@@ -567,6 +578,12 @@ class App extends React.Component {
                           }
                         >
                           Purchase Party Display
+                        </a>
+                        <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.machineSupplyDisplay)}>
+                          Machine Supply Display
+                        </a>
+                        <a className="dropdown-item" data-toggle="collapse" data-target=".navbar-collapse.show" onClick={() =>this.updateCurrentPage(this.state.allPages.vehicleSupplyDisplay)}>
+                          Vehicle Supply Display
                         </a>
                       </div>
                     </li>

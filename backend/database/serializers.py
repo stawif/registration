@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (Machine , Owner , Vehicle , Recorder ,  Material , MachineParty,PurchaseParty,VehicleParty,
-                    MachineWork,VehicleWork,MixDebit,Worker,Purchase,DailyWork,Part,Debit)
+                    MachineWork,VehicleWork,MixDebit,Worker,Purchase,DailyWork,Part,Debit,MachineSupply)
 
 class MachineSerializer(serializers.ModelSerializer):
     """
@@ -9,6 +9,25 @@ class MachineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Machine
         fields = ['owner','name']
+
+class MachineSupplySerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Machine Supply  Model.
+    """
+    party = serializers.CharField(source='party.name')
+    material = serializers.CharField(source='Material.name')
+    class Meta:
+        model = MachineSupply
+        fields = ['party','material','date','quantity','drilling_feet']
+
+class VehicleSupplySerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Vehicle Supply Model.
+    """
+    material = serializers.CharField(source='Material.name')
+    class Meta:
+        model = MachineSupply
+        fields = ['material','date','quantity']
 
 class VehicleSerializer(serializers.ModelSerializer):
     """
@@ -114,7 +133,7 @@ class PurchaseSerializer(serializers.ModelSerializer):
     Serializer for the Purchase Model.
     """
     party_name = serializers.CharField(source='party.name')
-    material_name = serializers.CharField(source='Material.name')
+    material_name = serializers.CharField(source='material.name')
     class Meta:
         model = Purchase
         fields = ['party_name','material_name','rate','net_amount','paid','remark']
