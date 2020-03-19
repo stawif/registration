@@ -131,7 +131,7 @@ export default class DailyWorkEntry extends React.Component {
                 }}
               />
 
-              <p>{this.state.workerExistMessage}</p>
+              <br />  
               <br />
 
               <Autocomplete

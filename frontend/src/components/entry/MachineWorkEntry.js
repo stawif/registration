@@ -166,97 +166,101 @@ export default class MachineWorkEntry extends React.Component {
 
   render() {
     return (
-      <form
-        className="form-container form-group"
-        onSubmit={e => this.onSubmit(e)}
-      >
-        <p className="headingViewPart">Machine Work Entry</p>
-        <div className="pt-5">
-          <Autocomplete
-            suggestions={this.state.partyNamesFromApi}
-            callbackFromParent={dataFromChild => {
-              this.state.selectedParty = dataFromChild;
-            }}
-            checkFromParent={this.checkParty}
-            placeholderfrom={"Party name"}
-          />
+      <div id="mainComponent">
+        <div className="d-flex justify-content-center align-items-center scrollingSection">
+          <form
+            className="form-container form-group"
+            onSubmit={e => this.onSubmit(e)}
+          >
+            <p className="headingViewPart">Machine Work Entry</p>
+            <div className="pt-5">
+              <Autocomplete
+                suggestions={this.state.partyNamesFromApi}
+                callbackFromParent={dataFromChild => {
+                  this.state.selectedParty = dataFromChild;
+                }}
+                checkFromParent={this.checkParty}
+                placeholderfrom={"Party name"}
+              />
 
-          <p>{this.state.partyExistMessage}</p>
-          <br />
-          
+              <p>{this.state.partyExistMessage}</p>
+              <br />
+              
 
-          <Autocomplete
-            suggestions={this.state.machineNamesFromApi}
-            callbackFromParent={dataFromChild => {
-              this.state.selectedMachine = dataFromChild;
-            }}
-            placeholderfrom={"Machine name"}
-            checkFromParent={this.checkMachine}
-          />
+              <Autocomplete
+                suggestions={this.state.machineNamesFromApi}
+                callbackFromParent={dataFromChild => {
+                  this.state.selectedMachine = dataFromChild;
+                }}
+                placeholderfrom={"Machine name"}
+                checkFromParent={this.checkMachine}
+              />
 
-          <br />
-          <br />
+              <br />
+              <br />
 
-          <InputDateField
-            callbackFromParent={dataFromChild => {
-              this.state.date = dataFromChild;
-            }}
-          />
+              <InputDateField
+                callbackFromParent={dataFromChild => {
+                  this.state.date = dataFromChild;
+                }}
+              />
 
-          <br />
-          <br />
-          <InputRateField
-            placeholderParent={"Diesel Amount"}
-            callbackFromParent={dataFromChild => {
-              this.state.dieselAmount = parseInt(dataFromChild);
-            }}
-          />
+              <br />
+              <br />
+              <InputRateField
+                placeholderParent={"Diesel Amount"}
+                callbackFromParent={dataFromChild => {
+                  this.state.dieselAmount = parseInt(dataFromChild);
+                }}
+              />
 
-          <br />
-          <br />
+              <br />
+              <br />
 
-          <InputQuantityField
-            placeholder={"Drilling Feet"}
-            callbackFromParent={dataFromChild => {
-              this.state.drillingFeet = parseInt(dataFromChild);
-            }}
-          />
-          <br />
-          <br />
+              <InputQuantityField
+                placeholder={"Drilling Feet"}
+                callbackFromParent={dataFromChild => {
+                  this.state.drillingFeet = parseInt(dataFromChild);
+                }}
+              />
+              <br />
+              <br />
 
-          <InputQuantityField
-            placeholder={"Holes"}
-            callbackFromParent={dataFromChild => {
-              this.state.holes = parseInt(dataFromChild);
-            }}
-          />
-          <br />
-          <br />
+              <InputQuantityField
+                placeholder={"Holes"}
+                callbackFromParent={dataFromChild => {
+                  this.state.holes = parseInt(dataFromChild);
+                }}
+              />
+              <br />
+              <br />
 
-          <InputRateField
-            placeholderParent={"Payment"}
-            callbackFromParent={dataFromChild => {
-              this.state.payment = dataFromChild;
-            }}
-          />
-          <br />
-          <br />
+              <InputRateField
+                placeholderParent={"Payment Received"}
+                callbackFromParent={dataFromChild => {
+                  this.state.payment = dataFromChild;
+                }}
+              />
+              <br />
+              <br />
 
-          <InputRemarkField
-            callbackFromParent={dataFromChild => {
-              this.state.remark = dataFromChild;
-            }}
-          />
+              <InputRemarkField
+                callbackFromParent={dataFromChild => {
+                  this.state.remark = dataFromChild;
+                }}
+              />
+            </div>
+            <p>{this.state.responseMessage}</p>
+            <button
+              type="submit"
+              className="btn btn-outline-dark"
+              style={this.state.buttonStatus}
+            >
+              Save
+            </button>
+          </form>
         </div>
-        <p>{this.state.responseMessage}</p>
-        <button
-          type="submit"
-          className="btn btn-outline-dark"
-          style={this.state.buttonStatus}
-        >
-          Save
-        </button>
-      </form>
+      </div>    
     );
   }
 }

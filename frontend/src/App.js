@@ -69,7 +69,7 @@ class App extends React.Component {
         addDailyWork: "addDailyWork",
         machineDisplay: "machineDisplay",
         vehicleDisplay: "vehicleDisplay",
-        workerDispaly: "workerDisplay",
+        workerDisplay: "workerDisplay",
         materialDisplay: "materialDisplay",
         machinePartyDisplay: "machinePartyDisplay",
         vehiclePartyDisplay: "vehiclePartyDisplay",
@@ -525,7 +525,7 @@ class App extends React.Component {
 						  data-target=".navbar-collapse.show"
                           onClick={() =>
                             this.updateCurrentPage(
-                              this.state.allPages.itemDisplay
+                              this.state.allPages.materialDisplay
                             )
                           }
                         >

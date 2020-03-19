@@ -120,51 +120,51 @@ export default class MaterialRegistration extends React.Component {
   }
   render() {
     return (
-      <form
-        className="form-container form-group"
-        onSubmit={e => this.onSubmit(e)}
-      >
-        <p className="headingViewPart">Material Registration</p>
-        <div className="pt-5">
-          <InputCommonName
-            minLength={"2"}
-            placeholderParent={"Material Name"}
-            callbackFromParent={dataFromChild => {
-              this.state.materialName = dataFromChild;
-              this.checkMaterial();
-            }}
-          />
-
-          <p>{this.state.materialExistMessage}</p>
-          <br />
-          <InputCommonName
-            callbackFromParent={dataFromChild => {
-              this.state.materialMeasurement = dataFromChild;
-            }}
-            placeholderParent={"Measurement"}
-          />
-
-          <br />
-          <br />
-
-          <InputQuantityField
-            placeholder={"Quantity"}
-            callbackFromParent={dataFromChild => {
-              this.state.materialQuantity = dataFromChild;
-            }}
-          />
-
-          <hr />
-        </div>
-        <p>{this.state.responseMessage}</p>
-        <button
-          type="submit"
-          className="btn btn-outline-dark"
-          style={this.state.buttonStatus}
+        <form
+          className="form-container form-group"
+          onSubmit={e => this.onSubmit(e)}
         >
-          Save
-        </button>
-      </form>
+          <p className="headingViewPart">Material Registration</p>
+          <div className="pt-5">
+            <InputCommonName
+              minLengthh={"2"}
+              placeholderParent={"Material Name"}
+              callbackFromParent={dataFromChild => {
+                this.state.materialName = dataFromChild;
+                this.checkMaterial();
+              }}
+            />
+
+            <p>{this.state.materialExistMessage}</p>
+            <br />
+            <InputCommonName
+              minLengthh={"2"}
+              callbackFromParent={dataFromChild => {
+                this.state.materialMeasurement = dataFromChild;
+              }}
+              placeholderParent={"Measurement"}
+            />
+
+            <br />
+            <br />
+
+            <InputQuantityField
+              placeholder={"Quantity"}
+              callbackFromParent={dataFromChild => {
+                this.state.materialQuantity = dataFromChild;
+              }}
+            />
+
+          </div>
+          <p>{this.state.responseMessage}</p>
+          <button
+            type="submit"
+            className="btn btn-outline-dark"
+            style={this.state.buttonStatus}
+          >
+            Save
+          </button>
+        </form>
     );
   }
 }

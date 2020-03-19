@@ -65,7 +65,7 @@ class WorkerDebit extends React.Component{
             <form
             className="form-container form-group"
             onSubmit={e => this.onSubmit(e)} >
-                <p className="headingViewPart">Worker Debit</p>
+                <p className="headingViewPart">Worker Debit Entry</p>
                 
                 <br />
                 <Autocomplete

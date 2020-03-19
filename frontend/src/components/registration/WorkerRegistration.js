@@ -179,15 +179,7 @@ export default class WorkerRegistration extends React.Component {
               this.state.date = dataFromChild;
             }}
           />
-
           <br />
-          <br />
-          <InputRateField
-            placeholderParent={"Worker Advance"}
-            callbackFromParent={dataFromChild => {
-              this.state.advance = dataFromChild;
-            }}
-          />
         </div>
         <p>{this.state.responseMessage}</p>
         <button
