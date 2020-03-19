@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import './entry.css';
 import Autocomplete from "./AutoComplete.jsx";
 import InputDateField from "../modular/InputDateField";
 import InputRemarkField from "../modular/InputRemarkField";
@@ -24,7 +25,9 @@ export default class MachineWorkEntry extends React.Component {
       const jsonMachineList = await responseMachineList.json();
 
       jsonMachineList.map(item =>
-        this.state.machineNamesFromApi.push(item.name)
+        this.setState({ 
+          machineNamesFromApi: [...this.state.machineNamesFromApi, item.name] 
+        })
       );
     } catch {
       this.toggleLoadStatus();
@@ -186,15 +189,11 @@ export default class MachineWorkEntry extends React.Component {
               <p>{this.state.partyExistMessage}</p>
               <br />
               
-
-              <Autocomplete
-                suggestions={this.state.machineNamesFromApi}
-                callbackFromParent={dataFromChild => {
-                  this.state.selectedMachine = dataFromChild;
-                }}
-                placeholderfrom={"Machine name"}
-                checkFromParent={this.checkMachine}
-              />
+              <select onChange={e => this.state.selectedMachine=e.target.value}>
+                {this.state.machineNamesFromApi.map((item) => (
+                    <option value={item}>{item}</option>
+                ))}
+              </select> 
 
               <br />
               <br />

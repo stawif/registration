@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import './entry.css';
 import Autocomplete from "./AutoComplete.jsx";
 import InputDateField from "../modular/InputDateField";
 import InputQuantityField from "../modular/InputQuantityField";
@@ -19,7 +20,9 @@ export default class MachineSupplyEntry extends React.Component {
 
       const jsonMaterialList = await responseMaterialList.json();
       jsonMaterialList.map(item =>
-        this.state.materialNamesFromApi.push(item.name)
+        this.setState({ 
+          materialNamesFromApi: [...this.state.materialNamesFromApi, item.name] 
+        })
       );
     } catch {
       this.toggleLoadStatus();
@@ -173,14 +176,11 @@ export default class MachineSupplyEntry extends React.Component {
           <p>{this.state.partyExistMessage}</p>
           <br />
 
-          <Autocomplete
-            suggestions={this.state.materialNamesFromApi}
-            callbackFromParent={dataFromChild => {
-              this.state.selectedMaterial = dataFromChild;
-            }}
-            placeholderfrom={"Material name"}
-            checkFromParent={this.checkMaterial}
-          />
+          <select onChange={e => this.state.selectedMaterial=e.target.value}>
+                {this.state.materialNamesFromApi.map((item) => (
+                    <option value={item}>{item}</option>
+                ))}
+          </select> 
 
           <br />
           <br />
